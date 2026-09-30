@@ -14,7 +14,7 @@ environment variables and the hosting dashboards only.
 
 ## State as of 2026-09-30, after Phase 3
 
-- Migrations 0001 through 0008 are applied.
+- Migrations 0001 through 0009 are applied.
   Seed data is loaded. RLS is on for every table.
 - Vercel holds `NEXT_PUBLIC_SUPABASE_URL` and
   `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` for all environments. Deployment
