@@ -53,3 +53,9 @@ These OVERRIDE the base prompt wherever they conflict.
 - Two friends who are fans of DIFFERENT schools can each build their
   program for a week, each join their school's faction, and meet in a
   simulated rivalry game.
+
+## Decisions since the Q&A
+- 2026-09-30: Stack is web-first and mobile-first as proposed in
+  `docs/phase-0/stack.md`. Native client deferred until after the slice.
+- 2026-09-30: The six sharding proposals in
+  `docs/phase-0/sharding-and-rivalry.md` §8 stand as working defaults.

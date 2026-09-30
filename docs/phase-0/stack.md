@@ -1,7 +1,7 @@
 # Stack proposal
 
-Phase 0 design. Status: **proposal, awaiting founder approval.** No code is
-written until this is approved (`CLAUDE.md` §2).
+Phase 0 design. Status: **approved by the founder, 2026-09-30: web-first,
+mobile-first, as proposed.** Code may begin in Phase 1.
 
 ---
 
@@ -118,10 +118,8 @@ Nothing sells.
 /public/placeholder   Placeholder art
 ```
 
-## 8. Decision needed
+## 8. Decision
 
-One decision: **web-first slice as proposed, or native from the start.**
-
-Everything else in this document follows from the answer. If web-first, the
-next step is Phase 1 in `docs/roadmap.md`. If native, this proposal is
-replaced and the roadmap is rewritten with a longer path to the slice.
+**Web-first, mobile-first, as proposed.** Decided by the founder on
+2026-09-30. The next step is Phase 1 in `docs/roadmap.md`. A native client
+remains on the after-the-slice list.

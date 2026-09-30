@@ -26,14 +26,25 @@ The three social layers, in order of intimacy:
 
 ## 2. Stack
 
-Not chosen yet. Do not add application code, a framework, or a dependency
-until a stack proposal has been written to `docs/phase-0/stack.md` and the
-founder has approved it. The founder's other projects run Next.js, Supabase
-Postgres, and Vercel, so that is the default candidate for the web and data
-layers. The server-side game simulation and the League sharding model may
-justify something else, and that is the question the proposal must answer.
+Approved 2026-09-30. `docs/phase-0/stack.md` is authoritative and has the
+reasoning; this table is the summary.
 
-Until then this repository holds documents only.
+| Layer | Choice | Notes |
+|---|---|---|
+| Client | Next.js 15 (App Router), mobile-first web, installable as a PWA | Server Components by default. The client is the replaceable layer. |
+| Language | TypeScript, strict mode | No `any` without a comment justifying it |
+| Database | Supabase Postgres | `league_id` on every League-scoped table. RLS before data. |
+| Auth | Supabase Auth | Email + Google. Date of birth collected at signup. |
+| Realtime | Supabase Realtime | Faction chat, League feeds |
+| Sim | `packages/sim`, pure TypeScript, seeded, no I/O | Server-side only. Every game stores seed and frozen inputs. |
+| Scheduler | Vercel Cron, one League-week per call, Postgres queue table | |
+| Styling | Tailwind CSS | Confirm major version before adding config |
+| Art | Placeholders in `public/placeholder/` | A product designer owns final UI |
+| Hosting | Vercel | Preview deploy per branch |
+| Payments | Deferred until after the slice | Rail is a founder decision |
+
+Do not introduce additional frameworks, ORMs, state libraries, component
+kits, or a game engine without asking.
 
 ## 3. Non-negotiables
 

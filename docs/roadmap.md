@@ -16,11 +16,11 @@ Documents only. No code.
 - [x] `CLAUDE.md` — working agreement, non-negotiables, escalation list
 - [x] `docs/phase-0/sharding-and-rivalry.md` — server/shard model
 - [x] `docs/phase-0/stack.md` — stack proposal
-- [ ] Founder decisions: the six in the sharding document, the one in the
-      stack document
+- [x] Founder decision on the stack: web-first, mobile-first (2026-09-30)
+- [x] The six sharding proposals stand as working defaults until the founder
+      changes one. Changing any of them is an escalation (`CLAUDE.md` §4).
 
-**Checkpoint:** the founder has read both proposals and answered the seven
-decisions. Until then the six sharding proposals stand as working defaults.
+**Checkpoint: passed.** Phase 1 may begin in the next session.
 
 ## Phase 1 — Foundation
 
