@@ -24,3 +24,11 @@ python3 supabase/seed/build.py > supabase/seed/seed.sql
 - The 2026 calendar is the game's calendar: weeks 0-3 non-conference, 4-12
   conference, 13 Rivalry Week, 14 championship. Real schedules mix these; the
   game does not need to.
+
+## Phase 3 additions
+
+- `facility_facets.csv`: how each facility's power splits across rushing,
+  passing, run defense, pass defense. Rows sum to 1.
+- `emphases.csv`: the six weekly emphasis choices and their multipliers.
+- `staff.csv`: the assistant staff catalog. **All names are fictional.**
+  Never add a real coach's name (`CLAUDE.md` §3.6).

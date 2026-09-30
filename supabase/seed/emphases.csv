@@ -1,0 +1,7 @@
+id,name,blurb,sort_order,rushing,passing,run_defense,pass_defense
+balanced,Balanced,No lean. Take what they give you.,10,1,1,1,1
+ground-and-pound,Ground and pound,Run it down their throat.,20,1.25,0.85,1,1
+air-raid,Air raid,Spread them out and throw.,30,0.85,1.25,1,1
+stack-the-box,Stack the box,Dare them to pass.,40,1,1,1.25,0.85
+cover-shell,Cover shell,Take away the deep ball.,50,1,1,0.85,1.25
+ball-control,Ball control,"Run it, stop the run, shorten the game.",60,1.1,0.9,1.1,0.9

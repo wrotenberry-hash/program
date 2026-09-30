@@ -17,7 +17,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
 
   const { data: program } = await supabase
     .from("programs")
-    .select("id, name, school:schools(id, name, full_name, nickname, city, state, conference:conferences(id, name, short_name))")
+    .select("id, name, share_code, emphasis_id, school:schools(id, name, full_name, nickname, city, state, conference:conferences(id, name, short_name))")
     .eq("account_id", user.id)
     .maybeSingle();
   if (!program) redirect("/onboarding/school");
@@ -38,8 +38,15 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
         .select("facility_id, level, upgrade_to, upgrade_completes_at, facility:facilities(name, description, sort_order)")
         .eq("program_id", program.id),
       supabase.from("facility_levels").select("facility_id, level, cost, duration_seconds, income_per_hour, power"),
-      supabase.from("game_config").select("key, value").in("key", ["COLLECT_CAP_HOURS", "MAX_CONCURRENT_UPGRADES"]),
+      supabase.from("game_config").select("key, value").in("key", ["COLLECT_CAP_HOURS", "MAX_CONCURRENT_UPGRADES", "SCOUT_COOLDOWN_HOURS"]),
     ]);
+  const [{ data: staffRows }, { data: catalog }, { data: games }, { data: emphasis }, { data: treasury2 }] = await Promise.all([
+    supabase.from("program_staff").select("staff_id, stars, level").eq("program_id", program.id),
+    supabase.from("staff").select("id, base_power, power_per_level"),
+    supabase.from("games").select("status, locks_at, result").or(`home_program_id.eq.${program.id},away_program_id.eq.${program.id}`),
+    supabase.from("emphases").select("name").eq("id", program.emphasis_id ?? "balanced").maybeSingle(),
+    supabase.from("program_treasury").select("last_scouted_at").eq("program_id", program.id).maybeSingle(),
+  ]);
 
   const today = new Date().toISOString().slice(0, 10);
   const { data: week } = season
@@ -63,6 +70,18 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
   const incomeRate = boosters ? ((levels ?? []).find((l) => l.facility_id === "booster-club" && l.level === boosters.level)?.income_per_hour ?? 0) : 0;
   const hoursSince = treasury ? (Date.now() - new Date(treasury.last_collected_at).getTime()) / 3600000 : 0;
   const accrued = Math.floor(Math.min(hoursSince, capHours) * incomeRate);
+  const catalogById = new Map((catalog ?? []).map((c) => [c.id, c]));
+  const hired = (staffRows ?? []).filter((s) => s.stars > 0);
+  const staffPower = hired.reduce((n, s) => {
+    const c = catalogById.get(s.staff_id);
+    return c ? n + Math.round((c.base_power + c.power_per_level * (s.level - 1)) * (1 + 0.25 * (s.stars - 1))) : n;
+  }, 0);
+  const nowMs = Date.now();
+  const wins = (games ?? []).filter((g) => g.status === "resolved" && (g.result as { winner_program_id?: string } | null)?.winner_program_id === program.id).length;
+  const losses = (games ?? []).filter((g) => g.status === "resolved").length - wins;
+  const dueGames = (games ?? []).filter((g) => g.status === "scheduled" && new Date(g.locks_at).getTime() <= nowMs).length;
+  const scoutCooldownH = cfg.SCOUT_COOLDOWN_HOURS || 4;
+  const canScout = !treasury2?.last_scouted_at || new Date(treasury2.last_scouted_at).getTime() + scoutCooldownH * 3600e3 <= nowMs;
 
   return (
     <ProgramView
@@ -81,6 +100,14 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
       levels={levels ?? []}
       busy={rows.filter((r) => r.upgrade_to !== null).length >= maxConcurrent}
       notice={notice}
+      staffHired={hired.length}
+      staffTotal={(catalog ?? []).length}
+      staffPower={staffPower}
+      canScout={canScout}
+      record={{ wins, losses }}
+      emphasisName={emphasis?.name ?? "Balanced"}
+      shareCode={program.share_code ?? "——————"}
+      dueGames={dueGames}
       actions={{ joinFaction, collectIncome, startUpgrade, claimUpgrade, signOut }}
     />
   );

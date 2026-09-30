@@ -56,6 +56,13 @@ config = [
     ("STARTING_CASH", 500, "Budget a new program starts with"),
     ("COLLECT_CAP_HOURS", 8, "Booster income stops accruing after this many hours uncollected"),
     ("MAX_CONCURRENT_UPGRADES", 1, "Facility upgrades a program can run at once"),
+    ("SCOUT_COOLDOWN_HOURS", 4, "Hours between scouting trips"),
+    ("SCOUT_SHARDS", 5, "Shards granted per scouting trip"),
+    ("STAFF_LEVEL_COST_BASE", 200, "Cash to level a coach: base times current level"),
+    ("CHALLENGE_LOCK_MINUTES", 10, "Minutes after a challenge is issued before it locks and resolves"),
+    ("POINTS_PER_EDGE", 28, "Expected points per unit of facet edge. docs/phase-3/power-and-matchups.md §8"),
+    ("BASE_POINTS", 24, "Expected points for an even matchup"),
+    ("SCORE_NOISE_SD_TENTHS", 85, "Standard deviation of score noise, in tenths of a point"),
 ]
 out.append("insert into public.facilities (id, name, description, sort_order) values")
 rows = list(csv.DictReader(open(here / "facilities.csv")))
@@ -66,6 +73,21 @@ out.append("insert into public.facility_levels (facility_id, level, cost, durati
 rows = list(csv.DictReader(open(here / "facility_levels.csv")))
 out.append(",\n".join(f"  ({q(r['facility_id'])}, {r['level']}, {r['cost']}, {r['duration_seconds']}, {r['income_per_hour'] or 'null'}, {r['power']})" for r in rows))
 out.append("on conflict (facility_id, level) do update set cost = excluded.cost, duration_seconds = excluded.duration_seconds, income_per_hour = excluded.income_per_hour, power = excluded.power;\n")
+
+out.append("insert into public.facility_facets (facility_id, rushing, passing, run_defense, pass_defense) values")
+rows = list(csv.DictReader(open(here / "facility_facets.csv")))
+out.append(",\n".join(f"  ({q(r['facility_id'])}, {r['rushing']}, {r['passing']}, {r['run_defense']}, {r['pass_defense']})" for r in rows))
+out.append("on conflict (facility_id) do update set rushing = excluded.rushing, passing = excluded.passing, run_defense = excluded.run_defense, pass_defense = excluded.pass_defense;\n")
+
+out.append("insert into public.emphases (id, name, blurb, sort_order, rushing, passing, run_defense, pass_defense) values")
+rows = list(csv.DictReader(open(here / "emphases.csv")))
+out.append(",\n".join(f"  ({q(r['id'])}, {q(r['name'])}, {q(r['blurb'])}, {r['sort_order']}, {r['rushing']}, {r['passing']}, {r['run_defense']}, {r['pass_defense']})" for r in rows))
+out.append("on conflict (id) do update set name = excluded.name, blurb = excluded.blurb, sort_order = excluded.sort_order, rushing = excluded.rushing, passing = excluded.passing, run_defense = excluded.run_defense, pass_defense = excluded.pass_defense;\n")
+
+out.append("insert into public.staff (id, name, role, rarity, base_power, power_per_level, unlock_shards, star_shards, rushing, passing, run_defense, pass_defense, sort_order) values")
+rows = list(csv.DictReader(open(here / "staff.csv")))
+out.append(",\n".join(f"  ({q(r['id'])}, {q(r['name'])}, {q(r['role'])}, {q(r['rarity'])}, {r['base_power']}, {r['power_per_level']}, {r['unlock_shards']}, {r['star_shards']}, {r['rushing']}, {r['passing']}, {r['run_defense']}, {r['pass_defense']}, {r['sort_order']})" for r in rows))
+out.append("on conflict (id) do update set name = excluded.name, role = excluded.role, rarity = excluded.rarity, base_power = excluded.base_power, power_per_level = excluded.power_per_level, unlock_shards = excluded.unlock_shards, star_shards = excluded.star_shards, rushing = excluded.rushing, passing = excluded.passing, run_defense = excluded.run_defense, pass_defense = excluded.pass_defense, sort_order = excluded.sort_order;\n")
 
 out.append("insert into public.game_config (key, value, description) values")
 out.append(",\n".join(f"  ({q(k)}, {q(json.dumps(v))}::jsonb, {q(d)})" for k, v, d in config))

@@ -1,6 +1,6 @@
 # Power and matchups
 
-Phase 3 design. Status: **proposal, awaiting founder reaction.** Written
+Phase 3 design. Status: **decided by the founder 2026-09-30, all four proposals as written.** Written
 2026-09-30 from the founder's direction that this is not a game simulation:
 the power of one program is put up against the power of another, with a few
 high-level emphasis choices.
@@ -96,7 +96,7 @@ so an empty slot still produces a real matchup.
   escalation.
 - Not zero-sum on power. Nobody loses power by losing a game.
 
-## 7. Decisions for the founder
+## 7. Decisions (made 2026-09-30, all as proposed)
 
 | # | Decision | Proposal |
 |---|---|---|
@@ -104,3 +104,18 @@ so an empty slot still produces a real matchup.
 | 2 | Emphasis list | The six above, tunable in config |
 | 3 | Variance | Enough that a 10% power edge wins about two of three, a 30% edge about nine of ten |
 | 4 | Where staff power comes from | Hero shards and levels, Last War style; the staff roster is Phase 3's main build |
+
+## 8. Where the resolver runs
+
+In the database, as `resolve_due_games()`. It reads both programs' facet
+powers itself, draws from a seeded generator, writes the score, the facet
+results, the narrative, and a snapshot of the inputs, and never accepts a
+result from outside. Anyone may call it; it only resolves games whose lock
+time has passed and does the same thing no matter who calls. The Vercel
+cron calls it on a schedule and the matchups screen calls it on load, so a
+due game resolves even if the cron is late.
+
+Calibration: expected margin is `POINTS_PER_EDGE × (sum of a side's two
+offensive edges − the other side's)`, with normal noise of `SCORE_NOISE_SD`
+on each score. With `POINTS_PER_EDGE = 28` and `SCORE_NOISE_SD = 8.5`, a 10%
+power edge wins about 67% and a 30% edge about 89%.

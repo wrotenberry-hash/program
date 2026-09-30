@@ -29,6 +29,14 @@ export type ProgramViewProps = {
   levels: LevelRow[];
   busy: boolean;
   notice?: string;
+  staffHired: number;
+  staffTotal: number;
+  staffPower: number;
+  canScout: boolean;
+  record: { wins: number; losses: number };
+  emphasisName: string;
+  shareCode: string;
+  dueGames: number;
   actions: {
     joinFaction: (formData: FormData) => void | Promise<void>;
     collectIncome: (formData: FormData) => void | Promise<void>;
@@ -43,7 +51,7 @@ export function ProgramView(p: ProgramViewProps) {
   const now = p.now ?? Date.now();
   const levelOf = (facilityId: string, level: number) => p.levels.find((l) => l.facility_id === facilityId && l.level === level);
   const rows = p.facilities.slice().sort((a, b) => a.facility.sort_order - b.facility.sort_order);
-  const power = rows.reduce((sum, r) => sum + (levelOf(r.facility_id, r.level)?.power ?? 0), 0);
+  const power = rows.reduce((sum, r) => sum + (levelOf(r.facility_id, r.level)?.power ?? 0), 0) + p.staffPower;
   const readyCount = rows.filter((r) => r.upgrade_to !== null && r.upgrade_completes_at && new Date(r.upgrade_completes_at).getTime() <= now).length;
   const collectIsBest = p.accrued > 0;
 
@@ -179,9 +187,23 @@ export function ProgramView(p: ProgramViewProps) {
         )}
       </Card>
 
+      <Card title="Staff" accent="primary" icon={<Shield size={14} />}>
+        <p className="text-sm font-semibold">
+          {p.staffHired} of {p.staffTotal} coaches hired · <span className="text-power">{p.staffPower} power</span>
+        </p>
+        <Link href="/staff" className="btn-3d mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-extrabold text-primary-ink [--btn-edge:#1f4bc4]">
+          {p.canScout ? "Send scouts" : "Manage staff"}
+        </Link>
+      </Card>
+
       <Card title="Matchups" accent="go" icon={<Trophy size={14} />}>
-        <p className="text-sm font-semibold">Your power against theirs, with the emphasis you choose each week.</p>
-        <p className="mt-1 text-xs font-semibold text-ink-muted">Opens in the next build.</p>
+        <p className="text-sm font-semibold">
+          {p.record.wins}–{p.record.losses} this season · emphasis: {p.emphasisName}
+        </p>
+        {p.dueGames > 0 ? <p className="mt-1 text-xs font-extrabold text-go">{p.dueGames} result waiting</p> : <p className="mt-1 text-xs font-semibold text-ink-muted">Your code: <span className="font-black tracking-[0.15em] text-ink">{p.shareCode}</span></p>}
+        <Link href="/matchups" className={`btn-3d mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-go text-sm font-extrabold text-go-ink [--btn-edge:#158a48] ${p.dueGames > 0 && !collectIsBest ? "pulse [--glow:rgba(61,220,132,0.6)]" : ""}`}>
+          <Trophy size={16} /> {p.dueGames > 0 ? "See the result" : "Find a game"}
+        </Link>
       </Card>
 
       <form action={p.actions.signOut} className="mt-2">

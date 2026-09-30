@@ -71,3 +71,12 @@ These OVERRIDE the base prompt wherever they conflict.
   inviting, always a tap to make. "Placeholder art" means the designer owns
   the final character and building art, not that the shell may look like a
   utility app. Spec in `docs/design.md`.
+- 2026-09-30: Matchup model decided. Four facets (rushing, passing, run
+  defense, pass defense). Six emphases (Balanced, Ground and pound, Air raid,
+  Stack the box, Cover shell, Ball control). Moderate variance: a 10% power
+  edge wins about two of three, a 30% edge about nine of ten. Staff power
+  comes from shards and levels, Last War style.
+- 2026-09-30: The resolver runs inside the database as a SQL function, not a
+  TypeScript package, because that is the only place a result cannot be
+  forged by a player calling our functions directly. Same determinism: a
+  stored seed and frozen inputs replay to the same result.

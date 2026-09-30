@@ -167,6 +167,8 @@ CLAUDE.md             This file.
     sharding-and-rivalry.md   Server/shard model, faction caps, cross-server rivalry
     stack.md                  Stack proposal
 /app                Next.js App Router. Server Components; actions in actions.ts
+  /preview          Design previews with sample data, served only when PREVIEWS=1
+  /api/cron         Scheduled maintenance routes
 /components         Shared UI. Client Components only for chat and countdowns
 /lib                Supabase clients, flags, database types, helpers
 /supabase

@@ -1,0 +1,7 @@
+facility_id,rushing,passing,run_defense,pass_defense
+booster-club,0.25,0.25,0.25,0.25
+stadium,0.25,0.25,0.25,0.25
+weight-room,0.4,0.1,0.4,0.1
+practice-facility,0.3,0.3,0.2,0.2
+film-room,0.1,0.4,0.1,0.4
+academic-center,0.25,0.25,0.25,0.25

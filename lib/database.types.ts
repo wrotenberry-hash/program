@@ -107,18 +107,19 @@ export type Database = {
         ]
       }
       program_treasury: {
-        Row: { cash: number; last_collected_at: string; program_id: string; updated_at: string }
-        Insert: { cash?: number; last_collected_at?: string; program_id: string; updated_at?: string }
-        Update: { cash?: number; last_collected_at?: string; program_id?: string; updated_at?: string }
+        Row: { cash: number; last_collected_at: string; last_scouted_at: string | null; program_id: string; updated_at: string }
+        Insert: { cash?: number; last_collected_at?: string; last_scouted_at?: string | null; program_id: string; updated_at?: string }
+        Update: { cash?: number; last_collected_at?: string; last_scouted_at?: string | null; program_id?: string; updated_at?: string }
         Relationships: [
           { foreignKeyName: "program_treasury_program_id_fkey"; columns: ["program_id"]; isOneToOne: true; referencedRelation: "programs"; referencedColumns: ["id"] },
         ]
       }
       programs: {
-        Row: { account_id: string | null; created_at: string; id: string; name: string; school_id: string; updated_at: string }
-        Insert: { account_id?: string | null; created_at?: string; id?: string; name: string; school_id: string; updated_at?: string }
-        Update: { account_id?: string | null; created_at?: string; id?: string; name?: string; school_id?: string; updated_at?: string }
+        Row: { account_id: string | null; created_at: string; emphasis_id: string | null; id: string; name: string; school_id: string; share_code: string | null; updated_at: string }
+        Insert: { account_id?: string | null; created_at?: string; emphasis_id?: string | null; id?: string; name: string; school_id: string; share_code?: string | null; updated_at?: string }
+        Update: { account_id?: string | null; created_at?: string; emphasis_id?: string | null; id?: string; name?: string; school_id?: string; share_code?: string | null; updated_at?: string }
         Relationships: [
+          { foreignKeyName: "programs_emphasis_id_fkey"; columns: ["emphasis_id"]; isOneToOne: false; referencedRelation: "emphases"; referencedColumns: ["id"] },
           { foreignKeyName: "programs_school_id_fkey"; columns: ["school_id"]; isOneToOne: false; referencedRelation: "schools"; referencedColumns: ["id"] },
         ]
       }
@@ -159,11 +160,67 @@ export type Database = {
         Update: { created_at?: string; ends_on?: string; id?: string; starts_on?: string; status?: string; year?: number }
         Relationships: []
       }
+      emphases: {
+        Row: { blurb: string; id: string; name: string; pass_defense: number; passing: number; run_defense: number; rushing: number; sort_order: number }
+        Insert: { blurb: string; id: string; name: string; pass_defense?: number; passing?: number; run_defense?: number; rushing?: number; sort_order?: number }
+        Update: { blurb?: string; id?: string; name?: string; pass_defense?: number; passing?: number; run_defense?: number; rushing?: number; sort_order?: number }
+        Relationships: []
+      }
+      facility_facets: {
+        Row: { facility_id: string; pass_defense: number; passing: number; run_defense: number; rushing: number }
+        Insert: { facility_id: string; pass_defense: number; passing: number; run_defense: number; rushing: number }
+        Update: { facility_id?: string; pass_defense?: number; passing?: number; run_defense?: number; rushing?: number }
+        Relationships: [
+          { foreignKeyName: "facility_facets_facility_id_fkey"; columns: ["facility_id"]; isOneToOne: true; referencedRelation: "facilities"; referencedColumns: ["id"] },
+        ]
+      }
+      games: {
+        Row: { away_program_id: string; created_at: string; home_program_id: string; id: string; inputs: Json | null; kind: string; league_id: string | null; locks_at: string; resolved_at: string | null; result: Json | null; season_id: string; seed: number | null; status: string; week_number: number }
+        Insert: { away_program_id: string; created_at?: string; home_program_id: string; id?: string; inputs?: Json | null; kind: string; league_id?: string | null; locks_at: string; resolved_at?: string | null; result?: Json | null; season_id: string; seed?: number | null; status?: string; week_number: number }
+        Update: { away_program_id?: string; created_at?: string; home_program_id?: string; id?: string; inputs?: Json | null; kind?: string; league_id?: string | null; locks_at?: string; resolved_at?: string | null; result?: Json | null; season_id?: string; seed?: number | null; status?: string; week_number?: number }
+        Relationships: [
+          { foreignKeyName: "games_away_program_id_fkey"; columns: ["away_program_id"]; isOneToOne: false; referencedRelation: "programs"; referencedColumns: ["id"] },
+          { foreignKeyName: "games_home_program_id_fkey"; columns: ["home_program_id"]; isOneToOne: false; referencedRelation: "programs"; referencedColumns: ["id"] },
+          { foreignKeyName: "games_league_id_fkey"; columns: ["league_id"]; isOneToOne: false; referencedRelation: "leagues"; referencedColumns: ["id"] },
+          { foreignKeyName: "games_season_id_fkey"; columns: ["season_id"]; isOneToOne: false; referencedRelation: "seasons"; referencedColumns: ["id"] },
+        ]
+      }
+      program_staff: {
+        Row: { level: number; program_id: string; shards: number; staff_id: string; stars: number; updated_at: string }
+        Insert: { level?: number; program_id: string; shards?: number; staff_id: string; stars?: number; updated_at?: string }
+        Update: { level?: number; program_id?: string; shards?: number; staff_id?: string; stars?: number; updated_at?: string }
+        Relationships: [
+          { foreignKeyName: "program_staff_program_id_fkey"; columns: ["program_id"]; isOneToOne: false; referencedRelation: "programs"; referencedColumns: ["id"] },
+          { foreignKeyName: "program_staff_staff_id_fkey"; columns: ["staff_id"]; isOneToOne: false; referencedRelation: "staff"; referencedColumns: ["id"] },
+        ]
+      }
+      staff: {
+        Row: { base_power: number; id: string; max_level: number; max_stars: number; name: string; pass_defense: number; passing: number; power_per_level: number; rarity: string; role: string; run_defense: number; rushing: number; sort_order: number; star_shards: number; unlock_shards: number }
+        Insert: { base_power: number; id: string; max_level?: number; max_stars?: number; name: string; pass_defense: number; passing: number; power_per_level: number; rarity: string; role: string; run_defense: number; rushing: number; sort_order?: number; star_shards: number; unlock_shards: number }
+        Update: { base_power?: number; id?: string; max_level?: number; max_stars?: number; name?: string; pass_defense?: number; passing?: number; power_per_level?: number; rarity?: string; role?: string; run_defense?: number; rushing?: number; sort_order?: number; star_shards?: number; unlock_shards?: number }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      challenge_by_code: { Args: { p_code: string }; Returns: string }
+      current_week: { Args: never; Returns: { kind: string; locks_at: string; season_id: string; week_number: number }[] }
+      effective_facets: { Args: { p_program_id: string }; Returns: { emphasis_id: string; pass_defense: number; passing: number; run_defense: number; rushing: number; total: number }[] }
+      facet_powers: { Args: { p_program_id: string }; Returns: { pass_defense: number; passing: number; run_defense: number; rushing: number; total: number }[] }
+      is_opponent: { Args: { p_program_id: string }; Returns: boolean }
+      level_up_staff: { Args: { p_staff_id: string }; Returns: { cash: number; level: number; staff_id: string }[] }
+      make_share_code: { Args: never; Returns: string }
+      replay_game: { Args: { p_game_id: string }; Returns: { away_score: number; home_score: number; matches: boolean }[] }
+      resolve_due_games: { Args: never; Returns: number }
+      resolve_game: { Args: { p_game_id: string }; Returns: undefined }
+      run_maintenance: { Args: never; Returns: { games_resolved: number; seats_swept: number }[] }
+      scout: { Args: never; Returns: { next_scout_at: string; shards: number; shards_granted: number; staff_id: string }[] }
+      set_emphasis: { Args: { p_emphasis_id: string }; Returns: undefined }
+      staff_level_cost: { Args: { p_level: number }; Returns: number }
+      staff_power: { Args: { p_base: number; p_level: number; p_per_level: number; p_stars: number }; Returns: number }
+      star_up_staff: { Args: { p_staff_id: string }; Returns: { shards: number; staff_id: string; stars: number }[] }
       claim_upgrade: { Args: { p_facility_id: string }; Returns: { facility_id: string; level: number }[] }
       collect_income: { Args: never; Returns: { cash: number; collected: number; income_per_hour: number }[] }
       config_int: { Args: { p_default: number; p_key: string }; Returns: number }

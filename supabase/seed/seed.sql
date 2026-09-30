@@ -459,6 +459,38 @@ insert into public.facility_levels (facility_id, level, cost, duration_seconds, 
   ('academic-center', 5, 12000, 36000, null, 750)
 on conflict (facility_id, level) do update set cost = excluded.cost, duration_seconds = excluded.duration_seconds, income_per_hour = excluded.income_per_hour, power = excluded.power;
 
+insert into public.facility_facets (facility_id, rushing, passing, run_defense, pass_defense) values
+  ('booster-club', 0.25, 0.25, 0.25, 0.25),
+  ('stadium', 0.25, 0.25, 0.25, 0.25),
+  ('weight-room', 0.4, 0.1, 0.4, 0.1),
+  ('practice-facility', 0.3, 0.3, 0.2, 0.2),
+  ('film-room', 0.1, 0.4, 0.1, 0.4),
+  ('academic-center', 0.25, 0.25, 0.25, 0.25)
+on conflict (facility_id) do update set rushing = excluded.rushing, passing = excluded.passing, run_defense = excluded.run_defense, pass_defense = excluded.pass_defense;
+
+insert into public.emphases (id, name, blurb, sort_order, rushing, passing, run_defense, pass_defense) values
+  ('balanced', 'Balanced', 'No lean. Take what they give you.', 10, 1, 1, 1, 1),
+  ('ground-and-pound', 'Ground and pound', 'Run it down their throat.', 20, 1.25, 0.85, 1, 1),
+  ('air-raid', 'Air raid', 'Spread them out and throw.', 30, 0.85, 1.25, 1, 1),
+  ('stack-the-box', 'Stack the box', 'Dare them to pass.', 40, 1, 1, 1.25, 0.85),
+  ('cover-shell', 'Cover shell', 'Take away the deep ball.', 50, 1, 1, 0.85, 1.25),
+  ('ball-control', 'Ball control', 'Run it, stop the run, shorten the game.', 60, 1.1, 0.9, 1.1, 0.9)
+on conflict (id) do update set name = excluded.name, blurb = excluded.blurb, sort_order = excluded.sort_order, rushing = excluded.rushing, passing = excluded.passing, run_defense = excluded.run_defense, pass_defense = excluded.pass_defense;
+
+insert into public.staff (id, name, role, rarity, base_power, power_per_level, unlock_shards, star_shards, rushing, passing, run_defense, pass_defense, sort_order) values
+  ('oc-vasquez', 'Rae Vasquez', 'Offensive Coordinator', 'epic', 120, 12, 40, 40, 0.4, 0.4, 0.1, 0.1, 10),
+  ('dc-okafor', 'Ben Okafor', 'Defensive Coordinator', 'epic', 120, 12, 40, 40, 0.1, 0.1, 0.4, 0.4, 20),
+  ('qb-lindqvist', 'Sofia Lindqvist', 'Quarterbacks Coach', 'rare', 80, 8, 20, 20, 0.15, 0.6, 0.1, 0.15, 30),
+  ('rb-tolliver', 'Marcus Tolliver', 'Running Backs Coach', 'rare', 80, 8, 20, 20, 0.6, 0.15, 0.15, 0.1, 40),
+  ('wr-nakamura', 'Kenji Nakamura', 'Receivers Coach', 'common', 50, 5, 10, 10, 0.1, 0.65, 0.1, 0.15, 50),
+  ('ol-brannigan', 'Pat Brannigan', 'Offensive Line Coach', 'common', 50, 5, 10, 10, 0.5, 0.3, 0.1, 0.1, 60),
+  ('dl-mbeki', 'Thabo Mbeki', 'Defensive Line Coach', 'common', 50, 5, 10, 10, 0.1, 0.1, 0.55, 0.25, 70),
+  ('lb-ferreira', 'Luana Ferreira', 'Linebackers Coach', 'common', 50, 5, 10, 10, 0.1, 0.1, 0.5, 0.3, 80),
+  ('db-castellano', 'Nico Castellano', 'Secondary Coach', 'rare', 80, 8, 20, 20, 0.1, 0.15, 0.15, 0.6, 90),
+  ('rc-hawthorne', 'Dee Hawthorne', 'Recruiting Coordinator', 'rare', 80, 8, 20, 20, 0.25, 0.25, 0.25, 0.25, 100),
+  ('sc-ivers', 'Gus Ivers', 'Strength Coach', 'common', 50, 5, 10, 10, 0.3, 0.2, 0.3, 0.2, 110)
+on conflict (id) do update set name = excluded.name, role = excluded.role, rarity = excluded.rarity, base_power = excluded.base_power, power_per_level = excluded.power_per_level, unlock_shards = excluded.unlock_shards, star_shards = excluded.star_shards, rushing = excluded.rushing, passing = excluded.passing, run_defense = excluded.run_defense, pass_defense = excluded.pass_defense, sort_order = excluded.sort_order;
+
 insert into public.game_config (key, value, description) values
   ('FACTION_CAP', '100'::jsonb, 'Active members per faction. docs/phase-0/sharding-and-rivalry.md §4'),
   ('DORMANCY_DAYS', '30'::jsonb, 'Days without login before a seat drops to alumni'),
@@ -469,7 +501,14 @@ insert into public.game_config (key, value, description) values
   ('SECONDARY_RIVALRIES_MAX', '2'::jsonb, 'Rivalry pairings per school beyond the primary'),
   ('STARTING_CASH', '500'::jsonb, 'Budget a new program starts with'),
   ('COLLECT_CAP_HOURS', '8'::jsonb, 'Booster income stops accruing after this many hours uncollected'),
-  ('MAX_CONCURRENT_UPGRADES', '1'::jsonb, 'Facility upgrades a program can run at once')
+  ('MAX_CONCURRENT_UPGRADES', '1'::jsonb, 'Facility upgrades a program can run at once'),
+  ('SCOUT_COOLDOWN_HOURS', '4'::jsonb, 'Hours between scouting trips'),
+  ('SCOUT_SHARDS', '5'::jsonb, 'Shards granted per scouting trip'),
+  ('STAFF_LEVEL_COST_BASE', '200'::jsonb, 'Cash to level a coach: base times current level'),
+  ('CHALLENGE_LOCK_MINUTES', '10'::jsonb, 'Minutes after a challenge is issued before it locks and resolves'),
+  ('POINTS_PER_EDGE', '28'::jsonb, 'Expected points per unit of facet edge. docs/phase-3/power-and-matchups.md §8'),
+  ('BASE_POINTS', '24'::jsonb, 'Expected points for an even matchup'),
+  ('SCORE_NOISE_SD_TENTHS', '85'::jsonb, 'Standard deviation of score noise, in tenths of a point')
 on conflict (key) do update set value = excluded.value, description = excluded.description, updated_at = now();
 
 commit;

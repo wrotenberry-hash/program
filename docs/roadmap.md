@@ -79,24 +79,28 @@ time. Nothing else.
 ## Phase 3 — Power, staff, and matchups
 
 The thing the whole product turns on. Design: `docs/phase-3/power-and-matchups.md`.
+**Built 2026-09-30.**
 
-- [x] Power as one number on the program screen, from facility levels
-      (2026-09-30)
-- [ ] Facets and emphasis: config weights, the weekly emphasis picker
-- [ ] Assistant staff as the hero layer: coordinators, position coaches,
-      recruiting coordinator, strength coach, each with power and a lean.
-      Placeholder art.
-- [ ] `packages/sim`: the matchup resolver. Pure, seeded, no I/O. Inputs are
-      two frozen facet-power sets. Output is a score, the facet results, and
-      the narrative.
-- [ ] Scheduler: Vercel Cron resolving one League-week per call from a queue
-      table; also runs the dormancy sweep
-- [ ] Non-conference challenge between friends
+- [x] Power as one number, from facility levels and hired staff
+- [x] Facets and emphasis: config weights per facility and coach, six
+      emphases, the weekly picker on the Matchups screen
+- [x] Assistant staff as the hero layer: eleven fictional coaches with
+      rarity, a facet lean, shards to hire and star up, budget to level.
+      Scouting on a cooldown grants shards on a deterministic rotation; no
+      random drops.
+- [x] The resolver, in the database (`resolve_due_games`): seeded, stores the
+      inputs snapshot and the seed, replays to the same score
+      (`replay_game`). Calibrated: an 8% power edge wins about 66%, a 25%
+      edge about 85%.
+- [x] Scheduler: `vercel.json` cron every ten minutes hits
+      `/api/cron/resolve`, which runs `run_maintenance` (resolve due games,
+      sweep dormant seats). The Matchups screen also resolves on load.
+- [x] Non-conference challenge between friends by share code
 
-**Checkpoint:** the two friends challenge each other in a non-conference
-week, the resolver settles it, and both see the score, the narrative, and
-which facets decided it. Replaying the stored seed and inputs produces the
-same result.
+**Checkpoint: ready for the founder to test.** Two friends exchange codes,
+one challenges the other, the game locks ten minutes later, and both see
+the score, the narrative, and which facets decided it. Verified in the
+database on 2026-09-30, including replay determinism.
 
 ## Phase 4 — The season and Rivalry Week
 
