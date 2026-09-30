@@ -1,0 +1,7 @@
+id,name,description,sort_order
+booster-club,Booster Club,Your donors. Levels raise income per hour.,10
+stadium,Stadium,Seats and sightlines. Home-field presence.,20
+weight-room,Weight Room,Strength and conditioning floor.,30
+practice-facility,Practice Facility,Indoor field and turf.,40
+film-room,Film Room,Scheme install and opponent prep.,50
+academic-center,Academic Center,Keeps the roster eligible and recruits' parents happy.,60

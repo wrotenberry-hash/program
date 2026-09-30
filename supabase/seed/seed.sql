@@ -417,6 +417,48 @@ insert into public.season_weeks (season_id, week_number, starts_on, locks_at, ki
   ('2026', 14, '2026-12-05', '2026-12-05T16:00:00Z', 'championship')
 on conflict (season_id, week_number) do update set starts_on = excluded.starts_on, locks_at = excluded.locks_at, kind = excluded.kind;
 
+insert into public.facilities (id, name, description, sort_order) values
+  ('booster-club', 'Booster Club', 'Your donors. Levels raise income per hour.', 10),
+  ('stadium', 'Stadium', 'Seats and sightlines. Home-field presence.', 20),
+  ('weight-room', 'Weight Room', 'Strength and conditioning floor.', 30),
+  ('practice-facility', 'Practice Facility', 'Indoor field and turf.', 40),
+  ('film-room', 'Film Room', 'Scheme install and opponent prep.', 50),
+  ('academic-center', 'Academic Center', 'Keeps the roster eligible and recruits'' parents happy.', 60)
+on conflict (id) do update set name = excluded.name, description = excluded.description, sort_order = excluded.sort_order;
+
+insert into public.facility_levels (facility_id, level, cost, duration_seconds, income_per_hour) values
+  ('booster-club', 1, 0, 0, 100),
+  ('booster-club', 2, 500, 300, 150),
+  ('booster-club', 3, 1500, 1800, 220),
+  ('booster-club', 4, 4000, 7200, 320),
+  ('booster-club', 5, 10000, 28800, 450),
+  ('stadium', 1, 300, 120, null),
+  ('stadium', 2, 800, 600, null),
+  ('stadium', 3, 2000, 2700, null),
+  ('stadium', 4, 5000, 10800, null),
+  ('stadium', 5, 12000, 36000, null),
+  ('weight-room', 1, 300, 120, null),
+  ('weight-room', 2, 800, 600, null),
+  ('weight-room', 3, 2000, 2700, null),
+  ('weight-room', 4, 5000, 10800, null),
+  ('weight-room', 5, 12000, 36000, null),
+  ('practice-facility', 1, 300, 120, null),
+  ('practice-facility', 2, 800, 600, null),
+  ('practice-facility', 3, 2000, 2700, null),
+  ('practice-facility', 4, 5000, 10800, null),
+  ('practice-facility', 5, 12000, 36000, null),
+  ('film-room', 1, 300, 120, null),
+  ('film-room', 2, 800, 600, null),
+  ('film-room', 3, 2000, 2700, null),
+  ('film-room', 4, 5000, 10800, null),
+  ('film-room', 5, 12000, 36000, null),
+  ('academic-center', 1, 300, 120, null),
+  ('academic-center', 2, 800, 600, null),
+  ('academic-center', 3, 2000, 2700, null),
+  ('academic-center', 4, 5000, 10800, null),
+  ('academic-center', 5, 12000, 36000, null)
+on conflict (facility_id, level) do update set cost = excluded.cost, duration_seconds = excluded.duration_seconds, income_per_hour = excluded.income_per_hour;
+
 insert into public.game_config (key, value, description) values
   ('FACTION_CAP', '100'::jsonb, 'Active members per faction. docs/phase-0/sharding-and-rivalry.md §4'),
   ('DORMANCY_DAYS', '30'::jsonb, 'Days without login before a seat drops to alumni'),
@@ -424,7 +466,10 @@ insert into public.game_config (key, value, description) values
   ('LEAGUE_OPEN_SEASONS', '1'::jsonb, 'Seasons a League accepts placement before it is settled'),
   ('FACTION_SCORING_N', '50'::jsonb, 'Faction weekly score is the sum of its top N program results'),
   ('TRANSFER_WINDOW', '"offseason"'::jsonb, 'When a program may transfer Leagues'),
-  ('SECONDARY_RIVALRIES_MAX', '2'::jsonb, 'Rivalry pairings per school beyond the primary')
+  ('SECONDARY_RIVALRIES_MAX', '2'::jsonb, 'Rivalry pairings per school beyond the primary'),
+  ('STARTING_CASH', '500'::jsonb, 'Budget a new program starts with'),
+  ('COLLECT_CAP_HOURS', '8'::jsonb, 'Booster income stops accruing after this many hours uncollected'),
+  ('MAX_CONCURRENT_UPGRADES', '1'::jsonb, 'Facility upgrades a program can run at once')
 on conflict (key) do update set value = excluded.value, description = excluded.description, updated_at = now();
 
 commit;

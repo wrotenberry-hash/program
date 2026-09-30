@@ -153,4 +153,22 @@ CLAUDE.md             This file.
   /phase-0            Design documents for Phase 0
     sharding-and-rivalry.md   Server/shard model, faction caps, cross-server rivalry
     stack.md                  Stack proposal
+/app                Next.js App Router. Server Components; actions in actions.ts
+/components         Shared UI. Client Components only for chat and countdowns
+/lib                Supabase clients, flags, database types, helpers
+/supabase
+  /migrations       SQL migrations, ordered. Applied via Supabase.
+  /seed             CSVs and build.py that generates seed.sql
 ```
+
+## 8. Database rules learned the hard way
+
+- Never write an RLS policy on a table that queries that same table, even
+  through a join. Postgres reports infinite recursion. Put the check in a
+  SECURITY DEFINER function (see `is_faction_mate`, `is_faction_member`).
+- Every SECURITY DEFINER function pins `search_path = public` and has
+  EXECUTE revoked from `anon`, and from `authenticated` unless the app calls
+  it. The Supabase security advisor flags anything else.
+- All game-state writes go through SECURITY DEFINER functions that derive the
+  program from `auth.uid()`. Client code never inserts into League or economy
+  tables directly.

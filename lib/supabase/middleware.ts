@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PROTECTED_PREFIXES = ["/program", "/onboarding"];
+const PROTECTED_PREFIXES = ["/program", "/onboarding", "/faction"];
 const AUTH_PAGES = ["/login", "/signup"];
 
 /** Refreshes the auth session on every request and guards routes. */

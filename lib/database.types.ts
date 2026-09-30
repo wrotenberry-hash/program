@@ -15,456 +15,148 @@ export type Database = {
   public: {
     Tables: {
       conferences: {
-        Row: {
-          created_at: string
-          id: string
-          name: string
-          short_name: string
-          sort_order: number
-          tier: string
-        }
-        Insert: {
-          created_at?: string
-          id: string
-          name: string
-          short_name: string
-          sort_order?: number
-          tier: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          name?: string
-          short_name?: string
-          sort_order?: number
-          tier?: string
-        }
+        Row: { created_at: string; id: string; name: string; short_name: string; sort_order: number; tier: string }
+        Insert: { created_at?: string; id: string; name: string; short_name: string; sort_order?: number; tier: string }
+        Update: { created_at?: string; id?: string; name?: string; short_name?: string; sort_order?: number; tier?: string }
         Relationships: []
       }
       drop_tables: {
-        Row: {
-          created_at: string
-          enabled: boolean
-          entries: Json
-          id: string
-          name: string
-        }
-        Insert: {
-          created_at?: string
-          enabled?: boolean
-          entries?: Json
-          id: string
-          name: string
-        }
-        Update: {
-          created_at?: string
-          enabled?: boolean
-          entries?: Json
-          id?: string
-          name?: string
-        }
+        Row: { created_at: string; enabled: boolean; entries: Json; id: string; name: string }
+        Insert: { created_at?: string; enabled?: boolean; entries?: Json; id: string; name: string }
+        Update: { created_at?: string; enabled?: boolean; entries?: Json; id?: string; name?: string }
         Relationships: []
       }
-      factions: {
-        Row: {
-          created_at: string
-          id: string
-          league_id: string
-          name: string
-          school_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          league_id: string
-          name: string
-          school_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          league_id?: string
-          name?: string
-          school_id?: string
-        }
+      facilities: {
+        Row: { description: string; id: string; name: string; sort_order: number }
+        Insert: { description: string; id: string; name: string; sort_order?: number }
+        Update: { description?: string; id?: string; name?: string; sort_order?: number }
+        Relationships: []
+      }
+      facility_levels: {
+        Row: { cost: number; duration_seconds: number; facility_id: string; income_per_hour: number | null; level: number }
+        Insert: { cost: number; duration_seconds: number; facility_id: string; income_per_hour?: number | null; level: number }
+        Update: { cost?: number; duration_seconds?: number; facility_id?: string; income_per_hour?: number | null; level?: number }
         Relationships: [
-          {
-            foreignKeyName: "factions_league_id_fkey"
-            columns: ["league_id"]
-            isOneToOne: false
-            referencedRelation: "leagues"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "factions_school_id_fkey"
-            columns: ["school_id"]
-            isOneToOne: false
-            referencedRelation: "schools"
-            referencedColumns: ["id"]
-          },
+          { foreignKeyName: "facility_levels_facility_id_fkey"; columns: ["facility_id"]; isOneToOne: false; referencedRelation: "facilities"; referencedColumns: ["id"] },
+        ]
+      }
+      faction_messages: {
+        Row: { body: string; created_at: string; faction_id: string; id: number; program_id: string }
+        Insert: { body: string; created_at?: string; faction_id: string; id?: never; program_id: string }
+        Update: { body?: string; created_at?: string; faction_id?: string; id?: never; program_id?: string }
+        Relationships: [
+          { foreignKeyName: "faction_messages_faction_id_fkey"; columns: ["faction_id"]; isOneToOne: false; referencedRelation: "factions"; referencedColumns: ["id"] },
+          { foreignKeyName: "faction_messages_program_id_fkey"; columns: ["program_id"]; isOneToOne: false; referencedRelation: "programs"; referencedColumns: ["id"] },
+        ]
+      }
+      factions: {
+        Row: { created_at: string; id: string; league_id: string; name: string; school_id: string }
+        Insert: { created_at?: string; id?: string; league_id: string; name: string; school_id: string }
+        Update: { created_at?: string; id?: string; league_id?: string; name?: string; school_id?: string }
+        Relationships: [
+          { foreignKeyName: "factions_league_id_fkey"; columns: ["league_id"]; isOneToOne: false; referencedRelation: "leagues"; referencedColumns: ["id"] },
+          { foreignKeyName: "factions_school_id_fkey"; columns: ["school_id"]; isOneToOne: false; referencedRelation: "schools"; referencedColumns: ["id"] },
         ]
       }
       game_config: {
-        Row: {
-          description: string
-          key: string
-          updated_at: string
-          value: Json
-        }
-        Insert: {
-          description: string
-          key: string
-          updated_at?: string
-          value: Json
-        }
-        Update: {
-          description?: string
-          key?: string
-          updated_at?: string
-          value?: Json
-        }
+        Row: { description: string; key: string; updated_at: string; value: Json }
+        Insert: { description: string; key: string; updated_at?: string; value: Json }
+        Update: { description?: string; key?: string; updated_at?: string; value?: Json }
         Relationships: []
       }
       house_programs: {
-        Row: {
-          created_at: string
-          league_id: string
-          school_id: string
-        }
-        Insert: {
-          created_at?: string
-          league_id: string
-          school_id: string
-        }
-        Update: {
-          created_at?: string
-          league_id?: string
-          school_id?: string
-        }
+        Row: { created_at: string; league_id: string; school_id: string }
+        Insert: { created_at?: string; league_id: string; school_id: string }
+        Update: { created_at?: string; league_id?: string; school_id?: string }
         Relationships: [
-          {
-            foreignKeyName: "house_programs_league_id_fkey"
-            columns: ["league_id"]
-            isOneToOne: false
-            referencedRelation: "leagues"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "house_programs_school_id_fkey"
-            columns: ["school_id"]
-            isOneToOne: false
-            referencedRelation: "schools"
-            referencedColumns: ["id"]
-          },
+          { foreignKeyName: "house_programs_league_id_fkey"; columns: ["league_id"]; isOneToOne: false; referencedRelation: "leagues"; referencedColumns: ["id"] },
+          { foreignKeyName: "house_programs_school_id_fkey"; columns: ["school_id"]; isOneToOne: false; referencedRelation: "schools"; referencedColumns: ["id"] },
         ]
       }
       league_seats: {
-        Row: {
-          faction_id: string
-          joined_at: string
-          last_active_at: string
-          league_id: string
-          program_id: string
-          role: string
-          status: string
-        }
-        Insert: {
-          faction_id: string
-          joined_at?: string
-          last_active_at?: string
-          league_id: string
-          program_id: string
-          role?: string
-          status?: string
-        }
-        Update: {
-          faction_id?: string
-          joined_at?: string
-          last_active_at?: string
-          league_id?: string
-          program_id?: string
-          role?: string
-          status?: string
-        }
+        Row: { faction_id: string; joined_at: string; last_active_at: string; league_id: string; program_id: string; role: string; status: string }
+        Insert: { faction_id: string; joined_at?: string; last_active_at?: string; league_id: string; program_id: string; role?: string; status?: string }
+        Update: { faction_id?: string; joined_at?: string; last_active_at?: string; league_id?: string; program_id?: string; role?: string; status?: string }
         Relationships: [
-          {
-            foreignKeyName: "league_seats_faction_id_fkey"
-            columns: ["faction_id"]
-            isOneToOne: false
-            referencedRelation: "factions"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "league_seats_league_id_fkey"
-            columns: ["league_id"]
-            isOneToOne: false
-            referencedRelation: "leagues"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "league_seats_program_id_fkey"
-            columns: ["program_id"]
-            isOneToOne: false
-            referencedRelation: "programs"
-            referencedColumns: ["id"]
-          },
+          { foreignKeyName: "league_seats_faction_id_fkey"; columns: ["faction_id"]; isOneToOne: false; referencedRelation: "factions"; referencedColumns: ["id"] },
+          { foreignKeyName: "league_seats_league_id_fkey"; columns: ["league_id"]; isOneToOne: false; referencedRelation: "leagues"; referencedColumns: ["id"] },
+          { foreignKeyName: "league_seats_program_id_fkey"; columns: ["program_id"]; isOneToOne: false; referencedRelation: "programs"; referencedColumns: ["id"] },
         ]
       }
       leagues: {
-        Row: {
-          conference_id: string
-          id: string
-          number: number
-          opened_at: string
-          settled_at: string | null
-        }
-        Insert: {
-          conference_id: string
-          id?: string
-          number: number
-          opened_at?: string
-          settled_at?: string | null
-        }
-        Update: {
-          conference_id?: string
-          id?: string
-          number?: number
-          opened_at?: string
-          settled_at?: string | null
-        }
+        Row: { conference_id: string; id: string; number: number; opened_at: string; settled_at: string | null }
+        Insert: { conference_id: string; id?: string; number: number; opened_at?: string; settled_at?: string | null }
+        Update: { conference_id?: string; id?: string; number?: number; opened_at?: string; settled_at?: string | null }
         Relationships: [
-          {
-            foreignKeyName: "leagues_conference_id_fkey"
-            columns: ["conference_id"]
-            isOneToOne: false
-            referencedRelation: "conferences"
-            referencedColumns: ["id"]
-          },
+          { foreignKeyName: "leagues_conference_id_fkey"; columns: ["conference_id"]; isOneToOne: false; referencedRelation: "conferences"; referencedColumns: ["id"] },
         ]
       }
       profiles: {
-        Row: {
-          created_at: string
-          date_of_birth: string | null
-          display_name: string | null
-          id: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          date_of_birth?: string | null
-          display_name?: string | null
-          id: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          date_of_birth?: string | null
-          display_name?: string | null
-          id?: string
-          updated_at?: string
-        }
+        Row: { created_at: string; date_of_birth: string | null; display_name: string | null; id: string; updated_at: string }
+        Insert: { created_at?: string; date_of_birth?: string | null; display_name?: string | null; id: string; updated_at?: string }
+        Update: { created_at?: string; date_of_birth?: string | null; display_name?: string | null; id?: string; updated_at?: string }
         Relationships: []
       }
-      programs: {
-        Row: {
-          account_id: string | null
-          created_at: string
-          id: string
-          name: string
-          school_id: string
-          updated_at: string
-        }
-        Insert: {
-          account_id?: string | null
-          created_at?: string
-          id?: string
-          name: string
-          school_id: string
-          updated_at?: string
-        }
-        Update: {
-          account_id?: string | null
-          created_at?: string
-          id?: string
-          name?: string
-          school_id?: string
-          updated_at?: string
-        }
+      program_facilities: {
+        Row: { facility_id: string; level: number; program_id: string; upgrade_completes_at: string | null; upgrade_started_at: string | null; upgrade_to: number | null }
+        Insert: { facility_id: string; level?: number; program_id: string; upgrade_completes_at?: string | null; upgrade_started_at?: string | null; upgrade_to?: number | null }
+        Update: { facility_id?: string; level?: number; program_id?: string; upgrade_completes_at?: string | null; upgrade_started_at?: string | null; upgrade_to?: number | null }
         Relationships: [
-          {
-            foreignKeyName: "programs_school_id_fkey"
-            columns: ["school_id"]
-            isOneToOne: false
-            referencedRelation: "schools"
-            referencedColumns: ["id"]
-          },
+          { foreignKeyName: "program_facilities_facility_id_fkey"; columns: ["facility_id"]; isOneToOne: false; referencedRelation: "facilities"; referencedColumns: ["id"] },
+          { foreignKeyName: "program_facilities_program_id_fkey"; columns: ["program_id"]; isOneToOne: false; referencedRelation: "programs"; referencedColumns: ["id"] },
+        ]
+      }
+      program_treasury: {
+        Row: { cash: number; last_collected_at: string; program_id: string; updated_at: string }
+        Insert: { cash?: number; last_collected_at?: string; program_id: string; updated_at?: string }
+        Update: { cash?: number; last_collected_at?: string; program_id?: string; updated_at?: string }
+        Relationships: [
+          { foreignKeyName: "program_treasury_program_id_fkey"; columns: ["program_id"]; isOneToOne: true; referencedRelation: "programs"; referencedColumns: ["id"] },
+        ]
+      }
+      programs: {
+        Row: { account_id: string | null; created_at: string; id: string; name: string; school_id: string; updated_at: string }
+        Insert: { account_id?: string | null; created_at?: string; id?: string; name: string; school_id: string; updated_at?: string }
+        Update: { account_id?: string | null; created_at?: string; id?: string; name?: string; school_id?: string; updated_at?: string }
+        Relationships: [
+          { foreignKeyName: "programs_school_id_fkey"; columns: ["school_id"]; isOneToOne: false; referencedRelation: "schools"; referencedColumns: ["id"] },
         ]
       }
       purchasables: {
-        Row: {
-          config: Json
-          created_at: string
-          currency: string
-          enabled: boolean
-          id: string
-          kind: string
-          name: string
-          price_cents: number
-        }
-        Insert: {
-          config?: Json
-          created_at?: string
-          currency?: string
-          enabled?: boolean
-          id: string
-          kind: string
-          name: string
-          price_cents: number
-        }
-        Update: {
-          config?: Json
-          created_at?: string
-          currency?: string
-          enabled?: boolean
-          id?: string
-          kind?: string
-          name?: string
-          price_cents?: number
-        }
+        Row: { config: Json; created_at: string; currency: string; enabled: boolean; id: string; kind: string; name: string; price_cents: number }
+        Insert: { config?: Json; created_at?: string; currency?: string; enabled?: boolean; id: string; kind: string; name: string; price_cents: number }
+        Update: { config?: Json; created_at?: string; currency?: string; enabled?: boolean; id?: string; kind?: string; name?: string; price_cents?: number }
         Relationships: []
       }
       rivalry_pairings: {
-        Row: {
-          rank: number
-          rival_school_id: string
-          school_id: string
-        }
-        Insert: {
-          rank: number
-          rival_school_id: string
-          school_id: string
-        }
-        Update: {
-          rank?: number
-          rival_school_id?: string
-          school_id?: string
-        }
+        Row: { rank: number; rival_school_id: string; school_id: string }
+        Insert: { rank: number; rival_school_id: string; school_id: string }
+        Update: { rank?: number; rival_school_id?: string; school_id?: string }
         Relationships: [
-          {
-            foreignKeyName: "rivalry_pairings_rival_school_id_fkey"
-            columns: ["rival_school_id"]
-            isOneToOne: false
-            referencedRelation: "schools"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "rivalry_pairings_school_id_fkey"
-            columns: ["school_id"]
-            isOneToOne: false
-            referencedRelation: "schools"
-            referencedColumns: ["id"]
-          },
+          { foreignKeyName: "rivalry_pairings_rival_school_id_fkey"; columns: ["rival_school_id"]; isOneToOne: false; referencedRelation: "schools"; referencedColumns: ["id"] },
+          { foreignKeyName: "rivalry_pairings_school_id_fkey"; columns: ["school_id"]; isOneToOne: false; referencedRelation: "schools"; referencedColumns: ["id"] },
         ]
       }
       schools: {
-        Row: {
-          city: string | null
-          conference_id: string
-          created_at: string
-          full_name: string
-          id: string
-          name: string
-          nickname: string
-          state: string | null
-        }
-        Insert: {
-          city?: string | null
-          conference_id: string
-          created_at?: string
-          full_name: string
-          id: string
-          name: string
-          nickname: string
-          state?: string | null
-        }
-        Update: {
-          city?: string | null
-          conference_id?: string
-          created_at?: string
-          full_name?: string
-          id?: string
-          name?: string
-          nickname?: string
-          state?: string | null
-        }
+        Row: { city: string | null; conference_id: string; created_at: string; full_name: string; id: string; name: string; nickname: string; state: string | null }
+        Insert: { city?: string | null; conference_id: string; created_at?: string; full_name: string; id: string; name: string; nickname: string; state?: string | null }
+        Update: { city?: string | null; conference_id?: string; created_at?: string; full_name?: string; id?: string; name?: string; nickname?: string; state?: string | null }
         Relationships: [
-          {
-            foreignKeyName: "schools_conference_id_fkey"
-            columns: ["conference_id"]
-            isOneToOne: false
-            referencedRelation: "conferences"
-            referencedColumns: ["id"]
-          },
+          { foreignKeyName: "schools_conference_id_fkey"; columns: ["conference_id"]; isOneToOne: false; referencedRelation: "conferences"; referencedColumns: ["id"] },
         ]
       }
       season_weeks: {
-        Row: {
-          kind: string
-          locks_at: string
-          season_id: string
-          starts_on: string
-          week_number: number
-        }
-        Insert: {
-          kind: string
-          locks_at: string
-          season_id: string
-          starts_on: string
-          week_number: number
-        }
-        Update: {
-          kind?: string
-          locks_at?: string
-          season_id?: string
-          starts_on?: string
-          week_number?: number
-        }
+        Row: { kind: string; locks_at: string; season_id: string; starts_on: string; week_number: number }
+        Insert: { kind: string; locks_at: string; season_id: string; starts_on: string; week_number: number }
+        Update: { kind?: string; locks_at?: string; season_id?: string; starts_on?: string; week_number?: number }
         Relationships: [
-          {
-            foreignKeyName: "season_weeks_season_id_fkey"
-            columns: ["season_id"]
-            isOneToOne: false
-            referencedRelation: "seasons"
-            referencedColumns: ["id"]
-          },
+          { foreignKeyName: "season_weeks_season_id_fkey"; columns: ["season_id"]; isOneToOne: false; referencedRelation: "seasons"; referencedColumns: ["id"] },
         ]
       }
       seasons: {
-        Row: {
-          created_at: string
-          ends_on: string
-          id: string
-          starts_on: string
-          status: string
-          year: number
-        }
-        Insert: {
-          created_at?: string
-          ends_on: string
-          id: string
-          starts_on: string
-          status?: string
-          year: number
-        }
-        Update: {
-          created_at?: string
-          ends_on?: string
-          id?: string
-          starts_on?: string
-          status?: string
-          year?: number
-        }
+        Row: { created_at: string; ends_on: string; id: string; starts_on: string; status: string; year: number }
+        Insert: { created_at?: string; ends_on: string; id: string; starts_on: string; status?: string; year: number }
+        Update: { created_at?: string; ends_on?: string; id?: string; starts_on?: string; status?: string; year?: number }
         Relationships: []
       }
     }
@@ -472,7 +164,25 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_upgrade: { Args: { p_facility_id: string }; Returns: { facility_id: string; level: number }[] }
+      collect_income: { Args: never; Returns: { cash: number; collected: number; income_per_hour: number }[] }
+      config_int: { Args: { p_default: number; p_key: string }; Returns: number }
+      faction_roster: {
+        Args: { p_faction_id: string }
+        Returns: { display_name: string; is_me: boolean; joined_at: string; last_active_at: string; program_id: string; program_name: string; role: string }[]
+      }
+      is_faction_mate: { Args: { p_program_id: string }; Returns: boolean }
+      is_faction_member: { Args: { p_faction_id: string }; Returns: boolean }
       is_minor: { Args: { dob: string }; Returns: boolean }
+      my_program_id: { Args: never; Returns: string }
+      place_my_program: { Args: never; Returns: string }
+      place_program: { Args: { p_program_id: string }; Returns: string }
+      start_upgrade: {
+        Args: { p_facility_id: string }
+        Returns: { cash: number; facility_id: string; upgrade_completes_at: string; upgrade_to: number }[]
+      }
+      sweep_dormant_seats: { Args: never; Returns: number }
+      touch_activity: { Args: { p_program_id: string }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never

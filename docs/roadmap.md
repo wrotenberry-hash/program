@@ -48,18 +48,33 @@ production domain before it works off localhost (see `infrastructure.md`).
 ## Phase 2 — Program and placement
 
 The Athletic Director half of the fantasy, and the shard model made real.
+**Built 2026-09-30.**
 
-- Placement on program creation, exactly as `sharding-and-rivalry.md` §6
-- Faction auto-join with the cap and dormancy rules
-- Facilities, budget, and boosters: a small set of build-and-wait actions
-  with timers, so the five-minute check-in loop exists
-- Faction chat over Realtime
-- House programs created for every empty slot in a new League
+- [x] Placement on program creation, exactly as `sharding-and-rivalry.md` §6.1:
+      rivalry-fill scoring, the faction cap, new Leagues born with house
+      programs in every slot. Runs in `place_program()` on a database trigger.
+- [x] Faction auto-join; the first fan of a school in a League founds the
+      faction. Dormancy sweep exists (`sweep_dormant_seats`) but is not yet
+      scheduled; Phase 3 adds the cron.
+- [x] Facilities, budget, and boosters: six facilities with five levels each,
+      booster income by the hour capped at eight hours, one upgrade at a time
+      with a timer, collect and claim. All numbers are config.
+- [x] Faction chat over Realtime, scoped by RLS to the faction.
+- [x] Faction page: roster (display name, role, last active) and the League's
+      human factions versus house-run slots.
 
-**Checkpoint:** two friends of different schools each create a program, each
-land in a League, each see their faction with at least one other member or a
-clear "you founded this faction" state, and each have something to collect
-on their next visit.
+**Checkpoint: ready for the founder to test.** Two friends of different
+schools each create a program, each land in a League, each see their faction
+with a founder or member state, and each have booster income to collect on
+their next visit. Verified in the database: an Oklahoma fan lands in the
+Texas fan's League because of the rivalry; a second Texas fan joins as a
+member; a Michigan fan founds Big Ten League 1; with the cap set to one, a
+second Oklahoma fan opens SEC League 2; strangers cannot read a faction's
+roster, programs, chat, or anyone's date of birth.
+
+Visibility decision made by default, for the founder to confirm:
+faction-mates see each other's display name, program, role, and last-active
+time. Nothing else.
 
 ## Phase 3 — Roster, staff, and the sim
 
