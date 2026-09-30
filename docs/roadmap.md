@@ -24,21 +24,26 @@ Documents only. No code.
 
 ## Phase 1 — Foundation
 
-The deployable shell with nothing to play yet.
+The deployable shell with nothing to play yet. **Built 2026-09-30.**
 
-- Next.js app on Vercel with a preview deploy per branch
-- Supabase project, auth with email and Google, date of birth at signup
-- Migrations: schools, conferences, rivalry pairings, leagues, factions,
-  programs, league seats, house programs, the season calendar. RLS on every
-  table before seed data lands.
-- Seed: every FBS school and conference, primary rivalries, the current
-  season's calendar
-- `lib/flags.ts` with `monetization_enabled` off and the empty config tables
-- Type generation from the database
+- [x] Next.js app on Vercel, production at https://program-flax.vercel.app
+- [x] Supabase auth with email; Google button wired, provider awaits the
+      founder's Google Cloud credentials in the Supabase dashboard
+- [x] Date of birth at signup (and at school pick for Google signups)
+- [x] Migrations 0001 and 0002: reference tables, profiles, the League shard
+      tables, monetization config tables. RLS on every table before seed.
+- [x] Seed: 138 FBS schools, 11 conferences, 237 rivalry pairings, the 2026
+      calendar, sharding tunables in `game_config`
+- [x] `lib/flags.ts` with `monetizationEnabled` off
+- [x] `lib/database.types.ts` generated from the database
 
-**Checkpoint:** a friend can sign up on their phone, pick their school, and
-see an empty program screen that names their school and conference. Both
-light and dark render.
+**Checkpoint: ready for the founder to test.** Sign up on a phone, pick a
+school, see the program screen naming school, conference and season week,
+in light and dark. Verified so far: every screen renders at phone width in
+both modes; the database enforces owner-only reads, one program per account,
+and a locked school; the production URL serves the app and guards the
+program route. The signup email link needs the Supabase Site URL set to the
+production domain before it works off localhost (see `infrastructure.md`).
 
 ## Phase 2 — Program and placement
 
