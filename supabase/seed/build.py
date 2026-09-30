@@ -62,10 +62,10 @@ rows = list(csv.DictReader(open(here / "facilities.csv")))
 out.append(",\n".join(f"  ({q(r['id'])}, {q(r['name'])}, {q(r['description'])}, {r['sort_order']})" for r in rows))
 out.append("on conflict (id) do update set name = excluded.name, description = excluded.description, sort_order = excluded.sort_order;\n")
 
-out.append("insert into public.facility_levels (facility_id, level, cost, duration_seconds, income_per_hour) values")
+out.append("insert into public.facility_levels (facility_id, level, cost, duration_seconds, income_per_hour, power) values")
 rows = list(csv.DictReader(open(here / "facility_levels.csv")))
-out.append(",\n".join(f"  ({q(r['facility_id'])}, {r['level']}, {r['cost']}, {r['duration_seconds']}, {r['income_per_hour'] or 'null'})" for r in rows))
-out.append("on conflict (facility_id, level) do update set cost = excluded.cost, duration_seconds = excluded.duration_seconds, income_per_hour = excluded.income_per_hour;\n")
+out.append(",\n".join(f"  ({q(r['facility_id'])}, {r['level']}, {r['cost']}, {r['duration_seconds']}, {r['income_per_hour'] or 'null'}, {r['power']})" for r in rows))
+out.append("on conflict (facility_id, level) do update set cost = excluded.cost, duration_seconds = excluded.duration_seconds, income_per_hour = excluded.income_per_hour, power = excluded.power;\n")
 
 out.append("insert into public.game_config (key, value, description) values")
 out.append(",\n".join(f"  ({q(k)}, {q(json.dumps(v))}::jsonb, {q(d)})" for k, v, d in config))

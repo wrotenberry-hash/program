@@ -59,3 +59,10 @@ These OVERRIDE the base prompt wherever they conflict.
   `docs/phase-0/stack.md`. Native client deferred until after the slice.
 - 2026-09-30: The six sharding proposals in
   `docs/phase-0/sharding-and-rivalry.md` §8 stand as working defaults.
+- 2026-09-30: One profile. The player runs the whole program; there is no
+  athletic director mode and no head coach mode. The fantasy stays the same,
+  the UI never splits it.
+- 2026-09-30: Matchups are not a game simulation. A program's power is put
+  up against another program's power, with high-level emphasis choices
+  (running game, passing game, and a few more). Design in
+  `docs/phase-3/power-and-matchups.md`.

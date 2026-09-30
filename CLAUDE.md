@@ -8,11 +8,13 @@ Working agreement and conventions for this repository. Read this before any task
 ## 1. What this project is
 
 A mobile-first program-builder game for die-hard fans of one real college
-football school. The player is both Athletic Director and Head Coach of their
-own version of their school. Fans of the same school are allies in a faction.
-Factions meet fans of rival schools in a simulated season. Tone and business
-model are Last War-adjacent: stylized cartoon, long-lived progression, a
-whale-friendly monetization layer.
+football school. The player runs their own version of their school's program
+as one profile, with no mode split between athletic director and coach. Fans
+of the same school are allies in a faction. Factions meet fans of rival
+schools in a weekly season of matchups: one program's power against
+another's, not a game simulation. Tone and business model are Last
+War-adjacent: stylized cartoon, long-lived progression, a whale-friendly
+monetization layer.
 
 The sentence the product exists to deliver: *"My school, my program, my people,
 against theirs."*
@@ -63,12 +65,14 @@ No mode, event, bracket, or leaderboard may put two programs of the same school
 against each other. Cross-League competition is school versus school, never
 League versus League, for exactly this reason.
 
-### 3.3 The sim is server-authoritative and pre-game only
+### 3.3 Matchups are server-resolved, pre-game only, and not a simulation
 
-Players set scheme, depth chart, and game plan before kickoff. The server
-resolves the game and returns a box score, a short narrative, and key moments.
-There is no live input, no client-side resolution, and no replay with
-different inputs.
+A matchup is one program's power against another's, shaped by a high-level
+emphasis the player picks before the week locks. The server resolves it from
+frozen inputs and a stored seed and returns a score, a short narrative, and
+the facet results. There is no play-by-play, no live input, no client-side
+resolution, and no replay with different inputs. Design:
+`docs/phase-3/power-and-matchups.md`.
 
 ### 3.4 Programs persist, standings reset
 

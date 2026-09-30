@@ -30,7 +30,7 @@ and the slice moves out by months. That is the decision to make now.
 | Database | Supabase Postgres | Existing stack. RLS on every table before it holds data. `league_id` on every League-scoped table. |
 | Auth | Supabase Auth: email and Google | Existing stack. Apple sign-in is added when a native client exists. Date of birth is collected at signup for the age gate. |
 | Realtime | Supabase Realtime | Faction chat and League event feeds. Channel per faction and per League. |
-| Sim | A pure TypeScript package, `packages/sim`, deterministic and seeded | The sim has no I/O. It takes two prepared programs and a seed and returns a result. That makes it testable, replayable for support, and portable to a native client for local previews. |
+| Matchup resolver | A pure TypeScript package, `packages/sim`, deterministic and seeded | Not a game simulation (decided 2026-09-30): it takes two programs' facet powers and a seed and returns a score, facet results, and a narrative. No I/O, so it is testable, replayable for support, and portable to a native client. |
 | Sim scheduler | Vercel Cron calling a server route that resolves one League-week at a time, queued in a Postgres table | A game resolves in milliseconds. A full League-week is under a thousand games. No queue service is needed for the slice. |
 | Styling | Tailwind CSS | Existing stack. |
 | Art | Placeholder only, in `public/placeholder/` | A product designer owns the final UI. Placeholders are named for their final purpose so they can be swapped one for one. |

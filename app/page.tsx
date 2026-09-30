@@ -18,7 +18,7 @@ export default async function Home() {
         <div>
           <h1 className="text-4xl font-black leading-tight tracking-tight">Your school. Your program. Your people.</h1>
           <p className="mt-3 text-base text-ink-muted">
-            Run your school as athletic director and head coach. Join your school&apos;s faction. Meet your rival in a simulated season.
+            Build your school&apos;s program and its power. Join your school&apos;s faction. Put your power up against your rival&apos;s every week.
           </p>
         </div>
         <div className="flex flex-col gap-3">

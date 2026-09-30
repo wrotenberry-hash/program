@@ -33,9 +33,9 @@ export type Database = {
         Relationships: []
       }
       facility_levels: {
-        Row: { cost: number; duration_seconds: number; facility_id: string; income_per_hour: number | null; level: number }
-        Insert: { cost: number; duration_seconds: number; facility_id: string; income_per_hour?: number | null; level: number }
-        Update: { cost?: number; duration_seconds?: number; facility_id?: string; income_per_hour?: number | null; level?: number }
+        Row: { cost: number; duration_seconds: number; facility_id: string; income_per_hour: number | null; level: number; power: number | null }
+        Insert: { cost: number; duration_seconds: number; facility_id: string; income_per_hour?: number | null; level: number; power?: number | null }
+        Update: { cost?: number; duration_seconds?: number; facility_id?: string; income_per_hour?: number | null; level?: number; power?: number | null }
         Relationships: [
           { foreignKeyName: "facility_levels_facility_id_fkey"; columns: ["facility_id"]; isOneToOne: false; referencedRelation: "facilities"; referencedColumns: ["id"] },
         ]
@@ -177,6 +177,7 @@ export type Database = {
       my_program_id: { Args: never; Returns: string }
       place_my_program: { Args: never; Returns: string }
       place_program: { Args: { p_program_id: string }; Returns: string }
+      program_power: { Args: { p_program_id: string }; Returns: number }
       start_upgrade: {
         Args: { p_facility_id: string }
         Returns: { cash: number; facility_id: string; upgrade_completes_at: string; upgrade_to: number }[]

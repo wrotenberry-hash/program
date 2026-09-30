@@ -40,7 +40,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
         .from("program_facilities")
         .select("facility_id, level, upgrade_to, upgrade_completes_at, facility:facilities(name, description, sort_order)")
         .eq("program_id", program.id),
-      supabase.from("facility_levels").select("facility_id, level, cost, duration_seconds, income_per_hour"),
+      supabase.from("facility_levels").select("facility_id, level, cost, duration_seconds, income_per_hour, power"),
       supabase.from("game_config").select("key, value").in("key", ["COLLECT_CAP_HOURS", "MAX_CONCURRENT_UPGRADES"]),
     ]);
 
@@ -74,6 +74,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
   const capped = hoursSince >= capHours;
   const busy = rows.filter((r) => r.upgrade_to !== null).length >= maxConcurrent;
   const now = Date.now();
+  const power = rows.reduce((sum, r) => sum + (levelOf(r.facility_id, r.level)?.power ?? 0), 0);
 
   return (
     <main className="flex flex-1 flex-col">
@@ -89,9 +90,15 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
           {school.full_name}
           {school.city ? ` · ${school.city}, ${school.state}` : ""}
         </p>
-        <p className="mt-3 inline-flex rounded-full border border-line bg-surface px-3 py-1 text-xs font-medium">
-          {season ? `${season.year} season · ${weekLabel}` : "No active season"}
-        </p>
+        <div className="mt-4 flex items-end justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Power</p>
+            <p className="text-5xl font-black leading-none tabular-nums">{power.toLocaleString("en-US")}</p>
+          </div>
+          <p className="inline-flex rounded-full border border-line bg-surface px-3 py-1 text-xs font-medium">
+            {season ? `${season.year} season · ${weekLabel}` : "No active season"}
+          </p>
+        </div>
       </section>
 
       {notice ? (
@@ -125,7 +132,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
           )}
         </Card>
 
-        <Card title="Athletic Director">
+        <Card title="Budget">
           <div className="flex items-baseline justify-between">
             <span className="text-sm text-ink-muted">Budget</span>
             <span className="text-2xl font-black tabular-nums">{formatCash(treasury?.cash ?? 0)}</span>
@@ -177,6 +184,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
                         <input type="hidden" name="facility_id" value={r.facility_id} />
                         <Button type="submit" variant="secondary" disabled={busy || (treasury?.cash ?? 0) < next.cost} className="h-10 text-sm">
                           {r.level === 0 ? "Build" : `Upgrade to Lv ${next.level}`} · {formatCash(next.cost)} · {formatDuration(next.duration_seconds)}
+                          {next.power ? ` · +${next.power - (levelOf(r.facility_id, r.level)?.power ?? 0)} power` : ""}
                           {next.income_per_hour ? ` · ${formatCash(next.income_per_hour)}/hr` : ""}
                         </Button>
                       </form>
@@ -191,8 +199,8 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
           {busy ? <p className="mt-3 text-xs text-ink-muted">One upgrade at a time. Your crew is on it.</p> : null}
         </Card>
 
-        <Card title="Head Coach">
-          <p className="text-sm">Roster, scheme, and depth chart.</p>
+        <Card title="Matchups">
+          <p className="text-sm">Your power against theirs, with the emphasis you choose each week.</p>
           <p className="mt-1 text-sm text-ink-muted">Opens in the next build.</p>
         </Card>
       </div>

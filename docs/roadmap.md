@@ -76,25 +76,27 @@ Visibility decision made by default, for the founder to confirm:
 faction-mates see each other's display name, program, role, and last-active
 time. Nothing else.
 
-## Phase 3 — Roster, staff, and the sim
+## Phase 3 — Power, staff, and matchups
 
-The Head Coach half, and the thing the whole product turns on.
+The thing the whole product turns on. Design: `docs/phase-3/power-and-matchups.md`.
 
-- `packages/sim`: deterministic, seeded, pure. Inputs are two frozen
-  programs. Output is an event log, from which the box score, narrative, and
-  key moments derive.
-- Roster and depth chart, scheme choice, game-plan choices as the pre-game
-  inputs
-- Assistant staff as the hero layer: coordinators, position coaches,
-  recruiting coordinator, strength coach. Placeholder art.
-- Scheduler: Vercel Cron resolving one League-week per call from a queue
-  table
-- Non-conference challenge between friends
+- [x] Power as one number on the program screen, from facility levels
+      (2026-09-30)
+- [ ] Facets and emphasis: config weights, the weekly emphasis picker
+- [ ] Assistant staff as the hero layer: coordinators, position coaches,
+      recruiting coordinator, strength coach, each with power and a lean.
+      Placeholder art.
+- [ ] `packages/sim`: the matchup resolver. Pure, seeded, no I/O. Inputs are
+      two frozen facet-power sets. Output is a score, the facet results, and
+      the narrative.
+- [ ] Scheduler: Vercel Cron resolving one League-week per call from a queue
+      table; also runs the dormancy sweep
+- [ ] Non-conference challenge between friends
 
 **Checkpoint:** the two friends challenge each other in a non-conference
-week, the sim resolves it, and both see the box score, the narrative, and
-the key moments. Replaying the stored seed and inputs produces the same
-result.
+week, the resolver settles it, and both see the score, the narrative, and
+which facets decided it. Replaying the stored seed and inputs produces the
+same result.
 
 ## Phase 4 — The season and Rivalry Week
 
