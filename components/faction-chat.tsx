@@ -49,15 +49,15 @@ export function FactionChat({
   }, [messages.length]);
 
   return (
-    <div className="flex flex-col rounded-2xl border border-line bg-surface">
+    <div className="flex flex-col rounded-2xl border border-line bg-surface-2">
       <div ref={listRef} className="flex max-h-[50dvh] min-h-48 flex-col gap-2 overflow-y-auto p-3">
-        {messages.length === 0 ? <p className="text-sm text-ink-muted">Quiet so far. Say something to your people.</p> : null}
+        {messages.length === 0 ? <p className="text-sm font-semibold text-ink-muted">Quiet so far. Say something to your people.</p> : null}
         {messages.map((m) => {
           const mine = m.program_id === myProgramId;
           return (
             <div key={m.id} className={`flex flex-col ${mine ? "items-end" : "items-start"}`}>
               <span className="text-[11px] text-ink-muted">{mine ? "You" : (names[m.program_id] ?? "Fan")}</span>
-              <span className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm ${mine ? "bg-accent text-accent-ink" : "bg-bg text-ink"}`}>{m.body}</span>
+              <span className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm font-semibold ${mine ? "bg-faction text-white" : "bg-surface text-ink"}`}>{m.body}</span>
             </div>
           );
         })}
@@ -81,9 +81,9 @@ export function FactionChat({
           maxLength={500}
           placeholder="Message your faction"
           autoComplete="off"
-          className="h-11 flex-1 rounded-xl border border-line bg-bg px-3 text-base text-ink outline-none focus:border-accent"
+          className="h-11 flex-1 rounded-xl border-2 border-line bg-surface px-3 text-base font-semibold text-ink outline-none focus:border-faction"
         />
-        <button type="submit" className="h-11 rounded-xl bg-accent px-4 text-sm font-semibold text-accent-ink disabled:opacity-50" disabled={!draft.trim()}>
+        <button type="submit" className="btn-3d h-11 rounded-xl bg-faction px-4 text-sm font-extrabold text-white [--btn-edge:#5a3fc0]" disabled={!draft.trim()}>
           Send
         </button>
       </form>

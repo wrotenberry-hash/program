@@ -12,7 +12,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
       <header className="py-2">
         <Wordmark />
       </header>
-      <h1 className="mt-6 text-3xl font-black tracking-tight">Log in</h1>
+      <h1 className="mt-4 text-[2.2rem] font-black leading-tight tracking-tight">Log in</h1>
 
       {error ? (
         <div className="mt-4">
@@ -43,9 +43,9 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-ink-muted">
+      <p className="mt-6 text-center text-sm font-semibold text-ink-muted">
         New here?{" "}
-        <Link href="/signup" className="font-semibold text-ink underline">
+        <Link href="/signup" className="font-extrabold text-primary underline">
           Create your program
         </Link>
       </p>

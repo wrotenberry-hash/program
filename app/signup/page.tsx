@@ -12,8 +12,8 @@ export default async function SignupPage({ searchParams }: { searchParams: Promi
       <header className="py-2">
         <Wordmark />
       </header>
-      <h1 className="mt-6 text-3xl font-black tracking-tight">Create your program</h1>
-      <p className="mt-2 text-sm text-ink-muted">One account, one school, one program. You pick the school next.</p>
+      <h1 className="mt-4 text-[2.2rem] font-black leading-tight tracking-tight">Create your program</h1>
+      <p className="mt-2 text-sm font-semibold text-ink-muted">One account, one school, one program. You pick the school next.</p>
 
       {error ? (
         <div className="mt-4">
@@ -34,7 +34,7 @@ export default async function SignupPage({ searchParams }: { searchParams: Promi
         <Field label="Date of birth" hint="Used for age-appropriate features. Never shown to anyone.">
           <Input name="date_of_birth" type="date" autoComplete="bday" required />
         </Field>
-        <Button type="submit">Create account</Button>
+        <Button type="submit" variant="gold">Create account</Button>
       </form>
 
       <div className="my-5 flex items-center gap-3 text-xs text-ink-muted">
@@ -49,9 +49,9 @@ export default async function SignupPage({ searchParams }: { searchParams: Promi
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-ink-muted">
+      <p className="mt-6 text-center text-sm font-semibold text-ink-muted">
         Already have a program?{" "}
-        <Link href="/login" className="font-semibold text-ink underline">
+        <Link href="/login" className="font-extrabold text-primary underline">
           Log in
         </Link>
       </p>

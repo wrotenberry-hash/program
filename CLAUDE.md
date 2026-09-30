@@ -93,7 +93,16 @@ All art is original and stylized. No real athlete's name, number, likeness,
 or identifiable stat line appears anywhere. School marks, colors, and names
 are a licensing question and belong to the escalation list.
 
-### 3.7 Both session lengths are first-class
+### 3.7 It looks and feels like a game
+
+Founder decision, 2026-09-30. Every screen reads as a colorful cartoon mobile
+game in the Last War register: saturated color on deep backgrounds, chunky
+rounded panels, big numbers, and a glowing button whenever there is
+something to collect or claim. A screen with nothing inviting to tap is a
+defect. `docs/design.md` is the spec and every value in it is literal. Both
+light and dark are tested on every screen.
+
+### 3.8 Both session lengths are first-class
 
 A five-minute check-in (collect, queue, claim) and a multi-hour session (map,
 events, faction activity) must both feel complete. No hard daily cap on

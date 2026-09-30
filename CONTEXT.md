@@ -66,3 +66,8 @@ These OVERRIDE the base prompt wherever they conflict.
   up against another program's power, with high-level emphasis choices
   (running game, passing game, and a few more). Design in
   `docs/phase-3/power-and-matchups.md`.
+- 2026-09-30: The look and feel is not deferred. The app must read as a
+  colorful, cartoon, Last War-style mobile game from the first build: bright,
+  inviting, always a tap to make. "Placeholder art" means the designer owns
+  the final character and building art, not that the shell may look like a
+  utility app. Spec in `docs/design.md`.

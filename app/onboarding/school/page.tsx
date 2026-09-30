@@ -35,8 +35,8 @@ export default async function SchoolPickerPage({ searchParams }: { searchParams:
       <header className="py-2">
         <Wordmark />
       </header>
-      <h1 className="mt-6 text-3xl font-black tracking-tight">Pick your school</h1>
-      <p className="mt-2 text-sm text-ink-muted">
+      <h1 className="mt-4 text-[2.2rem] font-black leading-tight tracking-tight">Pick your school</h1>
+      <p className="mt-2 text-sm font-semibold text-ink-muted">
         This is for keeps. Your program is your school&apos;s program, this season and every season after.
       </p>
 
@@ -70,7 +70,7 @@ export default async function SchoolPickerPage({ searchParams }: { searchParams:
           </Field>
         ) : null}
 
-        <Button type="submit">Start my program</Button>
+        <Button type="submit" variant="gold" pulse>Start my program</Button>
       </form>
     </main>
   );

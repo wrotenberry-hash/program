@@ -3,9 +3,9 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: { default: "Program", template: "%s · Program" },
-  description: "Run your school's program. Join your faction. Meet your rival.",
+  description: "Build your school's program. Join your faction. Put your power up against your rival's.",
   applicationName: "Program",
-  appleWebApp: { capable: true, title: "Program", statusBarStyle: "default" },
+  appleWebApp: { capable: true, title: "Program", statusBarStyle: "black-translucent" },
 };
 
 export const viewport: Viewport = {
@@ -13,8 +13,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f6f5f2" },
-    { media: "(prefers-color-scheme: dark)", color: "#101114" },
+    { media: "(prefers-color-scheme: light)", color: "#e9f0ff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b1230" },
   ],
 };
 
@@ -22,7 +22,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body className="antialiased">
-        <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-4 pb-8 pt-[max(1rem,env(safe-area-inset-top))]">
+        <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-4 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))]">
           {children}
         </div>
       </body>
