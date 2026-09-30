@@ -146,6 +146,7 @@ CONTEXT.md            Founder decisions. Authoritative.
 CLAUDE.md             This file.
 /docs
   roadmap.md          Phased build plan and checkpoints
+  infrastructure.md   Where the repo, database, and hosting live. No secrets.
   /phase-0            Design documents for Phase 0
     sharding-and-rivalry.md   Server/shard model, faction caps, cross-server rivalry
     stack.md                  Stack proposal
