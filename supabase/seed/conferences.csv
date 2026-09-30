@@ -1,0 +1,12 @@
+id,name,short_name,tier,sort_order
+sec,Southeastern Conference,SEC,power,10
+big-ten,Big Ten Conference,Big Ten,power,20
+big-12,Big 12 Conference,Big 12,power,30
+acc,Atlantic Coast Conference,ACC,power,40
+independent,FBS Independents,Independent,independent,50
+american,American Conference,American,group,60
+sun-belt,Sun Belt Conference,Sun Belt,group,70
+mac,Mid-American Conference,MAC,group,80
+mountain-west,Mountain West Conference,Mountain West,group,90
+conference-usa,Conference USA,CUSA,group,100
+pac-12,Pac-12 Conference,Pac-12,group,110

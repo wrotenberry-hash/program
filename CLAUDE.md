@@ -130,10 +130,13 @@ autonomously.
 
 ## 6. How we work
 
-- **One phase per session.** Phase 0 is design documents only. Do not begin a
-  later phase because the current one finished early. Stop and report.
+- **Phases run back to back when the founder says so.** Decided 2026-09-30.
+  A session may carry several phases. What does not change: each phase still
+  ends at its checkpoint, and the next one begins only after the founder has
+  been told the checkpoint is ready to test. New information from the founder
+  is folded into `CONTEXT.md` and the affected documents as it arrives.
 - **Checkpoint before proceeding.** Each phase ends with something the founder
-  can read, click, or play. Confirm the checkpoint passes before moving on.
+  can read, click, or play. Report it plainly, then continue.
 - **The slice is the target.** Two friends who are fans of different schools
   each build their program for a week, each join their school's faction, and
   meet in a simulated rivalry game. Every Phase 0 document must say how it

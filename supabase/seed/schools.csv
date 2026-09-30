@@ -1,0 +1,139 @@
+id,name,full_name,nickname,conference_id,city,state
+alabama,Alabama,University of Alabama,Crimson Tide,sec,Tuscaloosa,AL
+arkansas,Arkansas,University of Arkansas,Razorbacks,sec,Fayetteville,AR
+auburn,Auburn,Auburn University,Tigers,sec,Auburn,AL
+florida,Florida,University of Florida,Gators,sec,Gainesville,FL
+georgia,Georgia,University of Georgia,Bulldogs,sec,Athens,GA
+kentucky,Kentucky,University of Kentucky,Wildcats,sec,Lexington,KY
+lsu,LSU,Louisiana State University,Tigers,sec,Baton Rouge,LA
+mississippi-state,Mississippi State,Mississippi State University,Bulldogs,sec,Starkville,MS
+missouri,Missouri,University of Missouri,Tigers,sec,Columbia,MO
+oklahoma,Oklahoma,University of Oklahoma,Sooners,sec,Norman,OK
+ole-miss,Ole Miss,University of Mississippi,Rebels,sec,Oxford,MS
+south-carolina,South Carolina,University of South Carolina,Gamecocks,sec,Columbia,SC
+tennessee,Tennessee,University of Tennessee,Volunteers,sec,Knoxville,TN
+texas,Texas,University of Texas at Austin,Longhorns,sec,Austin,TX
+texas-am,Texas A&M,Texas A&M University,Aggies,sec,College Station,TX
+vanderbilt,Vanderbilt,Vanderbilt University,Commodores,sec,Nashville,TN
+illinois,Illinois,University of Illinois Urbana-Champaign,Fighting Illini,big-ten,Champaign,IL
+indiana,Indiana,Indiana University,Hoosiers,big-ten,Bloomington,IN
+iowa,Iowa,University of Iowa,Hawkeyes,big-ten,Iowa City,IA
+maryland,Maryland,University of Maryland,Terrapins,big-ten,College Park,MD
+michigan,Michigan,University of Michigan,Wolverines,big-ten,Ann Arbor,MI
+michigan-state,Michigan State,Michigan State University,Spartans,big-ten,East Lansing,MI
+minnesota,Minnesota,University of Minnesota,Golden Gophers,big-ten,Minneapolis,MN
+nebraska,Nebraska,University of Nebraska-Lincoln,Cornhuskers,big-ten,Lincoln,NE
+northwestern,Northwestern,Northwestern University,Wildcats,big-ten,Evanston,IL
+ohio-state,Ohio State,The Ohio State University,Buckeyes,big-ten,Columbus,OH
+oregon,Oregon,University of Oregon,Ducks,big-ten,Eugene,OR
+penn-state,Penn State,Pennsylvania State University,Nittany Lions,big-ten,University Park,PA
+purdue,Purdue,Purdue University,Boilermakers,big-ten,West Lafayette,IN
+rutgers,Rutgers,Rutgers University,Scarlet Knights,big-ten,Piscataway,NJ
+ucla,UCLA,University of California Los Angeles,Bruins,big-ten,Los Angeles,CA
+usc,USC,University of Southern California,Trojans,big-ten,Los Angeles,CA
+washington,Washington,University of Washington,Huskies,big-ten,Seattle,WA
+wisconsin,Wisconsin,University of Wisconsin-Madison,Badgers,big-ten,Madison,WI
+arizona,Arizona,University of Arizona,Wildcats,big-12,Tucson,AZ
+arizona-state,Arizona State,Arizona State University,Sun Devils,big-12,Tempe,AZ
+baylor,Baylor,Baylor University,Bears,big-12,Waco,TX
+byu,BYU,Brigham Young University,Cougars,big-12,Provo,UT
+cincinnati,Cincinnati,University of Cincinnati,Bearcats,big-12,Cincinnati,OH
+colorado,Colorado,University of Colorado Boulder,Buffaloes,big-12,Boulder,CO
+houston,Houston,University of Houston,Cougars,big-12,Houston,TX
+iowa-state,Iowa State,Iowa State University,Cyclones,big-12,Ames,IA
+kansas,Kansas,University of Kansas,Jayhawks,big-12,Lawrence,KS
+kansas-state,Kansas State,Kansas State University,Wildcats,big-12,Manhattan,KS
+oklahoma-state,Oklahoma State,Oklahoma State University,Cowboys,big-12,Stillwater,OK
+tcu,TCU,Texas Christian University,Horned Frogs,big-12,Fort Worth,TX
+texas-tech,Texas Tech,Texas Tech University,Red Raiders,big-12,Lubbock,TX
+ucf,UCF,University of Central Florida,Knights,big-12,Orlando,FL
+utah,Utah,University of Utah,Utes,big-12,Salt Lake City,UT
+west-virginia,West Virginia,West Virginia University,Mountaineers,big-12,Morgantown,WV
+boston-college,Boston College,Boston College,Eagles,acc,Chestnut Hill,MA
+california,California,University of California Berkeley,Golden Bears,acc,Berkeley,CA
+clemson,Clemson,Clemson University,Tigers,acc,Clemson,SC
+duke,Duke,Duke University,Blue Devils,acc,Durham,NC
+florida-state,Florida State,Florida State University,Seminoles,acc,Tallahassee,FL
+georgia-tech,Georgia Tech,Georgia Institute of Technology,Yellow Jackets,acc,Atlanta,GA
+louisville,Louisville,University of Louisville,Cardinals,acc,Louisville,KY
+miami,Miami,University of Miami,Hurricanes,acc,Coral Gables,FL
+north-carolina,North Carolina,University of North Carolina at Chapel Hill,Tar Heels,acc,Chapel Hill,NC
+nc-state,NC State,North Carolina State University,Wolfpack,acc,Raleigh,NC
+pittsburgh,Pittsburgh,University of Pittsburgh,Panthers,acc,Pittsburgh,PA
+smu,SMU,Southern Methodist University,Mustangs,acc,Dallas,TX
+stanford,Stanford,Stanford University,Cardinal,acc,Stanford,CA
+syracuse,Syracuse,Syracuse University,Orange,acc,Syracuse,NY
+virginia,Virginia,University of Virginia,Cavaliers,acc,Charlottesville,VA
+virginia-tech,Virginia Tech,Virginia Polytechnic Institute and State University,Hokies,acc,Blacksburg,VA
+wake-forest,Wake Forest,Wake Forest University,Demon Deacons,acc,Winston-Salem,NC
+notre-dame,Notre Dame,University of Notre Dame,Fighting Irish,independent,Notre Dame,IN
+uconn,UConn,University of Connecticut,Huskies,independent,Storrs,CT
+army,Army,United States Military Academy,Black Knights,american,West Point,NY
+charlotte,Charlotte,University of North Carolina at Charlotte,49ers,american,Charlotte,NC
+east-carolina,East Carolina,East Carolina University,Pirates,american,Greenville,NC
+florida-atlantic,Florida Atlantic,Florida Atlantic University,Owls,american,Boca Raton,FL
+memphis,Memphis,University of Memphis,Tigers,american,Memphis,TN
+navy,Navy,United States Naval Academy,Midshipmen,american,Annapolis,MD
+north-texas,North Texas,University of North Texas,Mean Green,american,Denton,TX
+rice,Rice,Rice University,Owls,american,Houston,TX
+south-florida,South Florida,University of South Florida,Bulls,american,Tampa,FL
+temple,Temple,Temple University,Owls,american,Philadelphia,PA
+tulane,Tulane,Tulane University,Green Wave,american,New Orleans,LA
+tulsa,Tulsa,University of Tulsa,Golden Hurricane,american,Tulsa,OK
+uab,UAB,University of Alabama at Birmingham,Blazers,american,Birmingham,AL
+utsa,UTSA,University of Texas at San Antonio,Roadrunners,american,San Antonio,TX
+appalachian-state,Appalachian State,Appalachian State University,Mountaineers,sun-belt,Boone,NC
+arkansas-state,Arkansas State,Arkansas State University,Red Wolves,sun-belt,Jonesboro,AR
+coastal-carolina,Coastal Carolina,Coastal Carolina University,Chanticleers,sun-belt,Conway,SC
+georgia-southern,Georgia Southern,Georgia Southern University,Eagles,sun-belt,Statesboro,GA
+georgia-state,Georgia State,Georgia State University,Panthers,sun-belt,Atlanta,GA
+james-madison,James Madison,James Madison University,Dukes,sun-belt,Harrisonburg,VA
+louisiana,Louisiana,University of Louisiana at Lafayette,Ragin' Cajuns,sun-belt,Lafayette,LA
+louisiana-tech,Louisiana Tech,Louisiana Tech University,Bulldogs,sun-belt,Ruston,LA
+marshall,Marshall,Marshall University,Thundering Herd,sun-belt,Huntington,WV
+old-dominion,Old Dominion,Old Dominion University,Monarchs,sun-belt,Norfolk,VA
+south-alabama,South Alabama,University of South Alabama,Jaguars,sun-belt,Mobile,AL
+southern-miss,Southern Miss,University of Southern Mississippi,Golden Eagles,sun-belt,Hattiesburg,MS
+troy,Troy,Troy University,Trojans,sun-belt,Troy,AL
+ul-monroe,UL Monroe,University of Louisiana at Monroe,Warhawks,sun-belt,Monroe,LA
+akron,Akron,University of Akron,Zips,mac,Akron,OH
+ball-state,Ball State,Ball State University,Cardinals,mac,Muncie,IN
+bowling-green,Bowling Green,Bowling Green State University,Falcons,mac,Bowling Green,OH
+buffalo,Buffalo,University at Buffalo,Bulls,mac,Buffalo,NY
+central-michigan,Central Michigan,Central Michigan University,Chippewas,mac,Mount Pleasant,MI
+eastern-michigan,Eastern Michigan,Eastern Michigan University,Eagles,mac,Ypsilanti,MI
+kent-state,Kent State,Kent State University,Golden Flashes,mac,Kent,OH
+massachusetts,UMass,University of Massachusetts Amherst,Minutemen,mac,Amherst,MA
+miami-oh,Miami (OH),Miami University,RedHawks,mac,Oxford,OH
+ohio,Ohio,Ohio University,Bobcats,mac,Athens,OH
+sacramento-state,Sacramento State,California State University Sacramento,Hornets,mac,Sacramento,CA
+toledo,Toledo,University of Toledo,Rockets,mac,Toledo,OH
+western-michigan,Western Michigan,Western Michigan University,Broncos,mac,Kalamazoo,MI
+air-force,Air Force,United States Air Force Academy,Falcons,mountain-west,Colorado Springs,CO
+hawaii,Hawaii,University of Hawaii at Manoa,Rainbow Warriors,mountain-west,Honolulu,HI
+nevada,Nevada,University of Nevada Reno,Wolf Pack,mountain-west,Reno,NV
+new-mexico,New Mexico,University of New Mexico,Lobos,mountain-west,Albuquerque,NM
+north-dakota-state,North Dakota State,North Dakota State University,Bison,mountain-west,Fargo,ND
+northern-illinois,Northern Illinois,Northern Illinois University,Huskies,mountain-west,DeKalb,IL
+san-jose-state,San Jose State,San Jose State University,Spartans,mountain-west,San Jose,CA
+unlv,UNLV,University of Nevada Las Vegas,Rebels,mountain-west,Las Vegas,NV
+utep,UTEP,University of Texas at El Paso,Miners,mountain-west,El Paso,TX
+wyoming,Wyoming,University of Wyoming,Cowboys,mountain-west,Laramie,WY
+delaware,Delaware,University of Delaware,Blue Hens,conference-usa,Newark,DE
+fiu,FIU,Florida International University,Panthers,conference-usa,Miami,FL
+jacksonville-state,Jacksonville State,Jacksonville State University,Gamecocks,conference-usa,Jacksonville,AL
+kennesaw-state,Kennesaw State,Kennesaw State University,Owls,conference-usa,Kennesaw,GA
+liberty,Liberty,Liberty University,Flames,conference-usa,Lynchburg,VA
+middle-tennessee,Middle Tennessee,Middle Tennessee State University,Blue Raiders,conference-usa,Murfreesboro,TN
+missouri-state,Missouri State,Missouri State University,Bears,conference-usa,Springfield,MO
+new-mexico-state,New Mexico State,New Mexico State University,Aggies,conference-usa,Las Cruces,NM
+sam-houston,Sam Houston,Sam Houston State University,Bearkats,conference-usa,Huntsville,TX
+western-kentucky,Western Kentucky,Western Kentucky University,Hilltoppers,conference-usa,Bowling Green,KY
+boise-state,Boise State,Boise State University,Broncos,pac-12,Boise,ID
+colorado-state,Colorado State,Colorado State University,Rams,pac-12,Fort Collins,CO
+fresno-state,Fresno State,California State University Fresno,Bulldogs,pac-12,Fresno,CA
+oregon-state,Oregon State,Oregon State University,Beavers,pac-12,Corvallis,OR
+san-diego-state,San Diego State,San Diego State University,Aztecs,pac-12,San Diego,CA
+texas-state,Texas State,Texas State University,Bobcats,pac-12,San Marcos,TX
+utah-state,Utah State,Utah State University,Aggies,pac-12,Logan,UT
+washington-state,Washington State,Washington State University,Cougars,pac-12,Pullman,WA
