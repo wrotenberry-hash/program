@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/auth/actions";
 import { claimUpgrade, collectIncome, joinFaction, startUpgrade } from "@/app/program/actions";
 import { ProgramView } from "@/components/program-view";
+import { schoolSubtitle, shortName, teamName } from "@/lib/schools";
 
 export const metadata: Metadata = { title: "Your program" };
 
@@ -17,7 +18,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
 
   const { data: program } = await supabase
     .from("programs")
-    .select("id, name, share_code, emphasis_id, school:schools(id, name, full_name, nickname, city, state, conference:conferences(id, name, short_name))")
+    .select("id, name, share_code, emphasis_id, school:schools(id, name, full_name, nickname, city, state, generic_name, generic_nickname, conference:conferences(id, name, short_name))")
     .eq("account_id", user.id)
     .maybeSingle();
   if (!program) redirect("/onboarding/school");
@@ -92,11 +93,11 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
   return (
     <ProgramView
       displayName={profile?.display_name ?? user.email ?? ""}
-      programName={program.name}
-      school={program.school}
+      programName={teamName(program.school)}
+      school={{ name: shortName(program.school), full_name: schoolSubtitle(program.school), city: null, state: null }}
       conferenceShort={program.school.conference.short_name}
       seasonLabel={season ? `${season.year} · ${weekLabel}` : "Offseason"}
-      seat={seat ? { factionName: seat.faction.name, leagueLabel: `${seat.league.conference.short_name} League ${seat.league.number}`, role: seat.role } : null}
+      seat={seat ? { factionName: teamName(program.school), leagueLabel: `${seat.league.conference.short_name} League ${seat.league.number}`, role: seat.role } : null}
       factionRank={factionRank}
       cash={treasury?.cash ?? 0}
       incomeRate={incomeRate}

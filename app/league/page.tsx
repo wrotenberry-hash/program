@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { LeagueView, type BracketPair, type StandingRow, type TrophyRow, type WeekGame } from "@/components/league-view";
+import { loadSchools, teamName } from "@/lib/schools";
 
 export const metadata: Metadata = { title: "League" };
 
@@ -38,17 +39,27 @@ export default async function LeaguePage() {
     supabase.from("schools").select("id", { count: "exact", head: true }).eq("conference_id", seat.league.conference_id),
   ]);
 
-  const factionById = new Map((factions ?? []).map((f) => [f.id, f]));
+  const schools = await loadSchools(supabase);
+  const nameOf = (schoolId: string | null | undefined) => {
+    const sc = schoolId ? schools.get(schoolId) : undefined;
+    return sc ? teamName(sc) : "Rival faction";
+  };
+  const factionById = new Map((factions ?? []).map((f) => [f.id, { ...f, name: nameOf(f.school_id) }]));
   const memberCount = new Map<string, number>();
   for (const s of seats ?? []) memberCount.set(s.faction_id, (memberCount.get(s.faction_id) ?? 0) + 1);
   const standingRows: StandingRow[] = (factions ?? [])
     .map((f) => {
       const st = (standings ?? []).find((s) => s.faction_id === f.id);
-      return { faction_id: f.id, name: f.name, school_id: f.school_id, wins: st?.wins ?? 0, losses: st?.losses ?? 0, points: st?.points ?? 0, members: memberCount.get(f.id) ?? 0, is_mine: f.id === seat.faction_id };
+      return { faction_id: f.id, name: nameOf(f.school_id), school_id: f.school_id, wins: st?.wins ?? 0, losses: st?.losses ?? 0, points: st?.points ?? 0, members: memberCount.get(f.id) ?? 0, is_mine: f.id === seat.faction_id };
     })
     .sort((a, b) => b.points - a.points || b.wins - a.wins || a.name.localeCompare(b.name));
 
-  const weekGames: WeekGame[] = (games ?? []).map((g) => ({ ...g, mine: g.home_faction_id === seat.faction_id || g.away_faction_id === seat.faction_id }));
+  const weekGames: WeekGame[] = (games ?? []).map((g) => ({
+    ...g,
+    home_name: nameOf(g.home_school),
+    away_name: nameOf(g.away_school),
+    mine: g.home_faction_id === seat.faction_id || g.away_faction_id === seat.faction_id,
+  }));
 
   // Rivalry bracket: group rivalry games by faction pair; points = 3 per win, 1 per loss for human programs.
   const bracketMap = new Map<string, BracketPair>();

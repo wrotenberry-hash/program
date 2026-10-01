@@ -18,10 +18,10 @@ rows = list(csv.DictReader(open(here / "conferences.csv")))
 out.append(",\n".join(f"  ({q(r['id'])}, {q(r['name'])}, {q(r['short_name'])}, {q(r['tier'])}, {r['sort_order']})" for r in rows))
 out.append("on conflict (id) do update set name = excluded.name, short_name = excluded.short_name, tier = excluded.tier, sort_order = excluded.sort_order;\n")
 
-out.append("insert into public.schools (id, name, full_name, nickname, conference_id, city, state) values")
+out.append("insert into public.schools (id, name, full_name, nickname, conference_id, city, state, generic_name, generic_nickname) values")
 rows = list(csv.DictReader(open(here / "schools.csv")))
-out.append(",\n".join(f"  ({q(r['id'])}, {q(r['name'])}, {q(r['full_name'])}, {q(r['nickname'])}, {q(r['conference_id'])}, {q(r['city'])}, {q(r['state'])})" for r in rows))
-out.append("on conflict (id) do update set name = excluded.name, full_name = excluded.full_name, nickname = excluded.nickname, conference_id = excluded.conference_id, city = excluded.city, state = excluded.state;\n")
+out.append(",\n".join(f"  ({q(r['id'])}, {q(r['name'])}, {q(r['full_name'])}, {q(r['nickname'])}, {q(r['conference_id'])}, {q(r['city'])}, {q(r['state'])}, {q(r['generic_name'])}, {q(r['generic_nickname'])})" for r in rows))
+out.append("on conflict (id) do update set name = excluded.name, full_name = excluded.full_name, nickname = excluded.nickname, conference_id = excluded.conference_id, city = excluded.city, state = excluded.state, generic_name = excluded.generic_name, generic_nickname = excluded.generic_nickname;\n")
 school_ids = {r["id"] for r in rows}
 
 out.append("delete from public.rivalry_pairings;")

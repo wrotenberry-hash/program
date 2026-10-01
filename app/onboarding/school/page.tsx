@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createProgram } from "@/app/onboarding/actions";
 import { Button, Field, Input, Notice, Select, Wordmark } from "@/components/ui";
+import { teamName, type SchoolNames } from "@/lib/schools";
 
 export const metadata: Metadata = { title: "Pick your school" };
 
@@ -18,13 +19,13 @@ export default async function SchoolPickerPage({ searchParams }: { searchParams:
     supabase.from("programs").select("id").eq("account_id", user.id).maybeSingle(),
     supabase.from("profiles").select("date_of_birth").eq("id", user.id).maybeSingle(),
     supabase.from("conferences").select("id, short_name, name, sort_order").order("sort_order"),
-    supabase.from("schools").select("id, name, nickname, conference_id").order("name"),
+    supabase.from("schools").select("id, name, nickname, full_name, city, state, conference_id, generic_name, generic_nickname"),
   ]);
   if (existing) redirect("/program");
 
   const needsDob = !profile?.date_of_birth;
-  const byConference = new Map<string, { id: string; name: string; nickname: string }[]>();
-  for (const s of schools ?? []) {
+  const byConference = new Map<string, SchoolNames[]>();
+  for (const s of (schools ?? []).slice().sort((a, b) => teamName(a).localeCompare(teamName(b)))) {
     const list = byConference.get(s.conference_id) ?? [];
     list.push(s);
     byConference.set(s.conference_id, list);
@@ -56,7 +57,7 @@ export default async function SchoolPickerPage({ searchParams }: { searchParams:
               <optgroup key={c.id} label={c.short_name}>
                 {(byConference.get(c.id) ?? []).map((s) => (
                   <option key={s.id} value={s.id}>
-                    {s.name} {s.nickname}
+                    {teamName(s)}
                   </option>
                 ))}
               </optgroup>

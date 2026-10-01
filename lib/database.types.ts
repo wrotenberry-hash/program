@@ -139,9 +139,9 @@ export type Database = {
         ]
       }
       schools: {
-        Row: { city: string | null; conference_id: string; created_at: string; full_name: string; id: string; name: string; nickname: string; state: string | null }
-        Insert: { city?: string | null; conference_id: string; created_at?: string; full_name: string; id: string; name: string; nickname: string; state?: string | null }
-        Update: { city?: string | null; conference_id?: string; created_at?: string; full_name?: string; id?: string; name?: string; nickname?: string; state?: string | null }
+        Row: { city: string | null; conference_id: string; created_at: string; full_name: string; generic_name: string | null; generic_nickname: string | null; id: string; name: string; nickname: string; state: string | null }
+        Insert: { city?: string | null; conference_id: string; created_at?: string; full_name: string; generic_name?: string | null; generic_nickname?: string | null; id: string; name: string; nickname: string; state?: string | null }
+        Update: { city?: string | null; conference_id?: string; created_at?: string; full_name?: string; generic_name?: string | null; generic_nickname?: string | null; id?: string; name?: string; nickname?: string; state?: string | null }
         Relationships: [
           { foreignKeyName: "schools_conference_id_fkey"; columns: ["conference_id"]; isOneToOne: false; referencedRelation: "conferences"; referencedColumns: ["id"] },
         ]

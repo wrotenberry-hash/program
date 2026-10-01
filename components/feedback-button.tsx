@@ -28,10 +28,10 @@ export function FeedbackButton() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="btn-3d fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-40 inline-flex h-11 items-center gap-1.5 rounded-full bg-surface px-4 text-xs font-extrabold text-ink ring-2 ring-line [--btn-edge:var(--line)]"
+        className="btn-3d fixed bottom-[max(0.75rem,env(safe-area-inset-bottom))] right-3 z-40 inline-flex h-9 items-center gap-1 rounded-full bg-surface/95 px-3 text-[11px] font-extrabold text-ink ring-2 ring-line backdrop-blur [--btn-edge:var(--line)]"
         aria-label="This confused me"
       >
-        <span className="text-base leading-none">?</span> This confused me
+        <span className="text-sm leading-none">?</span> Confused?
       </button>
 
       {open ? (
