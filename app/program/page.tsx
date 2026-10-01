@@ -43,7 +43,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
   const [{ data: staffRows }, { data: catalog }, { data: games }, { data: emphasis }, { data: treasury2 }] = await Promise.all([
     supabase.from("program_staff").select("staff_id, stars, level").eq("program_id", program.id),
     supabase.from("staff").select("id, base_power, power_per_level"),
-    supabase.from("games").select("status, locks_at, result").or(`home_program_id.eq.${program.id},away_program_id.eq.${program.id}`),
+    supabase.from("games").select("status, locks_at, result").or(`home_program_id.eq.${program.id},away_program_id.eq.${program.id}`).is("voided_at", null),
     supabase.from("emphases").select("name").eq("id", program.emphasis_id ?? "balanced").maybeSingle(),
     supabase.from("program_treasury").select("last_scouted_at").eq("program_id", program.id).maybeSingle(),
   ]);

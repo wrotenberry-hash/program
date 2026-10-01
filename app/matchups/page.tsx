@@ -28,6 +28,7 @@ export default async function MatchupsPage({ searchParams }: { searchParams: Pro
       .from("games")
       .select("id, kind, status, locks_at, week_number, home_program_id, away_program_id, inputs, result, home:programs!games_home_program_id_fkey(name), away:programs!games_away_program_id_fkey(name)")
       .or(`home_program_id.eq.${program.id},away_program_id.eq.${program.id}`)
+      .is("voided_at", null)
       .order("created_at", { ascending: false })
       .limit(30),
     supabase.rpc("current_week"),

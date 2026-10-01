@@ -175,9 +175,9 @@ export type Database = {
         ]
       }
       games: {
-        Row: { away_faction_id: string | null; away_program_id: string; created_at: string; home_faction_id: string | null; home_program_id: string; id: string; inputs: Json | null; kind: string; league_id: string | null; locks_at: string; resolved_at: string | null; result: Json | null; season_id: string; seed: number | null; status: string; week_number: number }
-        Insert: { away_faction_id?: string | null; away_program_id: string; created_at?: string; home_faction_id?: string | null; home_program_id: string; id?: string; inputs?: Json | null; kind: string; league_id?: string | null; locks_at: string; resolved_at?: string | null; result?: Json | null; season_id: string; seed?: number | null; status?: string; week_number: number }
-        Update: { away_faction_id?: string | null; away_program_id?: string; created_at?: string; home_faction_id?: string | null; home_program_id?: string; id?: string; inputs?: Json | null; kind?: string; league_id?: string | null; locks_at?: string; resolved_at?: string | null; result?: Json | null; season_id?: string; seed?: number | null; status?: string; week_number?: number }
+        Row: { void_reason: string | null; voided_at: string | null; away_faction_id: string | null; away_program_id: string; created_at: string; home_faction_id: string | null; home_program_id: string; id: string; inputs: Json | null; kind: string; league_id: string | null; locks_at: string; resolved_at: string | null; result: Json | null; season_id: string; seed: number | null; status: string; week_number: number }
+        Insert: { void_reason?: string | null; voided_at?: string | null; away_faction_id?: string | null; away_program_id: string; created_at?: string; home_faction_id?: string | null; home_program_id: string; id?: string; inputs?: Json | null; kind: string; league_id?: string | null; locks_at: string; resolved_at?: string | null; result?: Json | null; season_id: string; seed?: number | null; status?: string; week_number: number }
+        Update: { void_reason?: string | null; voided_at?: string | null; away_faction_id?: string | null; away_program_id?: string; created_at?: string; home_faction_id?: string | null; home_program_id?: string; id?: string; inputs?: Json | null; kind?: string; league_id?: string | null; locks_at?: string; resolved_at?: string | null; result?: Json | null; season_id?: string; seed?: number | null; status?: string; week_number?: number }
         Relationships: [
           { foreignKeyName: "games_away_program_id_fkey"; columns: ["away_program_id"]; isOneToOne: false; referencedRelation: "programs"; referencedColumns: ["id"] },
           { foreignKeyName: "games_home_program_id_fkey"; columns: ["home_program_id"]; isOneToOne: false; referencedRelation: "programs"; referencedColumns: ["id"] },
@@ -234,6 +234,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      export_feedback: { Args: { p_token: string }; Returns: { id: number; created_at: string; display_name: string | null; account_id: string | null; program_id: string | null; screen: string; note: string; user_agent: string | null }[] }
+      submit_feedback: { Args: { p_screen: string; p_note: string; p_user_agent?: string }; Returns: number }
       faction_has_week_game: { Args: { p_faction_id: string; p_season: string; p_week: number; p_kind: string }; Returns: boolean }
       faction_lineup: { Args: { p_faction_id: string; p_salt: string }; Returns: string[] }
       house_program_for: { Args: { p_league_id: string; p_school_id: string }; Returns: string }
