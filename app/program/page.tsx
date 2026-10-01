@@ -47,6 +47,12 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
     supabase.from("emphases").select("name").eq("id", program.emphasis_id ?? "balanced").maybeSingle(),
     supabase.from("program_treasury").select("last_scouted_at").eq("program_id", program.id).maybeSingle(),
   ]);
+  let factionRank: number | null = null;
+  if (seat) {
+    const { data: st } = await supabase.from("faction_standings").select("faction_id, points, wins").eq("league_id", seat.league.id).order("points", { ascending: false }).order("wins", { ascending: false });
+    const idx = (st ?? []).findIndex((r) => r.faction_id === seat.faction.id);
+    factionRank = idx >= 0 ? idx + 1 : null;
+  }
 
   const today = new Date().toISOString().slice(0, 10);
   const { data: week } = season
@@ -91,6 +97,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
       conferenceShort={program.school.conference.short_name}
       seasonLabel={season ? `${season.year} · ${weekLabel}` : "Offseason"}
       seat={seat ? { factionName: seat.faction.name, leagueLabel: `${seat.league.conference.short_name} League ${seat.league.number}`, role: seat.role } : null}
+      factionRank={factionRank}
       cash={treasury?.cash ?? 0}
       incomeRate={incomeRate}
       accrued={accrued}

@@ -12,15 +12,15 @@ environment variables and the hosting dashboards only.
 | Supabase project | Program | Ref `xrthgxxeaeojexagglix`, region `us-east-1`, Postgres 17. Created 2026-09-30 by the founder in the dashboard. |
 | Supabase API URL | `https://xrthgxxeaeojexagglix.supabase.co` | Public. The publishable key is fetched from the dashboard into Vercel environment variables in Phase 1. |
 
-## State as of 2026-09-30, after Phase 3
+## State as of 2026-10-01, after Phase 4
 
-- Migrations 0001 through 0009 are applied.
+- Migrations 0001 through 0012 are applied.
   Seed data is loaded. RLS is on for every table.
 - Vercel holds `NEXT_PUBLIC_SUPABASE_URL` and
   `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` for all environments. Deployment
   protection covers preview deploys only; production is public.
 - Production deploys from `main` automatically.
-- A Vercel cron (`vercel.json`) calls `/api/cron/resolve` every ten minutes.
+- A Vercel cron (`vercel.json`) calls `/api/cron/resolve` every ten minutes: it schedules the current week for every League, resolves due games, refreshes standings, and sweeps dormant seats.
   Set `CRON_SECRET` in Vercel to require a bearer token on that route; until
   then the route is open but harmless (idempotent, no inputs).
 

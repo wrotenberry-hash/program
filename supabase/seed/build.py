@@ -63,6 +63,9 @@ config = [
     ("POINTS_PER_EDGE", 28, "Expected points per unit of facet edge. docs/phase-3/power-and-matchups.md §8"),
     ("BASE_POINTS", 24, "Expected points for an even matchup"),
     ("SCORE_NOISE_SD_TENTHS", 85, "Standard deviation of score noise, in tenths of a point"),
+    ("HOUSE_MIN_POWER", 50, "Floor for a house program's power; above it, the house matches the League's human average"),
+    ("WIN_POINTS", 3, "Standings points a program earns for a League win"),
+    ("LOSS_POINTS", 1, "Standings points a program earns for a League loss"),
 ]
 out.append("insert into public.facilities (id, name, description, sort_order) values")
 rows = list(csv.DictReader(open(here / "facilities.csv")))

@@ -19,14 +19,14 @@ export default async function MatchupsPage({ searchParams }: { searchParams: Pro
   if (!program) redirect("/onboarding/school");
 
   // Resolve anything due before reading, so a late cron never leaves a stale screen.
-  await supabase.rpc("resolve_due_games");
+  await supabase.rpc("run_maintenance");
 
   const [{ data: facets }, { data: emphases }, { data: games }, { data: week }] = await Promise.all([
     supabase.rpc("effective_facets", { p_program_id: program.id }),
     supabase.from("emphases").select("id, name, blurb, rushing, passing, run_defense, pass_defense").order("sort_order"),
     supabase
       .from("games")
-      .select("id, status, locks_at, week_number, home_program_id, away_program_id, inputs, result, home:programs!games_home_program_id_fkey(name), away:programs!games_away_program_id_fkey(name)")
+      .select("id, kind, status, locks_at, week_number, home_program_id, away_program_id, inputs, result, home:programs!games_home_program_id_fkey(name), away:programs!games_away_program_id_fkey(name)")
       .or(`home_program_id.eq.${program.id},away_program_id.eq.${program.id}`)
       .order("created_at", { ascending: false })
       .limit(30),
@@ -37,6 +37,7 @@ export default async function MatchupsPage({ searchParams }: { searchParams: Pro
   const w = week?.[0];
   const rows: GameRow[] = (games ?? []).map((g) => ({
     id: g.id,
+    kind: g.kind,
     status: g.status,
     locks_at: g.locks_at,
     week_number: g.week_number,

@@ -508,7 +508,10 @@ insert into public.game_config (key, value, description) values
   ('CHALLENGE_LOCK_MINUTES', '10'::jsonb, 'Minutes after a challenge is issued before it locks and resolves'),
   ('POINTS_PER_EDGE', '28'::jsonb, 'Expected points per unit of facet edge. docs/phase-3/power-and-matchups.md §8'),
   ('BASE_POINTS', '24'::jsonb, 'Expected points for an even matchup'),
-  ('SCORE_NOISE_SD_TENTHS', '85'::jsonb, 'Standard deviation of score noise, in tenths of a point')
+  ('SCORE_NOISE_SD_TENTHS', '85'::jsonb, 'Standard deviation of score noise, in tenths of a point'),
+  ('HOUSE_MIN_POWER', '50'::jsonb, 'Floor for a house program''s power; above it, the house matches the League''s human average'),
+  ('WIN_POINTS', '3'::jsonb, 'Standings points a program earns for a League win'),
+  ('LOSS_POINTS', '1'::jsonb, 'Standings points a program earns for a League loss')
 on conflict (key) do update set value = excluded.value, description = excluded.description, updated_at = now();
 
 commit;

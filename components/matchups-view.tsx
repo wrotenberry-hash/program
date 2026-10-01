@@ -7,6 +7,7 @@ import { FACETS, type FacetSet, type GameInputs, type GameResult } from "@/lib/f
 export type Emphasis = { id: string; name: string; blurb: string; rushing: number; passing: number; run_defense: number; pass_defense: number };
 export type GameRow = {
   id: string;
+  kind: string;
   status: string;
   locks_at: string;
   week_number: number;
@@ -143,6 +144,7 @@ export function MatchupsView(p: MatchupsViewProps) {
                     {g.home_name} <span className="text-ink-muted">vs</span> {g.away_name}
                   </p>
                   <p className="mt-0.5 text-xs font-bold text-ink-muted">
+                    <span className="mr-1 rounded-full bg-line px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider">{g.kind === "challenge" ? "Friendly" : g.kind === "rivalry" ? "Rivalry" : "League"}</span>
                     Week {g.week_number} · {due ? "Locked. Resolving…" : <>Locks in <Countdown until={g.locks_at} onDoneLabel="now" /></>}
                   </p>
                 </li>
@@ -171,7 +173,7 @@ export function MatchupsView(p: MatchupsViewProps) {
             return (
               <li key={g.id} className={`overflow-hidden rounded-2xl border-2 ${iWon ? "border-go" : "border-line"} bg-surface-2`}>
                 <div className={`flex items-center justify-between px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-wider ${iWon ? "bg-go text-go-ink" : "bg-line text-ink-muted"}`}>
-                  <span>{iWon ? "Win" : "Loss"}</span>
+                  <span>{iWon ? "Win" : "Loss"} · {g.kind === "challenge" ? "Friendly" : g.kind === "rivalry" ? "Rivalry" : "League"}</span>
                   <span>Week {g.week_number}</span>
                 </div>
                 <div className="p-3">

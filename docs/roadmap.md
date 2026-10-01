@@ -104,17 +104,30 @@ database on 2026-09-30, including replay determinism.
 
 ## Phase 4 — The season and Rivalry Week
 
-- The full in-League schedule against rival factions, with house programs
-  filling gaps
-- Faction standings by the agreed scoring rule
-- Conference Rivalry Week as faction versus faction, with the bracket screen
-  and the persistent cosmetic trophy
-- Nation roll-up and the Nation leaderboard
-- Orphaned-rivalry pool matching
+**Built 2026-10-01.** The slice is complete.
 
-**Checkpoint:** the slice. Two friends, one week each, factions joined, a
-rivalry game simulated. Both can point at their Nation's total and say who
-won.
+- [x] The weekly in-League schedule: a round robin of schools each conference
+      week; fans of paired schools play each other, leftovers play the house.
+      Every active human gets exactly one League game a week. Scheduled by
+      maintenance (cron and on screen load), idempotent.
+- [x] House programs are real program rows with power pegged to the League's
+      human average (floor `HOUSE_MIN_POWER`), so they are fair opponents.
+- [x] Faction standings: wins, losses, and points (3 a win, 1 a loss, best
+      `FACTION_SCORING_N` results per week). Recomputed from games, never
+      adjusted by hand.
+- [x] Conference Rivalry Week: primary rivals pair faction against faction;
+      the bracket screen shows faction points as games come in; the winning
+      faction takes a trophy into the trophy case.
+- [x] Orphaned rivalries: a faction whose rival is house-run in its League is
+      matched against a human rival faction from another League.
+- [x] Nation roll-up: every school's fans across every League on one
+      leaderboard, and a Nation rivalry total against the primary rival.
+
+**Checkpoint: the slice.** Two friends, one week each, factions joined, a
+rivalry game simulated, and both can point at their Nation's total and say
+who won. Verified in the database on 2026-10-01: a nine-fan scenario across
+three Leagues scheduled one game per fan, resolved, scored, awarded two
+trophies, and matched the orphaned Michigan faction across Leagues.
 
 ## After the slice
 

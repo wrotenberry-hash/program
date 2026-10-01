@@ -11,6 +11,7 @@ export const sampleProgram: Omit<ProgramViewProps, "actions"> = {
   conferenceShort: "SEC",
   seasonLabel: "2026 · Week 4",
   seat: { factionName: "Texas Longhorns", leagueLabel: "SEC League 1", role: "leader" },
+  factionRank: 2,
   cash: 1240,
   incomeRate: 150,
   accrued: 610,
@@ -87,9 +88,9 @@ export const sampleMatchups: Omit<MatchupsViewProps, "actions"> = {
     { id: "ball-control", name: "Ball control", blurb: "Run it, stop the run, shorten the game.", rushing: 1.1, passing: 0.9, run_defense: 1.1, pass_defense: 0.9 },
   ],
   games: [
-    { id: "g1", status: "scheduled", locks_at: new Date(now + 4 * 60e3).toISOString(), week_number: 4, home_program_id: "me", away_program_id: "ou", inputs: null, result: null, home_name: "Texas Longhorns", away_name: "Oklahoma Sooners" },
+    { id: "g1", kind: "conference", status: "scheduled", locks_at: new Date(now + 4 * 60e3).toISOString(), week_number: 4, home_program_id: "me", away_program_id: "ou", inputs: null, result: null, home_name: "Texas Longhorns", away_name: "Oklahoma Sooners" },
     {
-      id: "g2", status: "resolved", locks_at: new Date(now - 3600e3).toISOString(), week_number: 4, home_program_id: "mi", away_program_id: "me",
+      id: "g2", kind: "challenge", status: "resolved", locks_at: new Date(now - 3600e3).toISOString(), week_number: 4, home_program_id: "mi", away_program_id: "me",
       inputs: { home: { program_id: "mi", name: "Michigan Wolverines", emphasis: "ground-and-pound", total: 790, rushing: 260, passing: 160, run_defense: 190, pass_defense: 180 }, away: { program_id: "me", name: "Texas Longhorns", emphasis: "air-raid", total: 860, rushing: 180, passing: 265, run_defense: 210, pass_defense: 205 } },
       result: { home_score: 24, away_score: 31, winner_program_id: "me", edges: { home_rush: 0.11, home_pass: -0.12, away_rush: -0.03, away_pass: 0.19 }, decisive: "away_pass", narrative: "Texas Longhorns beat Michigan Wolverines 31–24. Texas Longhorns threw it all over Michigan Wolverines's secondary." },
       home_name: "Michigan Wolverines", away_name: "Texas Longhorns",
@@ -106,5 +107,46 @@ export const sampleStaff: Omit<StaffViewProps, "actions"> = {
     { id: "oc-vasquez", name: "Rae Vasquez", role: "Offensive Coordinator", rarity: "epic", base_power: 120, power_per_level: 12, unlock_shards: 40, star_shards: 40, max_stars: 5, max_level: 20, lean: "passing", shards: 15, stars: 0, level: 1 },
     { id: "qb-lindqvist", name: "Sofia Lindqvist", role: "Quarterbacks Coach", rarity: "rare", base_power: 80, power_per_level: 8, unlock_shards: 20, star_shards: 20, max_stars: 5, max_level: 20, lean: "passing", shards: 4, stars: 2, level: 3 },
     { id: "sc-ivers", name: "Gus Ivers", role: "Strength Coach", rarity: "common", base_power: 50, power_per_level: 5, unlock_shards: 10, star_shards: 10, max_stars: 5, max_level: 20, lean: "everything", shards: 12, stars: 1, level: 1 },
+  ],
+};
+
+import type { LeagueViewProps } from "@/components/league-view";
+import type { NationViewProps } from "@/components/nation-view";
+
+export const sampleLeague: LeagueViewProps = {
+  leagueLabel: "SEC League 1",
+  seasonLabel: "2026 · Week 13",
+  weekKind: "rivalry",
+  myFactionId: "tx",
+  houseCount: 12,
+  standings: [
+    { faction_id: "ou", name: "Oklahoma Sooners", school_id: "oklahoma", wins: 14, losses: 6, points: 52, members: 9, is_mine: false },
+    { faction_id: "tx", name: "Texas Longhorns", school_id: "texas", wins: 15, losses: 9, points: 51, members: 12, is_mine: true },
+    { faction_id: "al", name: "Alabama Crimson Tide", school_id: "alabama", wins: 7, losses: 5, points: 26, members: 4, is_mine: false },
+    { faction_id: "ga", name: "Georgia Bulldogs", school_id: "georgia", wins: 2, losses: 4, points: 10, members: 2, is_mine: false },
+  ],
+  games: [
+    { id: "1", kind: "rivalry", status: "resolved", locks_at: new Date(now - 3600e3).toISOString(), home_name: "Texas Longhorns", home_is_house: false, home_faction_id: "tx", away_name: "Oklahoma Sooners", away_is_house: false, away_faction_id: "ou", home_score: 31, away_score: 27, narrative: null, mine: true },
+    { id: "2", kind: "rivalry", status: "resolved", locks_at: new Date(now - 3600e3).toISOString(), home_name: "Oklahoma Sooners", home_is_house: false, home_faction_id: "ou", away_name: "Texas Longhorns", away_is_house: false, away_faction_id: "tx", home_score: 20, away_score: 24, narrative: null, mine: true },
+    { id: "3", kind: "rivalry", status: "scheduled", locks_at: new Date(now + 20 * 60e3).toISOString(), home_name: "Texas Longhorns", home_is_house: false, home_faction_id: "tx", away_name: "Oklahoma Sooners", away_is_house: true, away_faction_id: null, home_score: null, away_score: null, narrative: null, mine: true },
+    { id: "4", kind: "rivalry", status: "resolved", locks_at: new Date(now - 3600e3).toISOString(), home_name: "Alabama Crimson Tide", home_is_house: false, home_faction_id: "al", away_name: "Auburn Tigers", away_is_house: true, away_faction_id: null, home_score: 17, away_score: 21, narrative: null, mine: false },
+  ],
+  bracket: [
+    { a: "Oklahoma Sooners", b: "Texas Longhorns", a_points: 4, b_points: 6, games: 3, resolved: 2, a_mine: false, b_mine: true },
+    { a: "Alabama Crimson Tide", b: "Auburn Tigers", a_points: 1, b_points: 0, games: 1, resolved: 1, a_mine: false, b_mine: false },
+  ],
+  trophies: [{ week_number: 13, faction: "Texas Longhorns", opponent: "Oklahoma Sooners", faction_points: 8, opponent_points: 4, mine: true }],
+};
+
+export const sampleNation: NationViewProps = {
+  seasonLabel: "2026 · Week 13",
+  mySchool: "Texas",
+  rival: { name: "Oklahoma", myPoints: 412, rivalPoints: 377, myWins: 118, rivalWins: 104 },
+  rows: [
+    { school_id: "georgia", name: "Georgia", conference: "SEC", wins: 140, losses: 61, points: 481, mine: false },
+    { school_id: "texas", name: "Texas", conference: "SEC", wins: 118, losses: 58, points: 412, mine: true },
+    { school_id: "ohio-state", name: "Ohio State", conference: "Big Ten", wins: 110, losses: 70, points: 400, mine: false },
+    { school_id: "oklahoma", name: "Oklahoma", conference: "SEC", wins: 104, losses: 65, points: 377, mine: false },
+    { school_id: "michigan", name: "Michigan", conference: "Big Ten", wins: 90, losses: 80, points: 350, mine: false },
   ],
 };

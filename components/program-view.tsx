@@ -20,6 +20,7 @@ export type ProgramViewProps = {
   conferenceShort: string;
   seasonLabel: string;
   seat: { factionName: string; leagueLabel: string; role: string } | null;
+  factionRank: number | null;
   cash: number;
   incomeRate: number;
   accrued: number;
@@ -171,9 +172,14 @@ export function ProgramView(p: ProgramViewProps) {
               {p.seat.leagueLabel}
               {p.seat.role === "leader" ? " · Founder" : p.seat.role === "officer" ? " · Officer" : " · Member"}
             </p>
-            <Link href="/faction" className="btn-3d mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-faction text-sm font-extrabold text-white [--btn-edge:#5a3fc0]">
-              <Shield size={16} /> Open faction
-            </Link>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <Link href="/faction" className="btn-3d inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-faction text-sm font-extrabold text-white [--btn-edge:#5a3fc0]">
+                <Shield size={16} /> Faction
+              </Link>
+              <Link href="/league" className="btn-3d inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-surface-2 text-sm font-extrabold text-ink [--btn-edge:var(--line)]">
+                <Trophy size={16} /> League{p.factionRank ? ` · #${p.factionRank}` : ""}
+              </Link>
+            </div>
           </>
         ) : (
           <>
@@ -201,9 +207,14 @@ export function ProgramView(p: ProgramViewProps) {
           {p.record.wins}–{p.record.losses} this season · emphasis: {p.emphasisName}
         </p>
         {p.dueGames > 0 ? <p className="mt-1 text-xs font-extrabold text-go">{p.dueGames} result waiting</p> : <p className="mt-1 text-xs font-semibold text-ink-muted">Your code: <span className="font-black tracking-[0.15em] text-ink">{p.shareCode}</span></p>}
-        <Link href="/matchups" className={`btn-3d mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-go text-sm font-extrabold text-go-ink [--btn-edge:#158a48] ${p.dueGames > 0 && !collectIsBest ? "pulse [--glow:rgba(61,220,132,0.6)]" : ""}`}>
-          <Trophy size={16} /> {p.dueGames > 0 ? "See the result" : "Find a game"}
-        </Link>
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <Link href="/matchups" className={`btn-3d inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-go text-sm font-extrabold text-go-ink [--btn-edge:#158a48] ${p.dueGames > 0 && !collectIsBest ? "pulse [--glow:rgba(61,220,132,0.6)]" : ""}`}>
+            <Trophy size={16} /> {p.dueGames > 0 ? "See result" : "Matchups"}
+          </Link>
+          <Link href="/nation" className="btn-3d inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-surface-2 text-sm font-extrabold text-ink [--btn-edge:var(--line)]">
+            <Bolt size={16} /> Nation
+          </Link>
+        </div>
       </Card>
 
       <form action={p.actions.signOut} className="mt-2">
