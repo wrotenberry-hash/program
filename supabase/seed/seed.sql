@@ -397,7 +397,7 @@ insert into public.rivalry_pairings (school_id, rival_school_id, rank) values
   ('texas-state', 'sam-houston', 2);
 
 insert into public.seasons (id, year, starts_on, ends_on, status) values ('2026', 2026, '2026-08-29', '2026-12-05', 'active')
-on conflict (id) do update set starts_on = excluded.starts_on, ends_on = excluded.ends_on, status = excluded.status;
+on conflict (id) do update set starts_on = excluded.starts_on, ends_on = excluded.ends_on;
 
 insert into public.season_weeks (season_id, week_number, starts_on, locks_at, kind) values
   ('2026', 0, '2026-08-29', '2026-08-29T16:00:00Z', 'nonconference'),
@@ -415,6 +415,27 @@ insert into public.season_weeks (season_id, week_number, starts_on, locks_at, ki
   ('2026', 12, '2026-11-21', '2026-11-21T16:00:00Z', 'conference'),
   ('2026', 13, '2026-11-28', '2026-11-28T16:00:00Z', 'rivalry'),
   ('2026', 14, '2026-12-05', '2026-12-05T16:00:00Z', 'championship')
+on conflict (season_id, week_number) do update set starts_on = excluded.starts_on, locks_at = excluded.locks_at, kind = excluded.kind;
+
+insert into public.seasons (id, year, starts_on, ends_on, status) values ('2027', 2027, '2027-08-28', '2027-12-04', 'upcoming')
+on conflict (id) do update set starts_on = excluded.starts_on, ends_on = excluded.ends_on;
+
+insert into public.season_weeks (season_id, week_number, starts_on, locks_at, kind) values
+  ('2027', 0, '2027-08-28', '2027-08-28T16:00:00Z', 'nonconference'),
+  ('2027', 1, '2027-09-04', '2027-09-04T16:00:00Z', 'nonconference'),
+  ('2027', 2, '2027-09-11', '2027-09-11T16:00:00Z', 'nonconference'),
+  ('2027', 3, '2027-09-18', '2027-09-18T16:00:00Z', 'nonconference'),
+  ('2027', 4, '2027-09-25', '2027-09-25T16:00:00Z', 'conference'),
+  ('2027', 5, '2027-10-02', '2027-10-02T16:00:00Z', 'conference'),
+  ('2027', 6, '2027-10-09', '2027-10-09T16:00:00Z', 'conference'),
+  ('2027', 7, '2027-10-16', '2027-10-16T16:00:00Z', 'conference'),
+  ('2027', 8, '2027-10-23', '2027-10-23T16:00:00Z', 'conference'),
+  ('2027', 9, '2027-10-30', '2027-10-30T16:00:00Z', 'conference'),
+  ('2027', 10, '2027-11-06', '2027-11-06T16:00:00Z', 'conference'),
+  ('2027', 11, '2027-11-13', '2027-11-13T16:00:00Z', 'conference'),
+  ('2027', 12, '2027-11-20', '2027-11-20T16:00:00Z', 'conference'),
+  ('2027', 13, '2027-11-27', '2027-11-27T16:00:00Z', 'rivalry'),
+  ('2027', 14, '2027-12-04', '2027-12-04T16:00:00Z', 'championship')
 on conflict (season_id, week_number) do update set starts_on = excluded.starts_on, locks_at = excluded.locks_at, kind = excluded.kind;
 
 insert into public.facilities (id, name, description, sort_order) values
@@ -490,6 +511,20 @@ insert into public.staff (id, name, role, rarity, base_power, power_per_level, u
   ('rc-hawthorne', 'Dee Hawthorne', 'Recruiting Coordinator', 'rare', 80, 8, 20, 20, 0.25, 0.25, 0.25, 0.25, 100),
   ('sc-ivers', 'Gus Ivers', 'Strength Coach', 'common', 50, 5, 10, 10, 0.3, 0.2, 0.3, 0.2, 110)
 on conflict (id) do update set name = excluded.name, role = excluded.role, rarity = excluded.rarity, base_power = excluded.base_power, power_per_level = excluded.power_per_level, unlock_shards = excluded.unlock_shards, star_shards = excluded.star_shards, rushing = excluded.rushing, passing = excluded.passing, run_defense = excluded.run_defense, pass_defense = excluded.pass_defense, sort_order = excluded.sort_order;
+
+insert into public.daily_task_types (id, label, detector, reward_cash, sort_order) values
+  ('collect', 'Collect from your boosters', 'collect', 100, 10),
+  ('scout', 'Send your scouts out', 'scout', 100, 20),
+  ('upgrade', 'Start a facility upgrade', 'upgrade', 150, 30),
+  ('challenge', 'Challenge a friend', 'challenge', 200, 40),
+  ('chat', 'Say something in faction chat', 'chat', 75, 50)
+on conflict (id) do update set label = excluded.label, detector = excluded.detector, reward_cash = excluded.reward_cash, sort_order = excluded.sort_order;
+
+insert into public.faction_goal_types (id, label, blurb, metric, per_member, min_target, reward_cash, sort_order) values
+  ('league-wins', 'Win League games', 'Wins by anyone in the faction this week.', 'league_wins', 0.5, 1, 500, 10),
+  ('league-games', 'Show up', 'League games played by the faction this week.', 'league_games', 0.8, 1, 300, 20),
+  ('challenges', 'Throw down', 'Friendly challenges sent or received by faction members this week.', 'challenges', 0.5, 2, 400, 30)
+on conflict (id) do update set label = excluded.label, blurb = excluded.blurb, metric = excluded.metric, per_member = excluded.per_member, min_target = excluded.min_target, reward_cash = excluded.reward_cash, sort_order = excluded.sort_order;
 
 insert into public.game_config (key, value, description) values
   ('FACTION_CAP', '100'::jsonb, 'Active members per faction. docs/phase-0/sharding-and-rivalry.md §4'),

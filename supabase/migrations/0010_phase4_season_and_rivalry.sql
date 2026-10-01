@@ -494,7 +494,8 @@ end;
 $$;
 revoke execute on function public.refresh_standings(text) from public, anon, authenticated;
 
--- Maintenance: schedule, resolve, standings, dormancy.
+-- Maintenance: schedule, resolve, standings, dormancy. The return type changes, so drop first.
+drop function if exists public.run_maintenance();
 create or replace function public.run_maintenance()
 returns table (games_scheduled integer, games_resolved integer, seats_swept integer)
 language plpgsql

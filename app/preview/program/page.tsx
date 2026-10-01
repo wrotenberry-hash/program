@@ -1,11 +1,12 @@
 import { notFound } from "next/navigation";
 import { ProgramView } from "@/components/program-view";
-import { sampleActions, sampleProgram } from "@/app/preview/sample";
+import { sampleActions, sampleDaily, sampleProgram } from "@/app/preview/sample";
+import { flags } from "@/lib/flags";
 
 export const dynamic = "force-dynamic";
 
 /** Design preview with sample data. Only served when PREVIEWS=1. */
 export default function ProgramPreview() {
   if (process.env.PREVIEWS !== "1") notFound();
-  return <ProgramView {...sampleProgram} actions={sampleActions} />;
+  return <ProgramView {...sampleProgram} daily={flags.dailyRewards ? sampleDaily : null} actions={sampleActions} />;
 }

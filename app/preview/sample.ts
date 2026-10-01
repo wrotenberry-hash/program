@@ -1,5 +1,7 @@
 import type { ProgramViewProps } from "@/components/program-view";
 import type { FactionViewProps } from "@/components/faction-view";
+import type { DailyStatus } from "@/components/daily-card";
+import type { FactionGoalStatus } from "@/components/faction-goal-card";
 
 import { noop } from "@/app/preview/actions";
 import { renderNarrative, schoolSubtitle, shortName, teamName, type SchoolNames } from "@/lib/schools";
@@ -53,7 +55,35 @@ export const sampleProgram: Omit<ProgramViewProps, "actions"> = {
   dueGames: 1,
 };
 
-export const sampleActions: ProgramViewProps["actions"] = { joinFaction: noop, collectIncome: noop, startUpgrade: noop, claimUpgrade: noop, signOut: noop };
+export const sampleActions: ProgramViewProps["actions"] = { joinFaction: noop, collectIncome: noop, startUpgrade: noop, claimUpgrade: noop, signOut: noop, claimCheckin: noop, claimDailyTask: noop };
+
+export const sampleDaily: DailyStatus = {
+  enabled: true,
+  day: "2026-10-01",
+  checkin: { claimed: false, streak: 3, reward: 200, ladder: [100, 150, 200, 250, 300, 400, 600] },
+  tasks: [
+    { id: "collect", label: "Collect from your boosters", reward: 100, done: true, claimed: true },
+    { id: "scout", label: "Send your scouts out", reward: 100, done: true, claimed: false },
+    { id: "challenge", label: "Challenge a friend", reward: 200, done: false, claimed: false },
+  ],
+};
+
+export const sampleGoal: FactionGoalStatus = {
+  enabled: true,
+  seated: true,
+  role: "leader",
+  can_set: true,
+  officers: 1,
+  officer_cap: 5,
+  members: 3,
+  week: { season_id: "2026", week_number: 5 },
+  goal: { type_id: "league-wins", label: "Win League games", blurb: "Wins by anyone in the faction this week.", target: 2, reward: 500, progress: 1, met: false, claimed: false, locked: true },
+  types: [
+    { id: "league-wins", label: "Win League games", blurb: "Wins by anyone in the faction this week.", reward: 500, target: 2 },
+    { id: "league-games", label: "Show up", blurb: "League games played by the faction this week.", reward: 300, target: 3 },
+    { id: "challenges", label: "Throw down", blurb: "Friendly challenges sent or received by faction members this week.", reward: 400, target: 2 },
+  ],
+};
 
 export const sampleFaction: FactionViewProps = {
   leagueLabel: "SEC League 1",

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { NationView, type NationRow } from "@/components/nation-view";
 import { shortName } from "@/lib/schools";
+import { loadSeason, standingsLabel } from "@/lib/season";
 
 export const metadata: Metadata = { title: "Nation" };
 
@@ -15,9 +16,8 @@ export default async function NationPage() {
   const { data: program } = await supabase.from("programs").select("id, school:schools(id, name, nickname, full_name, city, state, generic_name, generic_nickname)").eq("account_id", user.id).maybeSingle();
   if (!program) redirect("/onboarding/school");
 
-  const { data: weekRows } = await supabase.rpc("current_week");
-  const week = weekRows?.[0];
-  const seasonId = week?.season_id ?? "2026";
+  const season = await loadSeason(supabase);
+  const seasonId = season.seasonId ?? "";
 
   const [{ data: ledger }, { data: schools }, { data: rival }] = await Promise.all([
     supabase.from("nation_ledger").select("school_id, wins, losses, points").eq("season_id", seasonId),
@@ -41,7 +41,7 @@ export default async function NationPage() {
 
   return (
     <NationView
-      seasonLabel={week ? `2026 · Week ${week.week_number}` : "2026 season"}
+      seasonLabel={standingsLabel(season)}
       mySchool={shortName(program.school)}
       rival={rival && rivalT ? { name: shortName(rival.rival), myPoints: mineT.points, rivalPoints: rivalT.points, myWins: mineT.wins, rivalWins: rivalT.wins } : null}
       rows={rows}

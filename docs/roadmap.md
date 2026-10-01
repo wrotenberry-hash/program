@@ -129,6 +129,19 @@ who won. Verified in the database on 2026-10-01: a nine-fan scenario across
 three Leagues scheduled one game per fan, resolved, scored, awarded two
 trophies, and matched the orphaned Michigan faction across Leagues.
 
+## Test week (2026-10-01 onward)
+
+- [x] Bugged week 4 game voided (kept as a record with its reason) and
+      standings recomputed. A hard delete waits on founder approval.
+- [x] "Confused?" feedback button on every screen; one-tap CSV export.
+- [x] School names behind `FLAG_SCHOOL_NAMES`; generic city names when off.
+- [x] Season rollover (`docs/phase-5/season-rollover.md`): 2026 completes
+      the day after its last week, 2027 activates on its start date,
+      standings start empty, programs and budgets carry over, Leagues
+      settle. Tested end to end on the staging copy.
+- [x] Behind flags, off in production: daily check-in and three-task strip;
+      weekly faction goal with shared reward and the officer role.
+
 ## After the slice
 
 Not scheduled. Listed so they are not forgotten and so nothing here is

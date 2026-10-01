@@ -42,3 +42,22 @@ export async function claimUpgrade(formData: FormData) {
   revalidatePath("/program");
   back();
 }
+
+export async function claimCheckin() {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("claim_daily_checkin");
+  if (error) back(error.message);
+  const row = data?.[0];
+  revalidatePath("/program");
+  back(row ? `Day ${row.streak} check-in: +$${Number(row.reward).toLocaleString("en-US")}.` : undefined);
+}
+
+export async function claimDailyTask(formData: FormData) {
+  const taskId = String(formData.get("task_id") ?? "");
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("claim_daily_task", { p_task_id: taskId });
+  if (error) back(error.message);
+  const row = data?.[0];
+  revalidatePath("/program");
+  back(row ? `Task done: +$${Number(row.reward).toLocaleString("en-US")}.` : undefined);
+}

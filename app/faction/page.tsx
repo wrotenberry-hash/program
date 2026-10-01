@@ -4,11 +4,14 @@ import { createClient } from "@/lib/supabase/server";
 import { FactionView } from "@/components/faction-view";
 import type { ChatMessage } from "@/components/faction-chat";
 import { shortName, teamName } from "@/lib/schools";
+import { claimFactionGoal, setFactionGoal, setFactionRole } from "@/app/faction/actions";
+import type { FactionGoalStatus } from "@/components/faction-goal-card";
+import { flags } from "@/lib/flags";
 
 export const metadata: Metadata = { title: "Your faction" };
 
-export default async function FactionPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
-  const { error } = await searchParams;
+export default async function FactionPage({ searchParams }: { searchParams: Promise<{ error?: string; notice?: string }> }) {
+  const { error, notice } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -34,6 +37,9 @@ export default async function FactionPage({ searchParams }: { searchParams: Prom
     supabase.from("schools").select("id", { count: "exact", head: true }).eq("conference_id", program.school.conference_id),
   ]);
 
+  // Weekly goal and officers render only when both the app flag and the database feature are on.
+  const goal = flags.factionGoals ? ((await supabase.rpc("faction_goal_status")).data as FactionGoalStatus | null) : null;
+
   const history: ChatMessage[] = (messages ?? []).slice().reverse();
 
   return (
@@ -49,6 +55,9 @@ export default async function FactionPage({ searchParams }: { searchParams: Prom
       leagueSchools={(factions ?? []).map((f) => ({ school_id: f.school_id, name: shortName(f.school) }))}
       conferenceSize={conferenceSize ?? 0}
       error={error}
+      notice={notice}
+      goal={goal?.enabled && goal.seated ? goal : null}
+      goalActions={{ setGoal: setFactionGoal, claimGoal: claimFactionGoal, setRole: setFactionRole }}
     />
   );
 }

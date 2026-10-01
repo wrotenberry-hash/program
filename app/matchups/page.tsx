@@ -5,6 +5,7 @@ import { MatchupsView, type GameRow } from "@/components/matchups-view";
 import { challenge, resolveNow, setEmphasis } from "@/app/matchups/actions";
 import type { GameInputs, GameResult } from "@/lib/facets";
 import { loadSchools, renderNarrative, teamName } from "@/lib/schools";
+import { loadSeason, seasonLabel } from "@/lib/season";
 
 export const metadata: Metadata = { title: "Matchups" };
 
@@ -22,7 +23,7 @@ export default async function MatchupsPage({ searchParams }: { searchParams: Pro
   // Resolve anything due before reading, so a late cron never leaves a stale screen.
   await supabase.rpc("run_maintenance");
 
-  const [{ data: facets }, { data: emphases }, { data: games }, { data: week }] = await Promise.all([
+  const [{ data: facets }, { data: emphases }, { data: games }, season] = await Promise.all([
     supabase.rpc("effective_facets", { p_program_id: program.id }),
     supabase.from("emphases").select("id, name, blurb, rushing, passing, run_defense, pass_defense").order("sort_order"),
     supabase
@@ -32,7 +33,7 @@ export default async function MatchupsPage({ searchParams }: { searchParams: Pro
       .is("voided_at", null)
       .order("created_at", { ascending: false })
       .limit(30),
-    supabase.rpc("current_week"),
+    loadSeason(supabase),
   ]);
 
   const schools = await loadSchools(supabase);
@@ -41,7 +42,6 @@ export default async function MatchupsPage({ searchParams }: { searchParams: Pro
     return sc ? teamName(sc) : "Unknown";
   };
   const f = facets?.[0];
-  const w = week?.[0];
   const rows: GameRow[] = (games ?? []).map((g) => ({
     id: g.id,
     kind: g.kind,
@@ -63,7 +63,7 @@ export default async function MatchupsPage({ searchParams }: { searchParams: Pro
       myProgramId={program.id}
       myName={nameOf(program.school_id)}
       shareCode={program.share_code ?? "——————"}
-      seasonLabel={w ? `2026 · Week ${w.week_number}${w.kind === "rivalry" ? " · Rivalry Week" : ""}` : "Offseason"}
+      seasonLabel={seasonLabel(season)}
       facets={{ rushing: Number(f?.rushing ?? 0), passing: Number(f?.passing ?? 0), run_defense: Number(f?.run_defense ?? 0), pass_defense: Number(f?.pass_defense ?? 0), total: f?.total ?? 0 }}
       emphasisId={program.emphasis_id ?? "balanced"}
       emphases={emphases ?? []}

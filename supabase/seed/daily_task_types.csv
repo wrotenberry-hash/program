@@ -1,0 +1,6 @@
+id,label,detector,reward_cash,sort_order
+collect,Collect from your boosters,collect,100,10
+scout,Send your scouts out,scout,100,20
+upgrade,Start a facility upgrade,upgrade,150,30
+challenge,Challenge a friend,challenge,200,40
+chat,Say something in faction chat,chat,75,50

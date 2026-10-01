@@ -32,18 +32,23 @@ for r in rows:
     assert r["rival_school_id"] in school_ids, r
 out.append(",\n".join(f"  ({q(r['school_id'])}, {q(r['rival_school_id'])}, {r['rank']})" for r in rows) + ";\n")
 
-# 2026 season. Week 0 is Saturday 2026-08-29. Inputs lock at 16:00 UTC on the Saturday.
-season_start = dt.date(2026, 8, 29)
-weeks = []
-for n in range(15):
-    day = season_start + dt.timedelta(weeks=n)
-    kind = "nonconference" if n <= 3 else "conference" if n <= 12 else "rivalry" if n == 13 else "championship"
-    weeks.append((n, day, kind))
-out.append("insert into public.seasons (id, year, starts_on, ends_on, status) values ('2026', 2026, '2026-08-29', '2026-12-05', 'active')")
-out.append("on conflict (id) do update set starts_on = excluded.starts_on, ends_on = excluded.ends_on, status = excluded.status;\n")
-out.append("insert into public.season_weeks (season_id, week_number, starts_on, locks_at, kind) values")
-out.append(",\n".join(f"  ('2026', {n}, '{d.isoformat()}', '{d.isoformat()}T16:00:00Z', {q(k)})" for n, d, k in weeks))
-out.append("on conflict (season_id, week_number) do update set starts_on = excluded.starts_on, locks_at = excluded.locks_at, kind = excluded.kind;\n")
+# Seasons. Week 0 is the last Saturday of August; inputs lock at 16:00 UTC on
+# the Saturday. Weeks 0-3 non-conference, 4-12 conference, 13 Rivalry Week,
+# 14 championship. Status is set only when a season row is first created:
+# re-running the seed never moves a season backward (season-rollover.md).
+SEASONS = [(2026, dt.date(2026, 8, 29), "active"), (2027, dt.date(2027, 8, 28), "upcoming")]
+for year, season_start, status in SEASONS:
+    weeks = []
+    for n in range(15):
+        day = season_start + dt.timedelta(weeks=n)
+        kind = "nonconference" if n <= 3 else "conference" if n <= 12 else "rivalry" if n == 13 else "championship"
+        weeks.append((n, day, kind))
+    ends = weeks[-1][1]
+    out.append(f"insert into public.seasons (id, year, starts_on, ends_on, status) values ('{year}', {year}, '{season_start.isoformat()}', '{ends.isoformat()}', '{status}')")
+    out.append("on conflict (id) do update set starts_on = excluded.starts_on, ends_on = excluded.ends_on;\n")
+    out.append("insert into public.season_weeks (season_id, week_number, starts_on, locks_at, kind) values")
+    out.append(",\n".join(f"  ('{year}', {n}, '{d.isoformat()}', '{d.isoformat()}T16:00:00Z', {q(k)})" for n, d, k in weeks))
+    out.append("on conflict (season_id, week_number) do update set starts_on = excluded.starts_on, locks_at = excluded.locks_at, kind = excluded.kind;\n")
 
 config = [
     ("FACTION_CAP", 100, "Active members per faction. docs/phase-0/sharding-and-rivalry.md §4"),
@@ -91,6 +96,16 @@ out.append("insert into public.staff (id, name, role, rarity, base_power, power_
 rows = list(csv.DictReader(open(here / "staff.csv")))
 out.append(",\n".join(f"  ({q(r['id'])}, {q(r['name'])}, {q(r['role'])}, {q(r['rarity'])}, {r['base_power']}, {r['power_per_level']}, {r['unlock_shards']}, {r['star_shards']}, {r['rushing']}, {r['passing']}, {r['run_defense']}, {r['pass_defense']}, {r['sort_order']})" for r in rows))
 out.append("on conflict (id) do update set name = excluded.name, role = excluded.role, rarity = excluded.rarity, base_power = excluded.base_power, power_per_level = excluded.power_per_level, unlock_shards = excluded.unlock_shards, star_shards = excluded.star_shards, rushing = excluded.rushing, passing = excluded.passing, run_defense = excluded.run_defense, pass_defense = excluded.pass_defense, sort_order = excluded.sort_order;\n")
+
+out.append("insert into public.daily_task_types (id, label, detector, reward_cash, sort_order) values")
+rows = list(csv.DictReader(open(here / "daily_task_types.csv")))
+out.append(",\n".join(f"  ({q(r['id'])}, {q(r['label'])}, {q(r['detector'])}, {r['reward_cash']}, {r['sort_order']})" for r in rows))
+out.append("on conflict (id) do update set label = excluded.label, detector = excluded.detector, reward_cash = excluded.reward_cash, sort_order = excluded.sort_order;\n")
+
+out.append("insert into public.faction_goal_types (id, label, blurb, metric, per_member, min_target, reward_cash, sort_order) values")
+rows = list(csv.DictReader(open(here / "faction_goal_types.csv")))
+out.append(",\n".join(f"  ({q(r['id'])}, {q(r['label'])}, {q(r['blurb'])}, {q(r['metric'])}, {r['per_member']}, {r['min_target']}, {r['reward_cash']}, {r['sort_order']})" for r in rows))
+out.append("on conflict (id) do update set label = excluded.label, blurb = excluded.blurb, metric = excluded.metric, per_member = excluded.per_member, min_target = excluded.min_target, reward_cash = excluded.reward_cash, sort_order = excluded.sort_order;\n")
 
 out.append("insert into public.game_config (key, value, description) values")
 out.append(",\n".join(f"  ({q(k)}, {q(json.dumps(v))}::jsonb, {q(d)})" for k, v, d in config))

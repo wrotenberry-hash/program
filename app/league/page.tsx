@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { LeagueView, type BracketPair, type StandingRow, type TrophyRow, type WeekGame } from "@/components/league-view";
 import { loadSchools, teamName } from "@/lib/schools";
+import { loadSeason, seasonLabel, standingsLabel } from "@/lib/season";
 
 export const metadata: Metadata = { title: "League" };
 
@@ -26,8 +27,9 @@ export default async function LeaguePage() {
   await supabase.rpc("run_maintenance");
   const { data: weekRows } = await supabase.rpc("current_week");
   const week = weekRows?.[0];
+  const season = await loadSeason(supabase);
   if (!week) {
-    return <LeagueView leagueLabel={`${seat.league.conference.short_name} League ${seat.league.number}`} seasonLabel="Offseason" weekKind="offseason" myFactionId={seat.faction_id} standings={[]} houseCount={0} games={[]} bracket={[]} trophies={[]} />;
+    return <LeagueView leagueLabel={`${seat.league.conference.short_name} League ${seat.league.number}`} seasonLabel={seasonLabel(season)} weekKind="offseason" myFactionId={seat.faction_id} standings={[]} houseCount={0} games={[]} bracket={[]} trophies={[]} />;
   }
 
   const [{ data: standings }, { data: factions }, { data: seats }, { data: games }, { data: trophies }, { count: schoolsInConf }] = await Promise.all([
@@ -93,7 +95,7 @@ export default async function LeaguePage() {
   return (
     <LeagueView
       leagueLabel={`${seat.league.conference.short_name} League ${seat.league.number}`}
-      seasonLabel={`2026 · Week ${week.week_number}`}
+      seasonLabel={standingsLabel(season)}
       weekKind={week.kind}
       myFactionId={seat.faction_id}
       standings={standingRows}

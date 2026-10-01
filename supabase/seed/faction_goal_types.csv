@@ -1,0 +1,4 @@
+id,label,blurb,metric,per_member,min_target,reward_cash,sort_order
+league-wins,Win League games,Wins by anyone in the faction this week.,league_wins,0.5,1,500,10
+league-games,Show up,League games played by the faction this week.,league_games,0.8,1,300,20
+challenges,Throw down,Friendly challenges sent or received by faction members this week.,challenges,0.5,2,400,30

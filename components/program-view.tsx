@@ -3,6 +3,7 @@ import { Button, Card, Hud, Notice, Pips, Wordmark } from "@/components/ui";
 import { Bolt, Coin, Hammer, Shield, Trophy } from "@/components/icons";
 import { Countdown } from "@/components/countdown";
 import { formatCash, formatDuration } from "@/lib/format";
+import { DailyCard, type DailyStatus } from "@/components/daily-card";
 
 export type FacilityRow = {
   facility_id: string;
@@ -38,12 +39,16 @@ export type ProgramViewProps = {
   emphasisName: string;
   shareCode: string;
   dueGames: number;
+  /** Daily check-in and tasks. Null unless the dailyRewards flag and the database feature are both on. */
+  daily?: DailyStatus | null;
   actions: {
     joinFaction: (formData: FormData) => void | Promise<void>;
     collectIncome: (formData: FormData) => void | Promise<void>;
     startUpgrade: (formData: FormData) => void | Promise<void>;
     claimUpgrade: (formData: FormData) => void | Promise<void>;
     signOut: (formData: FormData) => void | Promise<void>;
+    claimCheckin?: (formData: FormData) => void | Promise<void>;
+    claimDailyTask?: (formData: FormData) => void | Promise<void>;
   };
   now?: number;
 };
@@ -90,6 +95,10 @@ export function ProgramView(p: ProgramViewProps) {
       </section>
 
       {p.notice ? <Notice>{p.notice}</Notice> : null}
+
+      {p.daily && p.actions.claimCheckin && p.actions.claimDailyTask ? (
+        <DailyCard daily={p.daily} claimCheckin={p.actions.claimCheckin} claimTask={p.actions.claimDailyTask} />
+      ) : null}
 
       <Card title="Boosters" accent="gold" icon={<Coin size={14} />} action={<span className="text-xs font-extrabold text-ink-muted">{formatCash(p.incomeRate)}/hr</span>}>
         <form action={p.actions.collectIncome}>

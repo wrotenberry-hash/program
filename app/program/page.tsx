@@ -2,9 +2,12 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/auth/actions";
-import { claimUpgrade, collectIncome, joinFaction, startUpgrade } from "@/app/program/actions";
+import { claimCheckin, claimDailyTask, claimUpgrade, collectIncome, joinFaction, startUpgrade } from "@/app/program/actions";
+import type { DailyStatus } from "@/components/daily-card";
+import { flags } from "@/lib/flags";
 import { ProgramView } from "@/components/program-view";
 import { schoolSubtitle, shortName, teamName } from "@/lib/schools";
+import { loadSeason, seasonLabel } from "@/lib/season";
 
 export const metadata: Metadata = { title: "Your program" };
 
@@ -23,10 +26,10 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
     .maybeSingle();
   if (!program) redirect("/onboarding/school");
 
-  const [{ data: profile }, { data: season }, { data: seat }, { data: treasury }, { data: facilities }, { data: levels }, { data: config }] =
+  const [{ data: profile }, season, { data: seat }, { data: treasury }, { data: facilities }, { data: levels }, { data: config }] =
     await Promise.all([
       supabase.from("profiles").select("display_name").eq("id", user.id).maybeSingle(),
-      supabase.from("seasons").select("id, year").eq("status", "active").maybeSingle(),
+      loadSeason(supabase),
       supabase
         .from("league_seats")
         .select("role, faction:factions(id, name), league:leagues(id, number, conference:conferences(short_name))")
@@ -48,6 +51,8 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
     supabase.from("emphases").select("name").eq("id", program.emphasis_id ?? "balanced").maybeSingle(),
     supabase.from("program_treasury").select("last_scouted_at").eq("program_id", program.id).maybeSingle(),
   ]);
+  // Daily rewards render only when both the app flag and the database feature are on.
+  const daily = flags.dailyRewards ? ((await supabase.rpc("daily_status")).data as DailyStatus | null) : null;
   let factionRank: number | null = null;
   if (seat) {
     const { data: st } = await supabase.from("faction_standings").select("faction_id, points, wins").eq("league_id", seat.league.id).order("points", { ascending: false }).order("wins", { ascending: false });
@@ -55,20 +60,6 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
     factionRank = idx >= 0 ? idx + 1 : null;
   }
 
-  const today = new Date().toISOString().slice(0, 10);
-  const { data: week } = season
-    ? await supabase
-        .from("season_weeks")
-        .select("week_number, kind")
-        .eq("season_id", season.id)
-        .lte("starts_on", today)
-        .order("week_number", { ascending: false })
-        .limit(1)
-        .maybeSingle()
-    : { data: null };
-
-  const weekLabel =
-    week?.kind === "rivalry" ? "Rivalry Week" : week?.kind === "championship" ? "Championship Week" : week ? `Week ${week.week_number}` : "Offseason";
   const cfg = Object.fromEntries((config ?? []).map((c) => [c.key, Number(c.value)]));
   const capHours = cfg.COLLECT_CAP_HOURS || 8;
   const maxConcurrent = cfg.MAX_CONCURRENT_UPGRADES || 1;
@@ -96,7 +87,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
       programName={teamName(program.school)}
       school={{ name: shortName(program.school), full_name: schoolSubtitle(program.school), city: null, state: null }}
       conferenceShort={program.school.conference.short_name}
-      seasonLabel={season ? `${season.year} · ${weekLabel}` : "Offseason"}
+      seasonLabel={seasonLabel(season)}
       seat={seat ? { factionName: teamName(program.school), leagueLabel: `${seat.league.conference.short_name} League ${seat.league.number}`, role: seat.role } : null}
       factionRank={factionRank}
       cash={treasury?.cash ?? 0}
@@ -116,7 +107,8 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
       emphasisName={emphasis?.name ?? "Balanced"}
       shareCode={program.share_code ?? "——————"}
       dueGames={dueGames}
-      actions={{ joinFaction, collectIncome, startUpgrade, claimUpgrade, signOut }}
+      daily={daily?.enabled ? daily : null}
+      actions={{ joinFaction, collectIncome, startUpgrade, claimUpgrade, signOut, claimCheckin, claimDailyTask }}
     />
   );
 }
