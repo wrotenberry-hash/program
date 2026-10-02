@@ -3,7 +3,9 @@ import { Button, Card, Hud, Notice, Pips, Wordmark } from "@/components/ui";
 import { Bolt, Coin, Hammer, Shield, Trophy } from "@/components/icons";
 import { Countdown } from "@/components/countdown";
 import { formatCash, formatDuration } from "@/lib/format";
+import Image from "next/image";
 import { DailyCard, type DailyStatus } from "@/components/daily-card";
+import { buildingArt } from "@/lib/art";
 import { SeasonRewardsCard, type SeasonRewardsStatus } from "@/components/season-rewards-card";
 
 export type FacilityRow = {
@@ -44,6 +46,8 @@ export type ProgramViewProps = {
   daily?: DailyStatus | null;
   /** Unclaimed season-end rewards. Null unless the seasonRewards flag and the database feature are both on and something is waiting. */
   seasonRewards?: SeasonRewardsStatus | null;
+  /** Show building illustrations in the facilities list (flags.campusArt). */
+  art?: boolean;
   actions: {
     joinFaction: (formData: FormData) => void | Promise<void>;
     collectIncome: (formData: FormData) => void | Promise<void>;
@@ -130,10 +134,21 @@ export function ProgramView(p: ProgramViewProps) {
             const ready = upgrading && new Date(r.upgrade_completes_at!).getTime() <= now;
             const gain = next ? (next.power ?? 0) - (cur?.power ?? 0) : 0;
             const canAfford = next ? p.cash >= next.cost : false;
+            const art = p.art ? buildingArt(r.facility_id, r.level) : null;
             return (
               <li key={r.facility_id} className="rounded-2xl border border-line bg-surface-2 p-3">
                 <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
+                  {art ? (
+                    <Image
+                      src={art}
+                      alt=""
+                      width={84}
+                      height={84}
+                      unoptimized
+                      className={`-my-1 -ml-1 size-[84px] shrink-0 object-contain drop-shadow-md ${r.level === 0 ? "opacity-40 grayscale" : ""}`}
+                    />
+                  ) : null}
+                  <div className="min-w-0 flex-1">
                     <p className="truncate text-base font-black">{r.facility.name}</p>
                     <div className="mt-1 flex items-center gap-2 text-xs font-bold text-ink-muted">
                       <Pips level={r.level} tone={r.facility_id === "booster-club" ? "gold" : "primary"} />

@@ -110,6 +110,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
       shareCode={program.share_code ?? "——————"}
       dueGames={dueGames}
       daily={daily?.enabled ? daily : null}
+      art={flags.campusArt}
       seasonRewards={seasonRewards?.enabled && seasonRewards.unclaimed.length > 0 ? seasonRewards : null}
       actions={{ joinFaction, collectIncome, startUpgrade, claimUpgrade, signOut, claimCheckin, claimDailyTask, claimSeasonRewards }}
     />

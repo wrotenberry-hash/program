@@ -24,6 +24,8 @@ export const flags = {
   seasonRewards: on("FLAG_SEASON_REWARDS"),
   /** Adults only: signups under 18 are turned away. On for the beta (database: FEATURE_ADULTS_ONLY). */
   adultsOnly: on("FLAG_ADULTS_ONLY"),
+  /** Illustrated buildings on the program screen. Off until the full set is in. */
+  campusArt: on("FLAG_CAMPUS_ART"),
 } as const;
 
 export type FlagName = keyof typeof flags;
