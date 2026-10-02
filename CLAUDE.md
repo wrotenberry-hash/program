@@ -96,11 +96,12 @@ are a licensing question and belong to the escalation list.
 ### 3.7 It looks and feels like a game
 
 Founder decision, 2026-09-30. Every screen reads as a colorful cartoon mobile
-game in the Last War register: saturated color on deep backgrounds, chunky
+game in the Last War register: saturated color on a bright backdrop, chunky
 rounded panels, big numbers, and a glowing button whenever there is
 something to collect or claim. A screen with nothing inviting to tap is a
-defect. `docs/design.md` is the spec and every value in it is literal. Both
-light and dark are tested on every screen.
+defect. `docs/design.md` is the spec and every value in it is literal. There
+is one look, light, on every phone; no dark mode (founder decision,
+2026-10-02).
 
 ### 3.8 Both session lengths are first-class
 

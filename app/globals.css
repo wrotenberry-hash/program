@@ -19,29 +19,8 @@
   --faction: #7c5ce6;
   --danger: #e0343a;
   --shadow: 0 10px 30px rgba(18, 26, 58, 0.10);
-  color-scheme: light dark;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0b1230;
-    --bg-2: #151e4a;
-    --surface: #1a2454;
-    --surface-2: #222f6b;
-    --ink: #f5f7ff;
-    --ink-muted: #a9b4e3;
-    --line: #2e3c82;
-    --primary: #3e7bff;
-    --primary-ink: #ffffff;
-    --gold: #ffc94a;
-    --gold-ink: #3a2600;
-    --go: #3ddc84;
-    --go-ink: #04260f;
-    --power: #ff7a1a;
-    --faction: #a78bfa;
-    --danger: #ff5a5f;
-    --shadow: 0 12px 34px rgba(0, 0, 0, 0.45);
-  }
+  /* One look for everyone (CONTEXT.md 2026-10-02): light, whatever the phone is set to. */
+  color-scheme: light;
 }
 
 @theme inline {

@@ -5,33 +5,33 @@ the art and may replace this palette; until then, this is the law.
 
 ## Register
 
-Colorful cartoon mobile game. Think Last War: deep navy space behind bright,
-chunky, rounded panels; gold for money and rewards; green for "go"; a warm
-orange glow for power. Nothing flat, nothing gray, nothing that reads as a
+Colorful cartoon mobile game. Think Last War's chunky, rounded panels and
+glowing buttons, on a bright sky-blue backdrop: gold for money and rewards;
+green for "go"; a warm orange glow for power. Nothing flat, nothing gray, nothing that reads as a
 form. Every screen has at least one glowing button that wants to be tapped.
 
 ## Palette
 
 Tokens live on `:root` in `app/globals.css` and map to Tailwind colors.
 
-| Token | Dark | Light | Use |
-|---|---|---|---|
-| `--bg` | `#0B1230` | `#E9F0FF` | Page background, top of gradient |
-| `--bg-2` | `#151E4A` | `#F7FAFF` | Page background, bottom of gradient |
-| `--surface` | `#1A2454` | `#FFFFFF` | Panels |
-| `--surface-2` | `#222F6B` | `#EEF3FF` | Nested panels, tiles |
-| `--ink` | `#F5F7FF` | `#121A3A` | Text |
-| `--ink-muted` | `#A9B4E3` | `#5B6693` | Secondary text |
-| `--line` | `#2E3C82` | `#CFD9F6` | Borders |
-| `--primary` | `#3E7BFF` | `#2F6BFF` | Primary actions |
-| `--primary-ink` | `#FFFFFF` | `#FFFFFF` | Text on primary |
-| `--gold` | `#FFC94A` | `#FFB300` | Currency, rewards, collect |
-| `--gold-ink` | `#3A2600` | `#3A2600` | Text on gold |
-| `--go` | `#3DDC84` | `#1FB864` | Claim, ready, success |
-| `--go-ink` | `#04260F` | `#FFFFFF` | Text on go |
-| `--power` | `#FF7A1A` | `#F26A00` | Power number and glow |
-| `--faction` | `#A78BFA` | `#7C5CE6` | Faction accents |
-| `--danger` | `#FF5A5F` | `#E0343A` | Errors only |
+| Token | Value | Use |
+|---|---|---|
+| `--bg` | `#E9F0FF` | Page background, top of gradient |
+| `--bg-2` | `#F7FAFF` | Page background, bottom of gradient |
+| `--surface` | `#FFFFFF` | Panels |
+| `--surface-2` | `#EEF3FF` | Nested panels, tiles |
+| `--ink` | `#121A3A` | Text |
+| `--ink-muted` | `#5B6693` | Secondary text |
+| `--line` | `#CFD9F6` | Borders |
+| `--primary` | `#2F6BFF` | Primary actions |
+| `--primary-ink` | `#FFFFFF` | Text on primary |
+| `--gold` | `#FFB300` | Currency, rewards, collect |
+| `--gold-ink` | `#3A2600` | Text on gold |
+| `--go` | `#1FB864` | Claim, ready, success |
+| `--go-ink` | `#FFFFFF` | Text on go |
+| `--power` | `#F26A00` | Power number and glow |
+| `--faction` | `#7C5CE6` | Faction accents |
+| `--danger` | `#E0343A` | Errors only |
 
 ## Type
 
@@ -63,6 +63,7 @@ No emoji. No icon fonts. No external image hosts.
 
 ## Rules
 
-- Light mode is real. Both modes are checked on every screen.
+- One look for everyone: light, whatever the phone is set to. There is no
+  dark mode (founder decision, 2026-10-02).
 - One glowing button per screen at most; the most valuable tap gets it.
 - Red is for errors. Never for accents or hover.

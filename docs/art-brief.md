@@ -19,9 +19,9 @@ and games like it: a bright base you tap around, rounded 3D-ish buildings,
 glowing buttons, gold coins, a big orange power number. Inviting and
 playful, never gritty, never a spreadsheet.
 
-The interface already exists with a set palette (deep navy in dark mode, soft
-blue-white in light mode, gold, green, orange, purple). Screenshots are
-attached. Your art sits on top of that, in **both light and dark mode**.
+The interface already exists with a set palette (soft
+blue-white backdrop, white panels, gold, green, orange, purple). Screenshots are
+attached. Your art sits on that light backdrop; there is no dark mode.
 
 ## Hard rules
 

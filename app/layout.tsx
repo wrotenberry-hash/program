@@ -8,17 +8,14 @@ export const metadata: Metadata = {
   title: { default: "Program", template: "%s · Program" },
   description: "Build your school's program. Join your faction. Put your power up against your rival's.",
   applicationName: "Program",
-  appleWebApp: { capable: true, title: "Program", statusBarStyle: "black-translucent" },
+  appleWebApp: { capable: true, title: "Program", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#e9f0ff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0b1230" },
-  ],
+  themeColor: "#e9f0ff",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

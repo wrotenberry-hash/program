@@ -90,3 +90,5 @@ These OVERRIDE the base prompt wherever they conflict.
 - 2026-10-02: Season prizes are in-game budget, never real money.
 - 2026-10-02: Build toward the beta now, behind flags, while the private
   test runs. Results feed, monetization, and native app stay on hold.
+- 2026-10-02: One look for everyone, light. No dark mode; the game ignores
+  the phone's dark setting.
