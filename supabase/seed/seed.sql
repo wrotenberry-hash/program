@@ -505,7 +505,7 @@ insert into public.staff (id, name, role, rarity, base_power, power_per_level, u
   ('rb-tolliver', 'Marcus Tolliver', 'Running Backs Coach', 'rare', 80, 8, 20, 20, 0.6, 0.15, 0.15, 0.1, 40),
   ('wr-nakamura', 'Kenji Nakamura', 'Receivers Coach', 'common', 50, 5, 10, 10, 0.1, 0.65, 0.1, 0.15, 50),
   ('ol-brannigan', 'Pat Brannigan', 'Offensive Line Coach', 'common', 50, 5, 10, 10, 0.5, 0.3, 0.1, 0.1, 60),
-  ('dl-mbeki', 'Thabo Mbeki', 'Defensive Line Coach', 'common', 50, 5, 10, 10, 0.1, 0.1, 0.55, 0.25, 70),
+  ('dl-mbeki', 'Thabo Mokoena', 'Defensive Line Coach', 'common', 50, 5, 10, 10, 0.1, 0.1, 0.55, 0.25, 70),
   ('lb-ferreira', 'Luana Ferreira', 'Linebackers Coach', 'common', 50, 5, 10, 10, 0.1, 0.1, 0.5, 0.3, 80),
   ('db-castellano', 'Nico Castellano', 'Secondary Coach', 'rare', 80, 8, 20, 20, 0.1, 0.15, 0.15, 0.6, 90),
   ('rc-hawthorne', 'Dee Hawthorne', 'Recruiting Coordinator', 'rare', 80, 8, 20, 20, 0.25, 0.25, 0.25, 0.25, 100),

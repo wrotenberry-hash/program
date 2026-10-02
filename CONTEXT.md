@@ -80,3 +80,13 @@ These OVERRIDE the base prompt wherever they conflict.
   TypeScript package, because that is the only place a result cannot be
   forged by a player calling our functions directly. Same determinism: a
   stored seed and frozen inputs replay to the same result.
+- 2026-10-02: Rivalry Week beta. A few hundred invited fans from two or
+  three rival schools play from Rivalry Week (2026-11-28). Public soft launch
+  at the start of the 2027 season. Plan in `docs/beta-plan.md`.
+- 2026-10-02: The beta is 18+ only. Signups under 18 are turned away.
+- 2026-10-02: Notifications are off hold for the beta: email and browser
+  alerts, opt-in only. The sending service is still a dependency decision
+  (CLAUDE.md §4) and comes back to the founder before it is added.
+- 2026-10-02: Season prizes are in-game budget, never real money.
+- 2026-10-02: Build toward the beta now, behind flags, while the private
+  test runs. Results feed, monetization, and native app stay on hold.
