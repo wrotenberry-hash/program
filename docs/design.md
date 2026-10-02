@@ -61,6 +61,16 @@ Inline SVG only, single color, drawn from the token of the thing they mark
 (gold coin for budget, orange bolt for power, purple shield for faction).
 No emoji. No icon fonts. No external image hosts.
 
+## Campus home
+
+The founder-approved target is `docs/mockups/home-target-2026-10-02.png`
+(made with ChatGPT; its text is placeholder). Everything floating over the
+campus uses navy glass with a thin gold rim (`.navy-glass`): resources,
+round buttons, nameplates, the mission strip. Gold is `#D6B15C` for rims and
+`#F6DD94` for gold text. White type with a soft shadow (`.game-text`), never
+a thick cartoon outline. Green (`#2FBF6F` to `#0B6A36`) only for go actions:
+Matchups, Claim, Ready. The other app screens keep the light look.
+
 ## Rules
 
 - One look for everyone: light, whatever the phone is set to. There is no

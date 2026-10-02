@@ -375,7 +375,7 @@ export function CampusMap({
           {/* Labels and bubbles ride above every building so none hides behind another. Taps pass through. */}
           {placed.map(({ r, st, canUpgrade, w, foot, bubble }) => (
             <div key={`o-${r.facility_id}`} className="pointer-events-none absolute" style={{ left: foot.x, top: foot.y, zIndex: 900 }}>
-              <span className="absolute -top-[30px] left-0 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full bg-[#121a3a]/70 py-0.5 pl-0.5 pr-2 text-[11px] font-black text-white ring-1 ring-white/30">
+              <span className="absolute -top-[30px] left-0 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full bg-[#0b1430]/85 py-0.5 pl-0.5 pr-2.5 text-[11px] font-bold text-white ring-1 ring-[#d6b15c]/50">
                 {r.level > 0 ? (
                   <span className="grid min-w-5 place-items-center rounded-full bg-gradient-to-b from-[#ffe08a] to-[#ffb300] px-1 text-[10px] leading-5 text-[#3a2600] tabular-nums">
                     {r.level}
@@ -388,7 +388,7 @@ export function CampusMap({
               </span>
               {st === "ready" ? (
                 <span
-                  className="bubble-tail bob absolute left-0 -translate-x-1/2 rounded-2xl border-2 border-white bg-gradient-to-b from-[#5fe39b] to-[#1fb864] px-3 py-1 shadow-lg"
+                  className="bubble-tail bob absolute left-0 -translate-x-1/2 rounded-xl border-[1.5px] border-white bg-gradient-to-b from-[#2fbf6f] to-[#0e7a3f] px-3.5 py-1 shadow-[0_4px_12px_rgba(5,10,25,0.5)]"
                   style={{ top: -w * bubble }}
                 >
                   <span className="game-text relative z-10 text-sm font-black">Ready!</span>
@@ -400,7 +400,7 @@ export function CampusMap({
                 </span>
               ) : st === "unbuilt" ? (
                 <span
-                  className={`bubble-tail absolute left-0 -translate-x-1/2 rounded-2xl border-2 border-white px-3 py-1 shadow-lg ${canUpgrade ? "bob bg-gradient-to-b from-[#6ea2ff] to-[#2f6bff]" : "bg-gradient-to-b from-[#c4cbe0] to-[#9aa3c0]"}`}
+                  className={`bubble-tail absolute left-0 -translate-x-1/2 rounded-xl border-[1.5px] px-3 py-1 shadow-[0_4px_12px_rgba(5,10,25,0.5)] bg-gradient-to-b from-[#2c3f6e] to-[#0f1b3a] ${canUpgrade ? "bob border-[#f6dd94]" : "border-white/70 opacity-90"}`}
                   style={{ top: -w * 0.75 }}
                 >
                   <span className="game-text relative z-10 inline-flex items-center gap-1 text-sm font-black">
@@ -415,10 +415,10 @@ export function CampusMap({
             <form action={collectIncome} className="absolute" style={{ left: coinAt.x - 46, top: coinAt.y - TW * 2.3, zIndex: 950 }}>
               <button
                 type="submit"
-                className="bubble-tail bob relative flex w-[92px] flex-col items-center rounded-2xl border-2 border-white bg-gradient-to-b from-[#fff3c4] to-[#ffd75e] px-2 py-1.5 shadow-lg"
+                className="bubble-tail bob relative flex w-[92px] flex-col items-center rounded-2xl border-[1.5px] border-[#fff1c2] bg-gradient-to-b from-[#f2cf6b] to-[#b8862a] px-2 py-1.5 shadow-[0_0_22px_rgba(255,206,90,0.65),0_6px_14px_rgba(5,10,25,0.45)]"
                 aria-label={`Collect ${formatCash(accrued)} from the boosters`}
               >
-                <span className="grid size-9 place-items-center rounded-full bg-gradient-to-b from-[#ffe08a] to-[#ffb300] text-white ring-2 ring-white drop-shadow-[0_2px_0_#b47a00]">
+                <span className="grid size-9 place-items-center rounded-full bg-gradient-to-b from-[#ffe39a] to-[#c9922a] text-white ring-1 ring-[#fff1c2] shadow-inner">
                   <Coin size={24} />
                 </span>
                 <span className="game-text relative z-10 mt-0.5 text-[15px] font-black tabular-nums">{formatCash(accrued)}</span>

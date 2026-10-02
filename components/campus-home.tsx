@@ -56,7 +56,7 @@ function HudButton({
   const body = (
     <>
       <span
-        className={`relative grid size-[54px] place-items-center rounded-full bg-[radial-gradient(circle_at_50%_35%,#4a5878_0%,#2a3452_70%,#222a44_100%)] shadow-[0_4px_10px_rgba(18,26,58,0.45)] ring-[3px] ${pointed ? "bob ring-[#ffb300]" : "ring-[#dfe7f6]/90"} ${pulse ? "bob" : ""}`}
+        className={`relative grid size-[54px] place-items-center rounded-full bg-[radial-gradient(circle_at_50%_30%,#2c3f6e_0%,#16244a_65%,#0b1430_100%)] shadow-[0_0_0_2px_#0b1430,0_5px_12px_rgba(5,10,25,0.55)] ring-2 ${pointed ? "bob ring-[#ffcf4a]" : "ring-[#d6b15c]"} ${pulse ? "bob" : ""}`}
       >
         {pointed ? <PointerArrow from={pointed} /> : null}
         <span className="drop-shadow-[0_2px_1px_rgba(0,0,0,0.35)]">{icon}</span>
@@ -68,7 +68,7 @@ function HudButton({
           </span>
         ) : null}
       </span>
-      <span className="game-text mt-1 whitespace-nowrap text-[11px] font-black leading-none">{label}</span>
+      <span className="mt-1 whitespace-nowrap rounded-full bg-[#0b1430]/85 px-2 py-0.5 text-[11px] font-bold leading-none text-white ring-1 ring-[#d6b15c]/50">{label}</span>
     </>
   );
   const cls = "campus-bldg pointer-events-auto flex w-16 flex-col items-center";
@@ -87,9 +87,9 @@ function HudButton({
 /** One resource in the top bar: an icon coin and a game-type number. */
 function Resource({ icon, value, face }: { icon: ReactNode; value: string; face: string }) {
   return (
-    <span className="flex items-center gap-1.5 rounded-full bg-[#121a3a]/55 py-0.5 pl-0.5 pr-3 ring-1 ring-white/25 backdrop-blur-sm">
-      <span className={`grid size-7 place-items-center rounded-full text-white ring-2 ring-white ${face}`}>{icon}</span>
-      <span className="game-text text-[15px] font-black tabular-nums">{value}</span>
+    <span className="navy-glass flex items-center gap-2 rounded-full py-0.5 pl-0.5 pr-3.5">
+      <span className={`grid size-7 place-items-center rounded-full text-white ring-1 ring-[#f3dc9a] ${face}`}>{icon}</span>
+      <span className="game-text text-[15px] font-extrabold tabular-nums">{value}</span>
     </span>
   );
 }
@@ -134,7 +134,7 @@ export function CampusHome(p: ProgramViewProps) {
   const dailyLeft = p.daily ? (p.daily.checkin.claimed ? 0 : 1) + p.daily.tasks.filter((t) => t.done && !t.claimed).length : 0;
 
   return (
-    <div className="fixed inset-y-0 left-0 right-0 mx-auto w-full max-w-md overflow-hidden bg-[#86c95f]">
+    <div className="fixed inset-y-0 left-0 right-0 mx-auto w-full max-w-md overflow-hidden bg-[radial-gradient(circle_at_50%_45%,#6aa451_0%,#3c6a37_55%,#22402a_100%)]">
       <CampusMap
         rows={rows}
         levels={p.levels}
@@ -150,32 +150,37 @@ export function CampusHome(p: ProgramViewProps) {
       />
 
       {/* Top: who you are, then resources. */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-[1000] bg-gradient-to-b from-[#121a3a]/55 via-[#121a3a]/20 to-transparent px-3 pb-8 pt-[max(0.5rem,env(safe-area-inset-top))]">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-[1000] bg-gradient-to-b from-[#0b1430]/80 via-[#0b1430]/35 to-transparent px-3 pb-10 pt-[max(0.5rem,env(safe-area-inset-top))]">
         <div className="flex items-center justify-between gap-2">
-          <button type="button" onClick={() => setSheet("menu")} className="campus-bldg pointer-events-auto flex min-w-0 items-center gap-2" aria-label="Your program">
+          <button type="button" onClick={() => setSheet("menu")} className="campus-bldg pointer-events-auto flex min-w-0 max-w-[calc(100%-132px)] items-center gap-2" aria-label="Your program">
             {/* Program crest: a shield in power orange carrying the conference. */}
             <span className="relative grid size-12 shrink-0 place-items-center">
-              <svg viewBox="0 0 48 52" className="absolute inset-0 size-12 drop-shadow-[0_3px_0_#121a3a]" aria-hidden="true">
+              <svg viewBox="0 0 48 52" className="absolute inset-0 size-12 drop-shadow-[0_3px_6px_rgba(5,10,25,0.6)]" aria-hidden="true">
                 <defs>
                   <linearGradient id="crest" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0" stopColor="#ffb067" />
-                    <stop offset="1" stopColor="#f26a00" />
+                    <stop offset="0" stopColor="#2c3f6e" />
+                    <stop offset="1" stopColor="#0b1430" />
+                  </linearGradient>
+                  <linearGradient id="crest-rim" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stopColor="#f6dd94" />
+                    <stop offset="1" stopColor="#b8892e" />
                   </linearGradient>
                 </defs>
-                <path d="M24 2 L44 9 V26 C44 39 34 47 24 50 C14 47 4 39 4 26 V9 Z" fill="url(#crest)" stroke="#ffffff" strokeWidth="3" />
+                <path d="M24 2 L44 9 V26 C44 39 34 47 24 50 C14 47 4 39 4 26 V9 Z" fill="url(#crest)" stroke="url(#crest-rim)" strokeWidth="3" />
+                <path d="M24 12 l1.6 3.3 3.6 .5 -2.6 2.5 .6 3.6 -3.2-1.7 -3.2 1.7 .6-3.6 -2.6-2.5 3.6-.5 Z" fill="#f6dd94" />
               </svg>
-              <span className="game-text relative text-[11px] font-black">{p.conferenceShort}</span>
+              <span className="relative mt-4 text-[9px] font-black tracking-wider text-[#f6dd94]">{p.conferenceShort}</span>
             </span>
             <span className="min-w-0 text-left">
-              <span className="game-text block truncate text-[17px] font-black leading-tight">{p.programName}</span>
-              <span className="mt-0.5 inline-block rounded-full bg-[#121a3a]/55 px-2 text-[10px] font-black uppercase tracking-wider text-gold">{p.seasonLabel}</span>
+              <span className="game-text block truncate text-[17px] font-black uppercase leading-tight tracking-wide">{p.programName}</span>
+              <span className="mt-1 inline-block rounded-full border border-[#d6b15c]/80 bg-[#0b1430]/70 px-2.5 py-px text-[10px] font-bold uppercase tracking-wider text-[#f6dd94]">{p.seasonLabel}</span>
             </span>
           </button>
         </div>
         <div className="mt-2 flex flex-wrap gap-1.5">
-          <Resource icon={<Bolt size={16} />} value={power.toLocaleString("en-US")} face="bg-gradient-to-b from-[#ffaa5c] to-[#f26a00]" />
-          <Resource icon={<Coin size={16} />} value={formatCash(p.cash)} face="bg-gradient-to-b from-[#ffe08a] to-[#ffb300]" />
-          <span className="game-text self-center text-xs font-black tabular-nums">+{formatCash(p.incomeRate)}/hr</span>
+          <Resource icon={<Bolt size={16} />} value={power.toLocaleString("en-US")} face="bg-gradient-to-b from-[#ff9a4a] to-[#c24e00]" />
+          <Resource icon={<Coin size={16} />} value={formatCash(p.cash)} face="bg-gradient-to-b from-[#ffd76a] to-[#b8892e]" />
+          <span className="self-center text-[13px] font-extrabold tabular-nums text-[#5fe39b] [text-shadow:0_1px_2px_rgba(5,10,25,0.8)]">+{formatCash(p.incomeRate)}/hr</span>
         </div>
         {p.notice ? (
           <p className="pointer-events-auto mt-2 rounded-2xl bg-white/95 px-3 py-2 text-sm font-bold shadow-lg" role="status">
@@ -195,7 +200,7 @@ export function CampusHome(p: ProgramViewProps) {
       {/* The current mission, Last War style: one line, a reward, and Claim when it's done. */}
       {mission ? (
         <div className="pointer-events-none absolute inset-x-2 bottom-[calc(max(0.6rem,env(safe-area-inset-bottom))+92px)] z-[1001] flex items-center">
-          <span className="pointer-events-auto relative z-10 grid size-14 shrink-0 place-items-center rounded-2xl border-2 border-white bg-gradient-to-b from-[#ffe08a] to-[#ffb300] shadow-[0_4px_0_#b47a00,0_6px_12px_rgba(18,26,58,0.35)]">
+          <span className="pointer-events-auto relative z-10 grid size-14 shrink-0 place-items-center rounded-2xl border-[1.5px] border-[#f6dd94] bg-gradient-to-b from-[#e9c66a] to-[#a8781f] shadow-[0_4px_14px_rgba(5,10,25,0.5)]">
             <HudClipboard size={30} />
             <span className="game-text absolute -bottom-2 text-[11px] font-black">
               {p.missions!.claimed + 1}/{p.missions!.total}
@@ -205,13 +210,13 @@ export function CampusHome(p: ProgramViewProps) {
             type="button"
             onClick={() => (mission.target.startsWith("/") ? router.push(mission.target) : setFocusKey((k) => k + 1))}
             disabled={mission.done}
-            className="pointer-events-auto -ml-3 flex h-11 min-w-0 flex-1 items-center gap-2 rounded-r-xl bg-[#121a3a]/70 pl-5 pr-2 text-left backdrop-blur-sm"
+            className="navy-glass pointer-events-auto -ml-3 flex h-12 min-w-0 flex-1 items-center gap-2 rounded-r-xl border-l-0 pl-5 pr-2 text-left"
             aria-label={`Mission: ${mission.label}`}
           >
             <span className="game-text line-clamp-2 min-w-0 flex-1 text-[13px] font-black leading-[1.15]">{mission.label}</span>
             <span className={`game-text shrink-0 text-[13px] font-black ${mission.done ? "!text-[#5fe39b]" : ""}`}>({mission.done ? 1 : 0}/1)</span>
             {!mission.done ? (
-              <span className="flex shrink-0 items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 text-[12px] font-black text-[#ffe08a]">
+              <span className="flex shrink-0 items-center gap-1 rounded-full border border-[#d6b15c]/80 bg-[#0b1430]/60 px-2 py-0.5 text-[12px] font-extrabold text-[#f6dd94]">
                 <Coin size={14} /> +{formatCash(mission.reward)}
               </span>
             ) : null}
@@ -221,8 +226,7 @@ export function CampusHome(p: ProgramViewProps) {
               <input type="hidden" name="mission_id" value={mission.id} />
               <button
                 type="submit"
-                className="game-tile bob flex h-11 items-center gap-1 rounded-xl bg-gradient-to-b from-[#5fe39b] to-[#1fb864] px-3"
-                style={{ ["--edge" as string]: "#158a48" }}
+                className="bob flex h-12 items-center gap-1 rounded-xl border-[1.5px] border-[#d6b15c] bg-gradient-to-b from-[#2fbf6f] to-[#0e7a3f] px-3 shadow-[0_4px_14px_rgba(5,10,25,0.5)]"
               >
                 <span className="game-text relative z-10 text-[15px] font-black">Claim +{formatCash(mission.reward)}</span>
               </button>
@@ -232,21 +236,24 @@ export function CampusHome(p: ProgramViewProps) {
       ) : null}
 
       {/* Bottom: game day, then your people. */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1000] flex items-end gap-1.5 bg-gradient-to-t from-[#121a3a]/55 via-[#121a3a]/20 to-transparent px-2 pb-[max(0.6rem,env(safe-area-inset-bottom))] pt-12">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1000] flex items-end gap-1.5 bg-gradient-to-t from-[#0b1430]/85 via-[#0b1430]/40 to-transparent px-2 pb-[max(0.6rem,env(safe-area-inset-bottom))] pt-12">
         <Link
           href="/matchups"
-          className={`game-tile campus-bldg pointer-events-auto mb-[18px] flex h-[62px] min-w-0 flex-1 items-center gap-2 rounded-2xl bg-gradient-to-b from-[#5fe39b] to-[#1fb864] px-3 text-white ${p.dueGames > 0 || hudTarget === "/matchups" ? "bob" : ""} ${hudTarget === "/matchups" ? "!border-[#ffb300]" : ""}`}
+          className={`campus-bldg pointer-events-auto relative mb-[18px] flex h-[62px] min-w-0 flex-1 items-center gap-2 rounded-2xl border-2 border-[#d6b15c] bg-gradient-to-b from-[#2fbf6f] to-[#0b6a36] px-3 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_6px_16px_rgba(5,10,25,0.5)] ${p.dueGames > 0 || hudTarget === "/matchups" ? "bob" : ""} ${hudTarget === "/matchups" ? "!border-[#ffb300]" : ""}`}
           style={{ ["--edge" as string]: "#158a48" }}
         >
           {hudTarget === "/matchups" ? <PointerArrow from="above" /> : null}
           <span className="relative z-10 shrink-0 drop-shadow-[0_2px_0_rgba(18,26,58,0.35)]">
-            <HudHelmet size={32} />
+            <HudHelmet size={28} />
           </span>
           <span className="relative z-10 min-w-0">
-            <span className="game-text block truncate text-base font-black leading-tight">{p.dueGames > 0 ? "See result" : "Matchups"}</span>
-            <span className="block truncate text-[11px] font-black text-[#04260f]/80">
+            <span className="game-text block truncate text-[15px] font-black leading-tight">{p.dueGames > 0 ? "See result" : "Matchups"}</span>
+            <span className="block truncate text-[11px] font-bold text-[#b9f5cf]">
               {p.record.wins}–{p.record.losses} · {p.emphasisName}
             </span>
+          </span>
+          <span className="relative z-10 -mr-1 ml-auto shrink-0 text-xl font-black text-white/90" aria-hidden="true">
+            ›
           </span>
         </Link>
         {p.seat ? (

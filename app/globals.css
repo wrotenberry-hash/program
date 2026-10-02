@@ -103,13 +103,18 @@ input, select, button { font: inherit; }
 }
 
 .panel { box-shadow: var(--shadow); }
-/* Game type: white with a navy outline, for numbers and labels floating over the map. */
+/* Game type: clean white with a soft shadow, readable over the map without a cartoon outline. */
 .game-text {
   color: #ffffff;
-  -webkit-text-stroke: 3px #121a3a;
-  paint-order: stroke fill;
-  text-shadow: 0 2px 0 #121a3a;
+  text-shadow: 0 1px 2px rgba(5, 10, 25, 0.75), 0 0 1px rgba(5, 10, 25, 0.6);
   letter-spacing: 0.01em;
+}
+/* Navy glass with a thin gold rim: the frame for everything floating over the campus. */
+.navy-glass {
+  background: linear-gradient(180deg, rgba(30, 44, 80, 0.92), rgba(11, 19, 40, 0.92));
+  border: 1.5px solid rgba(214, 177, 92, 0.85);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 4px 14px rgba(5, 10, 25, 0.45);
+  backdrop-filter: blur(4px);
 }
 /* Glossy game tile: a gradient face, a lighter top sheen, and a dark bottom edge. */
 .game-tile {
@@ -141,7 +146,14 @@ input, select, button { font: inherit; }
 }
 
 /* On the campus home the bottom edge belongs to the mission strip and bottom bar; the feedback button takes the free top-right corner. */
-html[data-campus] .feedback-btn { top: max(0.75rem, env(safe-area-inset-top)); bottom: auto; }
+html[data-campus] .feedback-btn {
+  top: max(0.75rem, env(safe-area-inset-top));
+  bottom: auto;
+  background: linear-gradient(180deg, rgba(30, 44, 80, 0.95), rgba(11, 19, 40, 0.95));
+  color: #ffffff;
+  --tw-ring-color: rgba(214, 177, 92, 0.85);
+  --btn-edge: #0b1328;
+}
 .no-scrollbar { scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .power-glow { text-shadow: 0 0 18px color-mix(in srgb, var(--power) 55%, transparent); }
