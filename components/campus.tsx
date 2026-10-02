@@ -67,72 +67,185 @@ function diamond(gx: number, gy: number, w = 1, h = 1): string {
   return `${a.x},${a.y} ${b.x},${b.y} ${c.x},${c.y} ${d.x},${d.y}`;
 }
 
-/** The ground: grass, walkways, and a paved lot under every building. */
+/** Deterministic 0–1 noise so the ground looks hand-placed but never changes between renders. */
+function rand(a: number, b: number, c = 0): number {
+  const s = Math.sin(a * 127.1 + b * 311.7 + c * 74.7) * 43758.5453;
+  return s - Math.floor(s);
+}
+
+const isRoad = (gx: number, gy: number) => ROAD_GX.has(gx) || ROAD_GY.has(gy);
+const onLot = (gx: number, gy: number) =>
+  Object.values(LOTS).some((l) => gx + 0.5 > l.gx && gx + 0.5 < l.gx + l.n && gy + 0.5 > l.gy && gy + 0.5 < l.gy + l.n) ||
+  (gx >= PARKING.gx && gx < PARKING.gx + PARKING.n && gy >= PARKING.gy && gy < PARKING.gy + PARKING.n);
+
+/** An isometric box (benches, cars) from a grid footprint and a height in px. */
+function IsoBox({ gx, gy, w, d, h, top, left, right }: { gx: number; gy: number; w: number; d: number; h: number; top: string; left: string; right: string }) {
+  const a = at(gx, gy), b = at(gx + w, gy), c = at(gx + w, gy + d), e = at(gx, gy + d);
+  const up = (p: { x: number; y: number }) => `${p.x},${p.y - h}`;
+  const pt = (p: { x: number; y: number }) => `${p.x},${p.y}`;
+  return (
+    <g>
+      <polygon points={`${pt(e)} ${pt(c)} ${up(c)} ${up(e)}`} fill={left} />
+      <polygon points={`${pt(c)} ${pt(b)} ${up(b)} ${up(c)}`} fill={right} />
+      <polygon points={`${up(a)} ${up(b)} ${up(c)} ${up(e)}`} fill={top} />
+    </g>
+  );
+}
+
+const CAR_COLORS = [
+  ["#e94b4b", "#b83434", "#cf3e3e"],
+  ["#3e7bff", "#2a57c2", "#3368e0"],
+  ["#ffc94a", "#d49a18", "#e8b030"],
+  ["#ffffff", "#c9d1e6", "#e3e8f4"],
+  ["#3ddc84", "#22a85f", "#2fc272"],
+];
+
+/** The ground: grass with tufts and flowers, curbed walkways, paved lots, a parking lot, and an earthen edge. */
 function Ground() {
-  const tiles: React.ReactNode[] = [];
+  const grass: React.ReactNode[] = [];
+  const roads: React.ReactNode[] = [];
+  const details: React.ReactNode[] = [];
   for (let gx = 0; gx < COLS; gx++)
     for (let gy = 0; gy < ROWS; gy++) {
-      const road = ROAD_GX.has(gx) || ROAD_GY.has(gy);
-      const fill = road ? "#efe3c6" : (gx + gy) % 2 ? "#9ed672" : "#97cf6b";
-      tiles.push(<polygon key={`${gx}-${gy}`} points={diamond(gx, gy)} fill={fill} stroke={road ? "#e2d2ae" : "none"} strokeWidth={1} />);
+      if (isRoad(gx, gy)) {
+        roads.push(<polygon key={`r${gx}-${gy}`} points={diamond(gx, gy)} fill={rand(gx, gy) > 0.5 ? "#f2e7cd" : "#efe2c4"} />);
+        continue;
+      }
+      const shade = rand(gx, gy);
+      grass.push(<polygon key={`g${gx}-${gy}`} points={diamond(gx, gy)} fill={shade > 0.66 ? "#a3da74" : shade > 0.33 ? "#9cd46d" : "#95ce66"} />);
+      if (onLot(gx, gy)) continue;
+      // Tufts: little darker strokes.
+      for (let i = 0; i < 4; i++) {
+        const p = at(gx + 0.15 + rand(gx, gy, i) * 0.7, gy + 0.15 + rand(gy, gx, i + 9) * 0.7);
+        details.push(<path key={`t${gx}-${gy}-${i}`} d={`M${p.x - 3},${p.y} l2,-5 l1,5 l2,-6 l1,6`} stroke="#6fb04a" strokeWidth={1.4} fill="none" strokeLinecap="round" />);
+      }
+      // A few flowers.
+      if (rand(gx, gy, 3) > 0.62) {
+        const color = ["#ff8fb1", "#ffd84a", "#ffffff", "#b39cff"][Math.floor(rand(gx, gy, 4) * 4)];
+        for (let i = 0; i < 3; i++) {
+          const p = at(gx + 0.25 + rand(gx, gy, i + 20) * 0.5, gy + 0.25 + rand(gy, gx, i + 30) * 0.5);
+          details.push(<circle key={`f${gx}-${gy}-${i}`} cx={p.x} cy={p.y} r={2.6} fill={color} stroke="#ffffff" strokeOpacity={0.6} strokeWidth={0.8} />);
+        }
+      }
     }
-  const lots = Object.entries(LOTS).map(([id, l]) => (
-    <polygon key={id} points={diamond(l.gx - 0.05, l.gy - 0.05, l.n + 0.1, l.n + 0.1)} fill="#e6d8b8" stroke="#d6c39b" strokeWidth={2} />
-  ));
-  // A parking lot in the far corner: asphalt and white stall lines.
-  const pk = PARKING;
-  const stalls = Array.from({ length: 5 }, (_, i) => {
-    const a = at(pk.gx + 0.2 + i * 0.4, pk.gy + 0.15), b = at(pk.gx + 0.2 + i * 0.4, pk.gy + 0.8);
-    const c = at(pk.gx + 0.2 + i * 0.4, pk.gy + pk.n - 0.8), d = at(pk.gx + 0.2 + i * 0.4, pk.gy + pk.n - 0.15);
+
+  // Walkway curbs: a light top edge and a shaded lower edge along every run.
+  const curbs: React.ReactNode[] = [];
+  for (const gy of ROAD_GY) {
+    const a = at(0, gy), b = at(COLS, gy), c = at(0, gy + 1), d = at(COLS, gy + 1);
+    curbs.push(<line key={`cy1${gy}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#ffffff" strokeOpacity={0.9} strokeWidth={3} />);
+    curbs.push(<line key={`cy2${gy}`} x1={c.x} y1={c.y + 1} x2={d.x} y2={d.y + 1} stroke="#cdb98d" strokeWidth={3} />);
+  }
+  for (const gx of ROAD_GX) {
+    const a = at(gx, 0), b = at(gx, ROWS), c = at(gx + 1, 0), d = at(gx + 1, ROWS);
+    curbs.push(<line key={`cx1${gx}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#ffffff" strokeOpacity={0.9} strokeWidth={3} />);
+    curbs.push(<line key={`cx2${gx}`} x1={c.x} y1={c.y + 1} x2={d.x} y2={d.y + 1} stroke="#cdb98d" strokeWidth={3} />);
+  }
+
+  // Lots: paving stones with a border, so each building stands on a plaza.
+  const lots = Object.entries(LOTS).map(([id, l]) => {
+    const seams: React.ReactNode[] = [];
+    for (let i = 1; i < l.n * 2; i++) {
+      const a = at(l.gx + i / 2, l.gy), b = at(l.gx + i / 2, l.gy + l.n);
+      const c = at(l.gx, l.gy + i / 2), d = at(l.gx + l.n, l.gy + i / 2);
+      seams.push(<line key={`a${i}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#d9c9a4" strokeWidth={1} />);
+      seams.push(<line key={`b${i}`} x1={c.x} y1={c.y} x2={d.x} y2={d.y} stroke="#d9c9a4" strokeWidth={1} />);
+    }
     return (
-      <g key={i} stroke="#ffffff" strokeWidth={2} strokeOpacity={0.85}>
-        <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} />
-        <line x1={c.x} y1={c.y} x2={d.x} y2={d.y} />
+      <g key={id}>
+        <polygon points={diamond(l.gx - 0.12, l.gy - 0.12, l.n + 0.24, l.n + 0.24)} fill="#d8c59c" />
+        <polygon points={diamond(l.gx - 0.06, l.gy - 0.06, l.n + 0.12, l.n + 0.12)} fill="#ece0c2" />
+        {seams}
       </g>
     );
   });
-  // The grid's outer edge, drawn as a raised curb so the campus reads as one place.
-  const edge = [at(0, 0), at(COLS, 0), at(COLS, ROWS), at(0, ROWS)];
-  const lip = 14;
+
+  // Parking lot: asphalt, stall lines, and a few parked cars.
+  const pk = PARKING;
+  const stalls: React.ReactNode[] = [];
+  for (let i = 0; i <= 5; i++) {
+    const x = pk.gx + 0.15 + i * 0.34;
+    const a = at(x, pk.gy + 0.12), b = at(x, pk.gy + 0.75), c = at(x, pk.gy + pk.n - 0.75), d = at(x, pk.gy + pk.n - 0.12);
+    stalls.push(<line key={`s${i}a`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#ffffff" strokeWidth={2} strokeOpacity={0.85} />);
+    stalls.push(<line key={`s${i}b`} x1={c.x} y1={c.y} x2={d.x} y2={d.y} stroke="#ffffff" strokeWidth={2} strokeOpacity={0.85} />);
+  }
+  const cars = [0, 2, 3, 6, 8].map((k, i) => {
+    const row = k < 5 ? 0 : 1;
+    const slot = k % 5;
+    const [top, left, right] = CAR_COLORS[i % CAR_COLORS.length];
+    const gx = pk.gx + 0.2 + slot * 0.34;
+    const gy = row === 0 ? pk.gy + 0.18 : pk.gy + pk.n - 0.72;
+    return (
+      <g key={`car${k}`}>
+        <IsoBox gx={gx} gy={gy} w={0.24} d={0.52} h={8} top={top} left={left} right={right} />
+        <IsoBox gx={gx + 0.03} gy={gy + 0.14} w={0.18} d={0.24} h={14} top="#cfe6ff" left={left} right={right} />
+      </g>
+    );
+  });
+
+  // The edge: a green lip over brown earth, so the campus sits like an island.
+  const L = at(0, ROWS), B = at(COLS, ROWS), R = at(COLS, 0);
+  const lip = 10, dirt = 26;
+  const band = (y0: number, y1: number) => `${R.x},${R.y + y0} ${B.x},${B.y + y0} ${L.x},${L.y + y0} ${L.x},${L.y + y1} ${B.x},${B.y + y1} ${R.x},${R.y + y1}`;
+
   return (
     <svg className="absolute left-0 top-0" width={MAP_W} height={MAP_H} aria-hidden="true">
-      <polygon
-        points={`${edge[1].x},${edge[1].y} ${edge[2].x},${edge[2].y} ${edge[3].x},${edge[3].y} ${edge[3].x},${edge[3].y + lip} ${edge[2].x},${edge[2].y + lip} ${edge[1].x},${edge[1].y + lip}`}
-        fill="#6aa84a"
-      />
-      {tiles}
+      <polygon points={band(0, lip + dirt)} fill="#9a6b43" />
+      <polygon points={band(lip + dirt - 8, lip + dirt)} fill="#7d5434" />
+      <polygon points={band(0, lip)} fill="#6aa84a" />
+      {grass}
+      {details}
+      {roads}
+      {curbs}
       {lots}
-      <polygon points={diamond(pk.gx, pk.gy, pk.n, pk.n)} fill="#7d8aa8" stroke="#6a7694" strokeWidth={2} />
+      <polygon points={diamond(pk.gx, pk.gy, pk.n, pk.n)} fill="#7a86a3" />
+      <polygon points={diamond(pk.gx + 0.04, pk.gy + 0.04, pk.n - 0.08, pk.n - 0.08)} fill="#848fab" />
       {stalls}
+      {cars}
       {/* Center-line dashes on the walkways. */}
       {[...ROAD_GY].map((gy) => {
         const a = at(0, gy + 0.5), b = at(COLS, gy + 0.5);
-        return <line key={`ry${gy}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#ffffff" strokeOpacity={0.7} strokeWidth={3} strokeDasharray="10 12" />;
+        return <line key={`ry${gy}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#ffffff" strokeOpacity={0.75} strokeWidth={3} strokeDasharray="10 12" />;
       })}
       {[...ROAD_GX].map((gx) => {
         const a = at(gx + 0.5, 0), b = at(gx + 0.5, ROWS);
-        return <line key={`rx${gx}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#ffffff" strokeOpacity={0.7} strokeWidth={3} strokeDasharray="10 12" />;
+        return <line key={`rx${gx}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#ffffff" strokeOpacity={0.75} strokeWidth={3} strokeDasharray="10 12" />;
       })}
     </svg>
   );
 }
 
+/** Two kinds of tree, sized and toned by position so the rows don't look stamped. */
 function Tree({ gx, gy }: { gx: number; gy: number }) {
   const p = at(gx + 0.5, gy + 0.5);
+  const s = 0.85 + rand(gx, gy, 7) * 0.35;
+  const pine = rand(gx, gy, 8) > 0.6;
   return (
     <svg
       className="pointer-events-none absolute"
-      style={{ left: p.x - 22, top: p.y - 50, zIndex: Math.round((gx + gy + 1) * 10) }}
-      width={44}
-      height={60}
-      viewBox="0 0 44 60"
+      style={{ left: p.x - 24 * s, top: p.y - 58 * s, zIndex: Math.round((gx + gy + 1) * 10) }}
+      width={48 * s}
+      height={66 * s}
+      viewBox="0 0 48 66"
       aria-hidden="true"
     >
-      <ellipse cx="22" cy="52" rx="15" ry="6" fill="#000" opacity="0.15" />
-      <rect x="19" y="36" width="6" height="14" rx="2" fill="#8a5a33" />
-      <circle cx="22" cy="24" r="16" fill="#3f9a3a" />
-      <circle cx="15" cy="20" r="9" fill="#58b44a" />
-      <circle cx="27" cy="16" r="8" fill="#6cc455" />
+      <ellipse cx="24" cy="58" rx="16" ry="6" fill="#1d4d1a" opacity="0.22" />
+      <rect x="21" y="40" width="6" height="18" rx="2" fill="#8a5a33" />
+      {pine ? (
+        <>
+          <path d="M24 2 L42 44 L6 44 Z" fill="#2f8a3c" />
+          <path d="M24 2 L42 44 L24 44 Z" fill="#267532" />
+          <path d="M24 10 L33 30 L17 30 Z" fill="#45a84f" opacity="0.6" />
+        </>
+      ) : (
+        <>
+          <circle cx="24" cy="28" r="18" fill="#3a9437" />
+          <circle cx="31" cy="32" r="12" fill="#2f7f2d" />
+          <circle cx="17" cy="22" r="10" fill="#57b44a" />
+          <circle cx="27" cy="16" r="8" fill="#72c95a" />
+          <circle cx="15" cy="19" r="3" fill="#a4e38a" opacity="0.8" />
+        </>
+      )}
     </svg>
   );
 }
@@ -243,14 +356,23 @@ export function CampusMap({
           {/* Labels and bubbles ride above every building so none hides behind another. Taps pass through. */}
           {placed.map(({ r, st, canUpgrade, w, foot, bubble }) => (
             <div key={`o-${r.facility_id}`} className="pointer-events-none absolute" style={{ left: foot.x, top: foot.y, zIndex: 900 }}>
-              <span className="absolute -top-[30px] left-0 -translate-x-1/2 whitespace-nowrap rounded-full bg-white/95 px-2 py-0.5 text-[11px] font-black text-ink shadow">
+              <span className="absolute -top-[30px] left-0 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full bg-[#121a3a]/70 py-0.5 pl-0.5 pr-2 text-[11px] font-black text-white ring-1 ring-white/30">
+                {r.level > 0 ? (
+                  <span className="grid min-w-5 place-items-center rounded-full bg-gradient-to-b from-[#ffe08a] to-[#ffb300] px-1 text-[10px] leading-5 text-[#3a2600] tabular-nums">
+                    {r.level}
+                  </span>
+                ) : (
+                  <span className="w-1" />
+                )}
                 {r.facility.name.replace("Practice Facility", "Practice").replace("Academic Center", "Academics")}
-                {r.level > 0 ? <span className="ml-1 tabular-nums text-ink-muted">{r.level}</span> : null}
-                {canUpgrade ? <span className="ml-0.5 text-gold">▲</span> : null}
+                {canUpgrade ? <span className="text-[#5fe39b]">▲</span> : null}
               </span>
               {st === "ready" ? (
-                <span className="bob absolute left-0 -translate-x-1/2 rounded-full bg-go px-3 py-1 text-xs font-black text-go-ink shadow-lg ring-2 ring-white" style={{ top: -w * bubble }}>
-                  Ready!
+                <span
+                  className="bubble-tail bob absolute left-0 -translate-x-1/2 rounded-2xl border-2 border-white bg-gradient-to-b from-[#5fe39b] to-[#1fb864] px-3 py-1 shadow-lg"
+                  style={{ top: -w * bubble }}
+                >
+                  <span className="game-text relative z-10 text-sm font-black">Ready!</span>
                 </span>
               ) : st === "building" ? (
                 <span className="absolute left-0 inline-flex -translate-x-1/2 items-center gap-1 rounded-full bg-white px-2 py-1 text-[11px] font-black shadow-lg" style={{ top: -w * bubble }}>
@@ -259,10 +381,12 @@ export function CampusMap({
                 </span>
               ) : st === "unbuilt" ? (
                 <span
-                  className={`absolute left-0 -translate-x-1/2 rounded-full px-3 py-1 text-xs font-black shadow-lg ring-2 ring-white ${canUpgrade ? "bg-primary text-primary-ink" : "bg-white text-ink-muted"}`}
+                  className={`bubble-tail absolute left-0 -translate-x-1/2 rounded-2xl border-2 border-white px-3 py-1 shadow-lg ${canUpgrade ? "bob bg-gradient-to-b from-[#6ea2ff] to-[#2f6bff]" : "bg-gradient-to-b from-[#c4cbe0] to-[#9aa3c0]"}`}
                   style={{ top: -w * 0.75 }}
                 >
-                  Build
+                  <span className="game-text relative z-10 inline-flex items-center gap-1 text-sm font-black">
+                    <Hammer size={14} /> Build
+                  </span>
                 </span>
               ) : null}
             </div>
@@ -272,12 +396,14 @@ export function CampusMap({
             <form action={collectIncome} className="absolute" style={{ left: coinAt.x - 46, top: coinAt.y - TW * 2.3, zIndex: 950 }}>
               <button
                 type="submit"
-                className="bob flex w-[92px] flex-col items-center rounded-2xl bg-white/95 px-2 py-1.5 shadow-lg ring-2 ring-gold"
+                className="bubble-tail bob relative flex w-[92px] flex-col items-center rounded-2xl border-2 border-white bg-gradient-to-b from-[#fff3c4] to-[#ffd75e] px-2 py-1.5 shadow-lg"
                 aria-label={`Collect ${formatCash(accrued)} from the boosters`}
               >
-                <Coin size={26} className="text-gold" />
-                <span className="text-sm font-black tabular-nums">{formatCash(accrued)}</span>
-                {capped ? <span className="text-[10px] font-black uppercase text-power">Full!</span> : null}
+                <span className="grid size-9 place-items-center rounded-full bg-gradient-to-b from-[#ffe08a] to-[#ffb300] text-white ring-2 ring-white drop-shadow-[0_2px_0_#b47a00]">
+                  <Coin size={24} />
+                </span>
+                <span className="game-text relative z-10 mt-0.5 text-[15px] font-black tabular-nums">{formatCash(accrued)}</span>
+                {capped ? <span className="relative z-10 text-[10px] font-black uppercase text-power">Full!</span> : null}
               </button>
             </form>
           ) : null}

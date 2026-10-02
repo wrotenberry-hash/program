@@ -9,7 +9,17 @@ import { Bolt, Coin, Hammer, Shield, Trophy } from "@/components/icons";
 import { formatCash } from "@/lib/format";
 import type { ProgramViewProps } from "@/components/program-view";
 
-/** A round HUD button floating over the map, Last War style. */
+/** Tile colors: gradient face and the darker bottom edge. */
+const TONES = {
+  blue: { face: "bg-gradient-to-b from-[#6ea2ff] to-[#2f6bff]", edge: "#1f4bc4" },
+  purple: { face: "bg-gradient-to-b from-[#b9a3ff] to-[#7c5ce6]", edge: "#5a3fc0" },
+  green: { face: "bg-gradient-to-b from-[#5fe39b] to-[#1fb864]", edge: "#158a48" },
+  orange: { face: "bg-gradient-to-b from-[#ffaa5c] to-[#f26a00]", edge: "#b84f00" },
+  gold: { face: "bg-gradient-to-b from-[#ffe08a] to-[#ffb300]", edge: "#b47a00" },
+} as const;
+type Tone = keyof typeof TONES;
+
+/** A glossy square game button floating over the map, Last War style. */
 function HudButton({
   label,
   icon,
@@ -21,23 +31,27 @@ function HudButton({
 }: {
   label: string;
   icon: ReactNode;
-  tone: string;
+  tone: Tone;
   href?: string;
   onClick?: () => void;
   badge?: string | boolean;
   pulse?: boolean;
 }) {
+  const t = TONES[tone];
   const body = (
     <>
-      <span className={`relative grid size-12 place-items-center rounded-2xl bg-white shadow-lg ring-2 ring-white/80 ${tone} ${pulse ? "bob" : ""}`}>
-        {icon}
+      <span
+        className={`game-tile relative grid size-[52px] place-items-center rounded-2xl text-white ${t.face} ${pulse ? "bob" : ""}`}
+        style={{ ["--edge" as string]: t.edge }}
+      >
+        <span className="relative z-10 drop-shadow-[0_2px_0_rgba(18,26,58,0.35)]">{icon}</span>
         {badge ? (
-          <span className="absolute -right-1.5 -top-1.5 grid min-w-5 place-items-center rounded-full bg-power px-1 text-[10px] font-black leading-5 text-white ring-2 ring-white">
+          <span className="absolute -right-2 -top-2 z-20 grid min-w-5 place-items-center rounded-full bg-[#ff4d4f] px-1 text-[10px] font-black leading-5 text-white ring-2 ring-white">
             {badge === true ? "!" : badge}
           </span>
         ) : null}
       </span>
-      <span className="mt-0.5 whitespace-nowrap rounded-full bg-[#121a3a]/70 px-1.5 text-[10px] font-black leading-4 text-white">{label}</span>
+      <span className="game-text mt-1.5 whitespace-nowrap text-[12px] font-black leading-none">{label}</span>
     </>
   );
   const cls = "campus-bldg pointer-events-auto flex w-16 flex-col items-center";
@@ -50,6 +64,16 @@ function HudButton({
     <button type="button" onClick={onClick} className={cls} aria-label={label}>
       {body}
     </button>
+  );
+}
+
+/** One resource in the top bar: an icon coin and a game-type number. */
+function Resource({ icon, value, face }: { icon: ReactNode; value: string; face: string }) {
+  return (
+    <span className="flex items-center gap-1.5 rounded-full bg-[#121a3a]/55 py-0.5 pl-0.5 pr-3 ring-1 ring-white/25 backdrop-blur-sm">
+      <span className={`grid size-7 place-items-center rounded-full text-white ring-2 ring-white ${face}`}>{icon}</span>
+      <span className="game-text text-[15px] font-black tabular-nums">{value}</span>
+    </span>
   );
 }
 
@@ -101,36 +125,32 @@ export function CampusHome(p: ProgramViewProps) {
       />
 
       {/* Top: who you are, then resources. */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-[1000] bg-gradient-to-b from-[#121a3a]/45 to-transparent px-3 pb-6 pt-[max(0.5rem,env(safe-area-inset-top))]">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-[1000] bg-gradient-to-b from-[#121a3a]/55 via-[#121a3a]/20 to-transparent px-3 pb-8 pt-[max(0.5rem,env(safe-area-inset-top))]">
         <div className="flex items-center justify-between gap-2">
-          <button
-            type="button"
-            onClick={() => setSheet("menu")}
-            className="pointer-events-auto flex min-w-0 items-center gap-2 rounded-2xl bg-white/95 py-1 pl-1 pr-3 shadow-lg"
-            aria-label="Your program"
-          >
-            <span className="grid size-9 place-items-center rounded-xl bg-power text-white">
-              <Bolt size={20} />
+          <button type="button" onClick={() => setSheet("menu")} className="campus-bldg pointer-events-auto flex min-w-0 items-center gap-2" aria-label="Your program">
+            {/* Program crest: a shield in power orange carrying the conference. */}
+            <span className="relative grid size-12 shrink-0 place-items-center">
+              <svg viewBox="0 0 48 52" className="absolute inset-0 size-12 drop-shadow-[0_3px_0_#121a3a]" aria-hidden="true">
+                <defs>
+                  <linearGradient id="crest" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stopColor="#ffb067" />
+                    <stop offset="1" stopColor="#f26a00" />
+                  </linearGradient>
+                </defs>
+                <path d="M24 2 L44 9 V26 C44 39 34 47 24 50 C14 47 4 39 4 26 V9 Z" fill="url(#crest)" stroke="#ffffff" strokeWidth="3" />
+              </svg>
+              <span className="game-text relative text-[11px] font-black">{p.conferenceShort}</span>
             </span>
             <span className="min-w-0 text-left">
-              <span className="block truncate text-sm font-black leading-tight">{p.programName}</span>
-              <span className="block text-[10px] font-extrabold uppercase tracking-wider text-ink-muted">{p.conferenceShort}</span>
+              <span className="game-text block truncate text-[17px] font-black leading-tight">{p.programName}</span>
+              <span className="mt-0.5 inline-block rounded-full bg-[#121a3a]/55 px-2 text-[10px] font-black uppercase tracking-wider text-gold">{p.seasonLabel}</span>
             </span>
           </button>
-          <span className="shrink-0 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-black shadow-lg">{p.seasonLabel}</span>
         </div>
-        <div className="mt-2 flex gap-2">
-          <span className="flex items-center gap-1.5 rounded-full bg-white/95 py-1 pl-1.5 pr-3 shadow-lg">
-            <Bolt size={18} className="text-power" />
-            <span className="text-sm font-black tabular-nums">{power.toLocaleString("en-US")}</span>
-          </span>
-          <span className="flex items-center gap-1.5 rounded-full bg-white/95 py-1 pl-1.5 pr-3 shadow-lg">
-            <Coin size={18} className="text-gold" />
-            <span className="text-sm font-black tabular-nums">{formatCash(p.cash)}</span>
-          </span>
-          <span className="flex items-center gap-1 rounded-full bg-white/80 px-2.5 py-1 text-xs font-black tabular-nums text-ink-muted shadow-lg">
-            +{formatCash(p.incomeRate)}/hr
-          </span>
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          <Resource icon={<Bolt size={16} />} value={power.toLocaleString("en-US")} face="bg-gradient-to-b from-[#ffaa5c] to-[#f26a00]" />
+          <Resource icon={<Coin size={16} />} value={formatCash(p.cash)} face="bg-gradient-to-b from-[#ffe08a] to-[#ffb300]" />
+          <span className="game-text self-center text-xs font-black tabular-nums">+{formatCash(p.incomeRate)}/hr</span>
         </div>
         {p.notice ? (
           <p className="pointer-events-auto mt-2 rounded-2xl bg-white/95 px-3 py-2 text-sm font-bold shadow-lg" role="status">
@@ -140,43 +160,49 @@ export function CampusHome(p: ProgramViewProps) {
       </div>
 
       {/* Left: your crew and your staff. */}
-      <div className="pointer-events-none absolute left-2 top-[26%] z-[1000] flex flex-col gap-3">
-        <HudButton label={`Crew ${building}/1`} icon={<Hammer size={24} />} tone="text-primary" badge={ready > 0 ? String(ready) : false} />
-        <HudButton label="Staff" icon={<Shield size={24} />} tone="text-primary" href="/staff" badge={p.canScout} />
-        {p.daily ? <HudButton label="Daily" icon={<Coin size={24} />} tone="text-gold" onClick={() => setSheet("daily")} badge={dailyLeft > 0 ? String(dailyLeft) : false} pulse={dailyLeft > 0} /> : null}
-        {p.seasonRewards ? <HudButton label="Prizes" icon={<Trophy size={24} />} tone="text-gold" onClick={() => setSheet("rewards")} badge pulse /> : null}
+      <div className="pointer-events-none absolute left-2 top-[24%] z-[1000] flex flex-col gap-4">
+        <HudButton label={`Crew ${building}/1`} icon={<Hammer size={26} />} tone="blue" badge={ready > 0 ? String(ready) : false} />
+        <HudButton label="Staff" icon={<Shield size={26} />} tone="blue" href="/staff" badge={p.canScout} />
+        {p.daily ? <HudButton label="Daily" icon={<Coin size={26} />} tone="gold" onClick={() => setSheet("daily")} badge={dailyLeft > 0 ? String(dailyLeft) : false} pulse={dailyLeft > 0} /> : null}
+        {p.seasonRewards ? <HudButton label="Prizes" icon={<Trophy size={26} />} tone="gold" onClick={() => setSheet("rewards")} badge pulse /> : null}
       </div>
 
       {/* Bottom: game day, then your people. */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1000] flex items-end gap-1.5 bg-gradient-to-t from-[#121a3a]/50 to-transparent px-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-10">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1000] flex items-end gap-1.5 bg-gradient-to-t from-[#121a3a]/55 via-[#121a3a]/20 to-transparent px-2 pb-[max(0.6rem,env(safe-area-inset-bottom))] pt-12">
         <Link
           href="/matchups"
-          className={`btn-3d pointer-events-auto flex h-[68px] min-w-0 flex-1 items-center gap-2 rounded-2xl bg-go px-3 text-go-ink [--btn-edge:#158a48] [--glow:rgba(61,220,132,0.6)] ${p.dueGames > 0 ? "pulse" : ""}`}
+          className={`game-tile campus-bldg pointer-events-auto mb-[18px] flex h-[62px] min-w-0 flex-1 items-center gap-2 rounded-2xl bg-gradient-to-b from-[#5fe39b] to-[#1fb864] px-3 text-white ${p.dueGames > 0 ? "bob" : ""}`}
+          style={{ ["--edge" as string]: "#158a48" }}
         >
-          <Trophy size={26} />
-          <span className="min-w-0">
-            <span className="block truncate text-base font-black leading-tight">{p.dueGames > 0 ? "See result" : "Matchups"}</span>
-            <span className="block truncate text-[11px] font-extrabold opacity-90">
+          <span className="relative z-10 shrink-0 drop-shadow-[0_2px_0_rgba(18,26,58,0.35)]">
+            <Trophy size={26} />
+          </span>
+          <span className="relative z-10 min-w-0">
+            <span className="game-text block truncate text-base font-black leading-tight">{p.dueGames > 0 ? "See result" : "Matchups"}</span>
+            <span className="block truncate text-[11px] font-black text-[#04260f]/80">
               {p.record.wins}–{p.record.losses} · {p.emphasisName}
             </span>
           </span>
         </Link>
         {p.seat ? (
           <>
-            <HudButton label="Faction" icon={<Shield size={24} />} tone="text-faction" href="/faction" />
-            <HudButton label="League" icon={<Trophy size={24} />} tone="text-go" href="/league" badge={p.factionRank ? `#${p.factionRank}` : false} />
+            <HudButton label="Faction" icon={<Shield size={26} />} tone="purple" href="/faction" />
+            <HudButton label="League" icon={<Trophy size={26} />} tone="green" href="/league" badge={p.factionRank ? `#${p.factionRank}` : false} />
           </>
         ) : (
           <form action={p.actions.joinFaction} className="pointer-events-auto">
             <button type="submit" className="campus-bldg flex w-16 flex-col items-center" aria-label="Join your faction">
-              <span className="bob grid size-12 place-items-center rounded-2xl bg-faction text-white shadow-lg ring-2 ring-white">
-                <Shield size={24} />
+              <span
+                className="game-tile bob grid size-[52px] place-items-center rounded-2xl bg-gradient-to-b from-[#b9a3ff] to-[#7c5ce6] text-white"
+                style={{ ["--edge" as string]: "#5a3fc0" }}
+              >
+                <Shield size={26} />
               </span>
-              <span className="mt-0.5 rounded-full bg-[#121a3a]/70 px-1.5 text-[10px] font-black leading-4 text-white">Join</span>
+              <span className="game-text mt-1.5 text-[12px] font-black leading-none">Join</span>
             </button>
           </form>
         )}
-        <HudButton label="Nation" icon={<Bolt size={24} />} tone="text-power" href="/nation" />
+        <HudButton label="Nation" icon={<Bolt size={26} />} tone="orange" href="/nation" />
       </div>
 
       {sheet === "menu" ? (
