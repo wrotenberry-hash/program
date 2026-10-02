@@ -1100,6 +1100,7 @@ export type Database = {
       program_season_rewards: {
         Row: {
           claimed_at: string | null
+          faction_games: number
           faction_id: string | null
           games_played: number
           granted_at: string
@@ -1111,6 +1112,7 @@ export type Database = {
         }
         Insert: {
           claimed_at?: string | null
+          faction_games?: number
           faction_id?: string | null
           games_played: number
           granted_at?: string
@@ -1122,6 +1124,7 @@ export type Database = {
         }
         Update: {
           claimed_at?: string | null
+          faction_games?: number
           faction_id?: string | null
           games_played?: number
           granted_at?: string

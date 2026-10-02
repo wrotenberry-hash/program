@@ -14,7 +14,7 @@ environment variables and the hosting dashboards only.
 
 ## State as of 2026-10-01, test week
 
-- Migrations 0001 through 0020 are applied.
+- Migrations 0001 through 0021 are applied.
   Seed data is loaded, including the 2027 calendar (status upcoming).
   RLS is on for every table. `feedback` and `admin_tokens` have RLS on and no
   policies on purpose: only their SECURITY DEFINER functions touch them.
@@ -31,7 +31,7 @@ environment variables and the hosting dashboards only.
   database from every migration and the seed, and
   `scripts/staging-db/test-test-week.sql` runs the test-week checks against
   it (37 checks, including a full season rollover);
-  `test-season-rewards.sql` covers season-end rewards (19 checks). A hosted Supabase
+  `test-season-rewards.sql` covers season-end rewards (28 checks). A hosted Supabase
   staging branch is not set up; it is a billable resource awaiting the
   founder's approval.
 - Vercel holds `NEXT_PUBLIC_SUPABASE_URL` and
