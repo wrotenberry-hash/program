@@ -4,7 +4,7 @@ import { Bolt, Coin, Hammer, Shield, Trophy } from "@/components/icons";
 import { Countdown } from "@/components/countdown";
 import { formatCash, formatDuration } from "@/lib/format";
 import { DailyCard, type DailyStatus } from "@/components/daily-card";
-import { Campus } from "@/components/campus";
+import { CampusHome } from "@/components/campus-home";
 import { SeasonRewardsCard, type SeasonRewardsStatus } from "@/components/season-rewards-card";
 
 export type FacilityRow = {
@@ -61,6 +61,7 @@ export type ProgramViewProps = {
 };
 
 export function ProgramView(p: ProgramViewProps) {
+  if (p.art) return <CampusHome {...p} />;
   const now = p.now ?? Date.now();
   const levelOf = (facilityId: string, level: number) => p.levels.find((l) => l.facility_id === facilityId && l.level === level);
   const rows = p.facilities.slice().sort((a, b) => a.facility.sort_order - b.facility.sort_order);
@@ -119,17 +120,6 @@ export function ProgramView(p: ProgramViewProps) {
         <p className="mt-2 text-xs font-semibold text-ink-muted">Donations pile up for {p.capHours} hours, then stop. Come back and collect.</p>
       </Card>
 
-      {p.art ? (
-        <Card
-          title="Campus"
-          accent="primary"
-          icon={<Hammer size={14} />}
-          action={readyCount > 0 ? <span className="rounded-full bg-go px-2 py-0.5 text-[11px] font-extrabold text-go-ink">{readyCount} ready</span> : null}
-        >
-          <Campus rows={rows} levels={p.levels} cash={p.cash} busy={p.busy} startUpgrade={p.actions.startUpgrade} claimUpgrade={p.actions.claimUpgrade} />
-          <p className="mt-3 text-xs font-semibold text-ink-muted">Tap a building to upgrade it. One crew, one job at a time.</p>
-        </Card>
-      ) : (
         <Card
           title="Facilities"
           accent="primary"
@@ -192,7 +182,6 @@ export function ProgramView(p: ProgramViewProps) {
           </ul>
           {p.busy ? <p className="mt-3 text-xs font-semibold text-ink-muted">One crew, one job at a time. They&apos;re on it.</p> : null}
         </Card>
-      )}
 
       <Card title="Faction" accent="faction" icon={<Shield size={14} />}>
         {p.seat ? (

@@ -98,4 +98,8 @@ input, select, button { font: inherit; }
 }
 
 .panel { box-shadow: var(--shadow); }
+/* On the campus home the bottom bar owns the bottom edge; the feedback button sits just above it. */
+html[data-campus] .feedback-btn { bottom: calc(max(0.75rem, env(safe-area-inset-bottom)) + 5.25rem); }
+.no-scrollbar { scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
 .power-glow { text-shadow: 0 0 18px color-mix(in srgb, var(--power) 55%, transparent); }
