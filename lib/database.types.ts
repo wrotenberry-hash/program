@@ -915,6 +915,36 @@ export type Database = {
           },
         ]
       }
+      mission_types: {
+        Row: {
+          detector: string
+          enabled: boolean
+          id: string
+          label: string
+          reward_cash: number
+          sort_order: number
+          target: string
+        }
+        Insert: {
+          detector: string
+          enabled?: boolean
+          id: string
+          label: string
+          reward_cash: number
+          sort_order: number
+          target: string
+        }
+        Update: {
+          detector?: string
+          enabled?: boolean
+          id?: string
+          label?: string
+          reward_cash?: number
+          sort_order?: number
+          target?: string
+        }
+        Relationships: []
+      }
       nation_ledger: {
         Row: {
           losses: number
@@ -1145,6 +1175,42 @@ export type Database = {
           },
         ]
       }
+      program_mission_claims: {
+        Row: {
+          claimed_at: string
+          mission_id: string
+          program_id: string
+          reward: number
+        }
+        Insert: {
+          claimed_at?: string
+          mission_id: string
+          program_id: string
+          reward: number
+        }
+        Update: {
+          claimed_at?: string
+          mission_id?: string
+          program_id?: string
+          reward?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "program_mission_claims_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "mission_types"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "program_mission_claims_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       program_season_rewards: {
         Row: {
           claimed_at: string | null
@@ -1287,6 +1353,7 @@ export type Database = {
         Row: {
           account_id: string | null
           created_at: string
+          emphasis_chosen_at: string | null
           emphasis_id: string | null
           id: string
           is_house: boolean
@@ -1298,6 +1365,7 @@ export type Database = {
         Insert: {
           account_id?: string | null
           created_at?: string
+          emphasis_chosen_at?: string | null
           emphasis_id?: string | null
           id?: string
           is_house?: boolean
@@ -1309,6 +1377,7 @@ export type Database = {
         Update: {
           account_id?: string | null
           created_at?: string
+          emphasis_chosen_at?: string | null
           emphasis_id?: string | null
           id?: string
           is_house?: boolean
@@ -1604,6 +1673,14 @@ export type Database = {
           reward: number
         }[]
       }
+      claim_mission: {
+        Args: { p_mission_id: string }
+        Returns: {
+          cash: number
+          mission_id: string
+          reward: number
+        }[]
+      }
       claim_season_rewards: {
         Args: never
         Returns: {
@@ -1737,6 +1814,8 @@ export type Database = {
           role: string
         }[]
       }
+      first_missions_enabled: { Args: never; Returns: boolean }
+      first_missions_status: { Args: never; Returns: Json }
       house_program_for: {
         Args: { p_league_id: string; p_school_id: string }
         Returns: string
@@ -1777,6 +1856,10 @@ export type Database = {
       }
       local_day: { Args: { p_at?: string }; Returns: string }
       make_share_code: { Args: never; Returns: string }
+      mission_done: {
+        Args: { p_detector: string; p_program_id: string }
+        Returns: boolean
+      }
       my_program_id: { Args: never; Returns: string }
       my_seat: {
         Args: never

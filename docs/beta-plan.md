@@ -16,8 +16,8 @@ Public soft launch at the start of the 2027 season.
 
 | Week of | Build | Founder input |
 |---|---|---|
-| Oct 2 | Return-visit tracking. 18+ signup check. Illustrator brief. Guided first five minutes begins. | Start the illustrator search and the attorney call. |
-| Oct 9 | Guided start finished. Campus home screen with placeholder art. Act on test-week feedback (report Oct 8). | Decisions in the Oct 8 report. |
+| Oct 2 | Done: return-visit tracking, 18+ signup check, illustrator brief, all 18 building illustrations (made with ChatGPT), the campus home screen, guided first missions. All behind switches. | Start the attorney call. |
+| Oct 9 | Campus ground art from ChatGPT fitted in. Act on test-week feedback (report Oct 8). | Decisions in the Oct 8 report. |
 | Oct 16 | Game day v2: design first, then a box score and key moments. More pre-game choices only if the design is approved. | Approve the game day design. Attorney answer on school names. |
 | Oct 23 | Longer progression (more levels and coaches). Invite links and share cards. | Approve turning on daily rewards, faction goals, season prizes. |
 | Oct 30 | Notifications (email and browser, opt-in). Chat report and mute. Google sign-in. | Approve the email/push sending service. Google sign-in keys. |

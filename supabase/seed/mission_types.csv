@@ -1,0 +1,7 @@
+id,label,detector,target,reward_cash,sort_order
+collect,Collect from your boosters,collect,coin,100,10
+build_weight,Build the Weight Room,build_weight,weight-room,150,20
+open_weight,Open the Weight Room,open_weight,weight-room,150,30
+scout,Send your scouts out,scout,/staff,150,40
+game_plan,Pick your game plan,game_plan,/matchups,150,50
+say_hi,Say hi to your faction,chat,/faction,100,60

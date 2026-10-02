@@ -270,6 +270,8 @@ export function CampusMap({
   startUpgrade,
   claimUpgrade,
   collectIncome,
+  pointAt,
+  focusKey,
 }: {
   rows: FacilityRow[];
   levels: LevelRow[];
@@ -280,6 +282,10 @@ export function CampusMap({
   startUpgrade: Action;
   claimUpgrade: Action;
   collectIncome: Action;
+  /** Where the guide arrow points: a facility id or "coin". */
+  pointAt?: string | null;
+  /** Changing this scrolls the map to whatever pointAt names. */
+  focusKey?: number;
 }) {
   const scroller = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<string | null>(null);
@@ -321,6 +327,19 @@ export function CampusMap({
     });
   const booster = LOTS["booster-club"];
   const coinAt = at(booster.gx + booster.n / 2, booster.gy + booster.n / 2);
+
+  // The guide arrow: over the coin bubble, or over a building's roof.
+  const target = pointAt === "coin" ? { x: coinAt.x, y: coinAt.y - TW * 2.3 - 8 } : (() => {
+    const pl = placed.find((x) => x.r.facility_id === pointAt);
+    return pl ? { x: pl.foot.x, y: pl.foot.y - pl.w * (pl.bubble + 0.12) } : null;
+  })();
+  useEffect(() => {
+    const el = scroller.current;
+    if (!el || !target || !focusKey) return;
+    el.scrollTo({ left: target.x - el.clientWidth / 2, top: Math.max(0, target.y - el.clientHeight * 0.45), behavior: "smooth" });
+    // Only when asked: focusKey changes on a tap of the mission strip.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusKey]);
 
   return (
     <>
@@ -407,6 +426,7 @@ export function CampusMap({
               </button>
             </form>
           ) : null}
+          {target ? <GuideArrow x={target.x} y={target.y} /> : null}
         </div>
       </div>
 
@@ -425,6 +445,29 @@ export function CampusMap({
         />
       ) : null}
     </>
+  );
+}
+
+/** A big bouncing gold arrow pointing down at the next thing to tap. */
+export function GuideArrow({ x, y }: { x: number; y: number }) {
+  return (
+    <svg
+      className="guide-arrow pointer-events-none absolute"
+      style={{ left: x - 22, top: y - 54, zIndex: 980 }}
+      width={44}
+      height={54}
+      viewBox="0 0 44 54"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="guide-gold" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#ffe08a" />
+          <stop offset="1" stopColor="#ff9f1a" />
+        </linearGradient>
+      </defs>
+      <path d="M14 2 H30 V26 H41 L22 51 L3 26 H14 Z" fill="url(#guide-gold)" stroke="#121a3a" strokeWidth="3" strokeLinejoin="round" />
+      <path d="M18 6 H23 V28" stroke="#ffffff" strokeOpacity="0.7" strokeWidth="3" strokeLinecap="round" fill="none" />
+    </svg>
   );
 }
 

@@ -14,16 +14,19 @@ environment variables and the hosting dashboards only.
 
 ## State as of 2026-10-01, test week
 
-- Migrations 0001 through 0023 are applied.
+- Migrations 0001 through 0024 are applied.
   Seed data is loaded, including the 2027 calendar (status upcoming).
   RLS is on for every table. `feedback` and `admin_tokens` have RLS on and no
   policies on purpose: only their SECURITY DEFINER functions touch them.
 - Feature flags (`lib/flags.ts`) read Vercel environment variables:
   `FLAG_SCHOOL_NAMES=1` in every environment for the private test;
-  `FLAG_DAILY_REWARDS`, `FLAG_FACTION_GOALS`, `FLAG_SEASON_REWARDS` and
-  `FLAG_ADULTS_ONLY` unset (off). The database enforces the same gates with
-  `game_config` keys `FEATURE_DAILY_REWARDS`, `FEATURE_FACTION_GOALS`,
-  `FEATURE_SEASON_REWARDS` and `FEATURE_ADULTS_ONLY`, all 0. A recorded date
+  `FLAG_DAILY_REWARDS`, `FLAG_FACTION_GOALS`, `FLAG_SEASON_REWARDS`,
+  `FLAG_ADULTS_ONLY`, `FLAG_CAMPUS_ART` and `FLAG_FIRST_MISSIONS` unset (off).
+  The database enforces the gameplay ones with `game_config` keys
+  `FEATURE_DAILY_REWARDS`, `FEATURE_FACTION_GOALS`, `FEATURE_SEASON_REWARDS`,
+  `FEATURE_ADULTS_ONLY` and `FEATURE_FIRST_MISSIONS`, all 0. The campus home
+  (`FLAG_CAMPUS_ART`) is presentation only and has no database switch;
+  first missions need it on. A recorded date
   of birth can no longer be changed by the player (0023). Turning a feature on takes both: the
   env var in Vercel and the config key set to 1.
 - Founder page: `/founder?token=…` shows return visits by sign-up week and
@@ -36,7 +39,8 @@ environment variables and the hosting dashboards only.
   it (37 checks, including a full season rollover);
   `test-season-rewards.sql` covers season-end rewards (28 checks);
   `test-activity.sql` covers return-visit tracking (10 checks);
-  `test-adults-only.sql` covers the 18+ check (10 checks). A hosted Supabase
+  `test-adults-only.sql` covers the 18+ check (10 checks);
+  `test-first-missions.sql` covers the guided first missions (20 checks). A hosted Supabase
   staging branch is not set up; it is a billable resource awaiting the
   founder's approval.
 - Vercel holds `NEXT_PUBLIC_SUPABASE_URL` and

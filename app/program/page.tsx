@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/auth/actions";
-import { claimCheckin, claimDailyTask, claimSeasonRewards, claimUpgrade, collectIncome, joinFaction, startUpgrade } from "@/app/program/actions";
+import { claimCheckin, claimDailyTask, claimMission, claimSeasonRewards, claimUpgrade, collectIncome, joinFaction, startUpgrade } from "@/app/program/actions";
 import type { DailyStatus } from "@/components/daily-card";
+import type { MissionStatus } from "@/components/campus-home";
 import type { SeasonRewardsStatus } from "@/components/season-rewards-card";
 import { flags } from "@/lib/flags";
 import { ProgramView } from "@/components/program-view";
@@ -54,6 +55,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
   ]);
   // Daily rewards render only when both the app flag and the database feature are on.
   const daily = flags.dailyRewards ? ((await supabase.rpc("daily_status")).data as DailyStatus | null) : null;
+  const missions = flags.firstMissions && flags.campusArt ? ((await supabase.rpc("first_missions_status")).data as MissionStatus | null) : null;
   const seasonRewards = flags.seasonRewards ? ((await supabase.rpc("season_rewards_status")).data as SeasonRewardsStatus | null) : null;
   let factionRank: number | null = null;
   if (seat) {
@@ -111,8 +113,9 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
       dueGames={dueGames}
       daily={daily?.enabled ? daily : null}
       art={flags.campusArt}
+      missions={missions?.enabled && missions.current ? missions : null}
       seasonRewards={seasonRewards?.enabled && seasonRewards.unclaimed.length > 0 ? seasonRewards : null}
-      actions={{ joinFaction, collectIncome, startUpgrade, claimUpgrade, signOut, claimCheckin, claimDailyTask, claimSeasonRewards }}
+      actions={{ joinFaction, collectIncome, startUpgrade, claimUpgrade, signOut, claimCheckin, claimDailyTask, claimSeasonRewards, claimMission }}
     />
   );
 }

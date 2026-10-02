@@ -526,6 +526,15 @@ insert into public.faction_goal_types (id, label, blurb, metric, per_member, min
   ('challenges', 'Throw down', 'Friendly challenges sent or received by faction members this week.', 'challenges', 0.5, 2, 400, 30)
 on conflict (id) do update set label = excluded.label, blurb = excluded.blurb, metric = excluded.metric, per_member = excluded.per_member, min_target = excluded.min_target, reward_cash = excluded.reward_cash, sort_order = excluded.sort_order;
 
+insert into public.mission_types (id, label, detector, target, reward_cash, sort_order) values
+  ('collect', 'Collect from your boosters', 'collect', 'coin', 100, 10),
+  ('build_weight', 'Build the Weight Room', 'build_weight', 'weight-room', 150, 20),
+  ('open_weight', 'Open the Weight Room', 'open_weight', 'weight-room', 150, 30),
+  ('scout', 'Send your scouts out', 'scout', '/staff', 150, 40),
+  ('game_plan', 'Pick your game plan', 'game_plan', '/matchups', 150, 50),
+  ('say_hi', 'Say hi to your faction', 'chat', '/faction', 100, 60)
+on conflict (id) do update set label = excluded.label, detector = excluded.detector, target = excluded.target, reward_cash = excluded.reward_cash, sort_order = excluded.sort_order;
+
 insert into public.game_config (key, value, description) values
   ('FACTION_CAP', '100'::jsonb, 'Active members per faction. docs/phase-0/sharding-and-rivalry.md §4'),
   ('DORMANCY_DAYS', '30'::jsonb, 'Days without login before a seat drops to alumni'),

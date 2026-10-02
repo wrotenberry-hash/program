@@ -4,7 +4,7 @@ import { Bolt, Coin, Hammer, Shield, Trophy } from "@/components/icons";
 import { Countdown } from "@/components/countdown";
 import { formatCash, formatDuration } from "@/lib/format";
 import { DailyCard, type DailyStatus } from "@/components/daily-card";
-import { CampusHome } from "@/components/campus-home";
+import { CampusHome, type MissionStatus } from "@/components/campus-home";
 import { SeasonRewardsCard, type SeasonRewardsStatus } from "@/components/season-rewards-card";
 
 export type FacilityRow = {
@@ -45,6 +45,8 @@ export type ProgramViewProps = {
   daily?: DailyStatus | null;
   /** Unclaimed season-end rewards. Null unless the seasonRewards flag and the database feature are both on and something is waiting. */
   seasonRewards?: SeasonRewardsStatus | null;
+  /** The current guided mission. Null unless flags.firstMissions and the database feature are on and one is left. */
+  missions?: MissionStatus | null;
   /** Show the illustrated campus instead of the facilities list (flags.campusArt). */
   art?: boolean;
   actions: {
@@ -56,6 +58,7 @@ export type ProgramViewProps = {
     claimCheckin?: (formData: FormData) => void | Promise<void>;
     claimDailyTask?: (formData: FormData) => void | Promise<void>;
     claimSeasonRewards?: (formData: FormData) => void | Promise<void>;
+    claimMission?: (formData: FormData) => void | Promise<void>;
   };
   now?: number;
 };

@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { CampusMap } from "@/components/campus";
 import { DailyCard } from "@/components/daily-card";
 import { SeasonRewardsCard } from "@/components/season-rewards-card";
@@ -9,6 +10,29 @@ import { Bolt, Coin } from "@/components/icons";
 import { HudClipboard, HudFlag, HudGift, HudHammer, HudHelmet, HudShield, HudTrophy } from "@/components/hud-icons";
 import { formatCash } from "@/lib/format";
 import type { ProgramViewProps } from "@/components/program-view";
+
+/** Shape of first_missions_status() (supabase/migrations/0024_first_missions.sql). */
+export type MissionStatus = {
+  enabled: boolean;
+  total: number;
+  claimed: number;
+  current: { id: string; label: string; target: string; reward: number; done: boolean } | null;
+};
+
+/** A small gold arrow beside a HUD button the current mission needs. */
+function PointerArrow({ from }: { from: "above" | "right" }) {
+  return (
+    <svg
+      className={`guide-arrow pointer-events-none absolute z-30 ${from === "above" ? "-top-12 left-1/2 -ml-[15px]" : "-right-9 top-2.5 rotate-90"}`}
+      width={30}
+      height={38}
+      viewBox="0 0 44 54"
+      aria-hidden="true"
+    >
+      <path d="M14 2 H30 V26 H41 L22 51 L3 26 H14 Z" fill="#ffb300" stroke="#121a3a" strokeWidth="3.5" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 /** A round HUD button floating over the map, Last War style: dark slate face, light rim, pale glyph. */
 function HudButton({
@@ -18,9 +42,12 @@ function HudButton({
   onClick,
   badge,
   pulse,
+  pointed,
 }: {
   label: string;
   icon: ReactNode;
+  /** The current mission wants this button: gold ring and an arrow. */
+  pointed?: "above" | "right";
   href?: string;
   onClick?: () => void;
   badge?: string | boolean;
@@ -29,8 +56,9 @@ function HudButton({
   const body = (
     <>
       <span
-        className={`relative grid size-[54px] place-items-center rounded-full bg-[radial-gradient(circle_at_50%_35%,#4a5878_0%,#2a3452_70%,#222a44_100%)] shadow-[0_4px_10px_rgba(18,26,58,0.45)] ring-[3px] ring-[#dfe7f6]/90 ${pulse ? "bob" : ""}`}
+        className={`relative grid size-[54px] place-items-center rounded-full bg-[radial-gradient(circle_at_50%_35%,#4a5878_0%,#2a3452_70%,#222a44_100%)] shadow-[0_4px_10px_rgba(18,26,58,0.45)] ring-[3px] ${pointed ? "bob ring-[#ffb300]" : "ring-[#dfe7f6]/90"} ${pulse ? "bob" : ""}`}
       >
+        {pointed ? <PointerArrow from={pointed} /> : null}
         <span className="drop-shadow-[0_2px_1px_rgba(0,0,0,0.35)]">{icon}</span>
         {badge ? (
           <span
@@ -84,6 +112,12 @@ function Sheet({ title, onClose, children }: { title: string; onClose: () => voi
  */
 export function CampusHome(p: ProgramViewProps) {
   const [sheet, setSheet] = useState<null | "menu" | "daily" | "rewards">(null);
+  const [focusKey, setFocusKey] = useState(0);
+  const router = useRouter();
+  const mission = p.missions?.current ?? null;
+  // Map targets get the big arrow on the campus; screen targets light up their HUD button.
+  const mapTarget = mission && !mission.done && !mission.target.startsWith("/") ? mission.target : null;
+  const hudTarget = mission && !mission.done && mission.target.startsWith("/") ? mission.target : null;
   // Lets global chrome (the feedback button) make room for the bottom bar.
   useEffect(() => {
     document.documentElement.dataset.campus = "1";
@@ -111,6 +145,8 @@ export function CampusHome(p: ProgramViewProps) {
         startUpgrade={p.actions.startUpgrade}
         claimUpgrade={p.actions.claimUpgrade}
         collectIncome={p.actions.collectIncome}
+        pointAt={mapTarget}
+        focusKey={focusKey}
       />
 
       {/* Top: who you are, then resources. */}
@@ -151,18 +187,58 @@ export function CampusHome(p: ProgramViewProps) {
       {/* Left: your crew and your staff. */}
       <div className="pointer-events-none absolute left-2 top-[24%] z-[1000] flex flex-col gap-4">
         <HudButton label={`Crew ${building}/1`} icon={<HudHammer />} badge={ready > 0 ? String(ready) : false} />
-        <HudButton label="Staff" icon={<HudClipboard />} href="/staff" badge={p.canScout} />
+        <HudButton label="Staff" icon={<HudClipboard />} href="/staff" badge={p.canScout} pointed={hudTarget === "/staff" ? "right" : undefined} />
         {p.daily ? <HudButton label="Daily" icon={<HudGift />} onClick={() => setSheet("daily")} badge={dailyLeft > 0 ? String(dailyLeft) : false} pulse={dailyLeft > 0} /> : null}
         {p.seasonRewards ? <HudButton label="Prizes" icon={<HudTrophy />} onClick={() => setSheet("rewards")} badge pulse /> : null}
       </div>
+
+      {/* The current mission, Last War style: one line, a reward, and Claim when it's done. */}
+      {mission ? (
+        <div className="pointer-events-none absolute inset-x-2 bottom-[calc(max(0.6rem,env(safe-area-inset-bottom))+92px)] z-[1001] flex items-center">
+          <span className="pointer-events-auto relative z-10 grid size-14 shrink-0 place-items-center rounded-2xl border-2 border-white bg-gradient-to-b from-[#ffe08a] to-[#ffb300] shadow-[0_4px_0_#b47a00,0_6px_12px_rgba(18,26,58,0.35)]">
+            <HudClipboard size={30} />
+            <span className="game-text absolute -bottom-2 text-[11px] font-black">
+              {p.missions!.claimed + 1}/{p.missions!.total}
+            </span>
+          </span>
+          <button
+            type="button"
+            onClick={() => (mission.target.startsWith("/") ? router.push(mission.target) : setFocusKey((k) => k + 1))}
+            disabled={mission.done}
+            className="pointer-events-auto -ml-3 flex h-11 min-w-0 flex-1 items-center gap-2 rounded-r-xl bg-[#121a3a]/70 pl-5 pr-2 text-left backdrop-blur-sm"
+            aria-label={`Mission: ${mission.label}`}
+          >
+            <span className="game-text line-clamp-2 min-w-0 flex-1 text-[13px] font-black leading-[1.15]">{mission.label}</span>
+            <span className={`game-text shrink-0 text-[13px] font-black ${mission.done ? "!text-[#5fe39b]" : ""}`}>({mission.done ? 1 : 0}/1)</span>
+            {!mission.done ? (
+              <span className="flex shrink-0 items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 text-[12px] font-black text-[#ffe08a]">
+                <Coin size={14} /> +{formatCash(mission.reward)}
+              </span>
+            ) : null}
+          </button>
+          {mission.done && p.actions.claimMission ? (
+            <form action={p.actions.claimMission} className="pointer-events-auto -ml-1 shrink-0">
+              <input type="hidden" name="mission_id" value={mission.id} />
+              <button
+                type="submit"
+                className="game-tile bob flex h-11 items-center gap-1 rounded-xl bg-gradient-to-b from-[#5fe39b] to-[#1fb864] px-3"
+                style={{ ["--edge" as string]: "#158a48" }}
+              >
+                <span className="game-text relative z-10 text-[15px] font-black">Claim +{formatCash(mission.reward)}</span>
+              </button>
+            </form>
+          ) : null}
+        </div>
+      ) : null}
 
       {/* Bottom: game day, then your people. */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1000] flex items-end gap-1.5 bg-gradient-to-t from-[#121a3a]/55 via-[#121a3a]/20 to-transparent px-2 pb-[max(0.6rem,env(safe-area-inset-bottom))] pt-12">
         <Link
           href="/matchups"
-          className={`game-tile campus-bldg pointer-events-auto mb-[18px] flex h-[62px] min-w-0 flex-1 items-center gap-2 rounded-2xl bg-gradient-to-b from-[#5fe39b] to-[#1fb864] px-3 text-white ${p.dueGames > 0 ? "bob" : ""}`}
+          className={`game-tile campus-bldg pointer-events-auto mb-[18px] flex h-[62px] min-w-0 flex-1 items-center gap-2 rounded-2xl bg-gradient-to-b from-[#5fe39b] to-[#1fb864] px-3 text-white ${p.dueGames > 0 || hudTarget === "/matchups" ? "bob" : ""} ${hudTarget === "/matchups" ? "!border-[#ffb300]" : ""}`}
           style={{ ["--edge" as string]: "#158a48" }}
         >
+          {hudTarget === "/matchups" ? <PointerArrow from="above" /> : null}
           <span className="relative z-10 shrink-0 drop-shadow-[0_2px_0_rgba(18,26,58,0.35)]">
             <HudHelmet size={32} />
           </span>
@@ -175,7 +251,7 @@ export function CampusHome(p: ProgramViewProps) {
         </Link>
         {p.seat ? (
           <>
-            <HudButton label="Faction" icon={<HudShield />} href="/faction" />
+            <HudButton label="Faction" icon={<HudShield />} href="/faction" pointed={hudTarget === "/faction" ? "above" : undefined} />
             <HudButton label="League" icon={<HudTrophy />} href="/league" badge={p.factionRank ? `#${p.factionRank}` : false} />
           </>
         ) : (

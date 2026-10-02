@@ -26,6 +26,8 @@ export const flags = {
   adultsOnly: on("FLAG_ADULTS_ONLY"),
   /** The illustrated campus: tap a building to upgrade it. Replaces the facilities list. */
   campusArt: on("FLAG_CAMPUS_ART"),
+  /** Guided first missions on the campus home (database: FEATURE_FIRST_MISSIONS). */
+  firstMissions: on("FLAG_FIRST_MISSIONS"),
 } as const;
 
 export type FlagName = keyof typeof flags;

@@ -107,6 +107,11 @@ rows = list(csv.DictReader(open(here / "faction_goal_types.csv")))
 out.append(",\n".join(f"  ({q(r['id'])}, {q(r['label'])}, {q(r['blurb'])}, {q(r['metric'])}, {r['per_member']}, {r['min_target']}, {r['reward_cash']}, {r['sort_order']})" for r in rows))
 out.append("on conflict (id) do update set label = excluded.label, blurb = excluded.blurb, metric = excluded.metric, per_member = excluded.per_member, min_target = excluded.min_target, reward_cash = excluded.reward_cash, sort_order = excluded.sort_order;\n")
 
+out.append("insert into public.mission_types (id, label, detector, target, reward_cash, sort_order) values")
+rows = list(csv.DictReader(open(here / "mission_types.csv")))
+out.append(",\n".join(f"  ({q(r['id'])}, {q(r['label'])}, {q(r['detector'])}, {q(r['target'])}, {r['reward_cash']}, {r['sort_order']})" for r in rows))
+out.append("on conflict (id) do update set label = excluded.label, detector = excluded.detector, target = excluded.target, reward_cash = excluded.reward_cash, sort_order = excluded.sort_order;\n")
+
 out.append("insert into public.game_config (key, value, description) values")
 out.append(",\n".join(f"  ({q(k)}, {q(json.dumps(v))}::jsonb, {q(d)})" for k, v, d in config))
 out.append("on conflict (key) do update set value = excluded.value, description = excluded.description, updated_at = now();\n")

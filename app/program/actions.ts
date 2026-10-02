@@ -70,3 +70,13 @@ export async function claimSeasonRewards() {
   revalidatePath("/program");
   back(row ? `Season rewards: +$${Number(row.reward).toLocaleString("en-US")}.` : undefined);
 }
+
+export async function claimMission(formData: FormData) {
+  const missionId = String(formData.get("mission_id") ?? "");
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("claim_mission", { p_mission_id: missionId });
+  if (error) back(error.message);
+  const row = data?.[0];
+  revalidatePath("/program");
+  back(row ? `Mission complete: +$${Number(row.reward).toLocaleString("en-US")}.` : undefined);
+}

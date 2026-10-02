@@ -90,11 +90,16 @@ input, select, button { font: inherit; }
   50% { translate: 0 -5%; }
 }
 .bob { animation: bob 1.4s ease-in-out infinite; }
+@keyframes guide {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -12px; }
+}
+.guide-arrow { animation: guide 0.9s ease-in-out infinite; filter: drop-shadow(0 4px 4px rgba(18, 26, 58, 0.35)); }
 .campus-bldg { transition: transform 90ms ease; -webkit-tap-highlight-color: transparent; }
 .campus-bldg:active { transform: scale(0.96); }
 
 @media (prefers-reduced-motion: reduce) {
-  .pulse, .float, .bob { animation: none; }
+  .pulse, .float, .bob, .guide-arrow { animation: none; }
 }
 
 .panel { box-shadow: var(--shadow); }
@@ -135,8 +140,8 @@ input, select, button { font: inherit; }
   border-radius: 0 0 4px 0;
 }
 
-/* On the campus home the bottom bar owns the bottom edge; the feedback button sits just above it. */
-html[data-campus] .feedback-btn { bottom: calc(max(0.75rem, env(safe-area-inset-bottom)) + 5.25rem); }
+/* On the campus home the bottom edge belongs to the mission strip and bottom bar; the feedback button takes the free top-right corner. */
+html[data-campus] .feedback-btn { top: max(0.75rem, env(safe-area-inset-top)); bottom: auto; }
 .no-scrollbar { scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .power-glow { text-shadow: 0 0 18px color-mix(in srgb, var(--power) 55%, transparent); }
