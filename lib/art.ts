@@ -3,7 +3,7 @@
  * 3–4, and 5. Level 0 (not built) shows the first look, dimmed by the view.
  * Buildings without art yet return null and the view falls back to text.
  */
-const AVAILABLE = new Set(["stadium", "booster-club", "weight-room"]);
+const AVAILABLE = new Set(["stadium", "booster-club", "weight-room", "practice-facility", "film-room", "academic-center"]);
 
 export function buildingTier(level: number): 1 | 2 | 3 {
   return level >= 5 ? 3 : level >= 3 ? 2 : 1;

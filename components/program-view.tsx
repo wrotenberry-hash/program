@@ -149,7 +149,7 @@ export function ProgramView(p: ProgramViewProps) {
                     />
                   ) : null}
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-base font-black">{r.facility.name}</p>
+                    <p className={`text-base font-black ${p.art ? "leading-tight" : "truncate"}`}>{r.facility.name}</p>
                     <div className="mt-1 flex items-center gap-2 text-xs font-bold text-ink-muted">
                       <Pips level={r.level} tone={r.facility_id === "booster-club" ? "gold" : "primary"} />
                       Lv {r.level}
