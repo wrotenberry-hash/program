@@ -5,25 +5,15 @@ import Link from "next/link";
 import { CampusMap } from "@/components/campus";
 import { DailyCard } from "@/components/daily-card";
 import { SeasonRewardsCard } from "@/components/season-rewards-card";
-import { Bolt, Coin, Hammer, Shield, Trophy } from "@/components/icons";
+import { Bolt, Coin } from "@/components/icons";
+import { HudClipboard, HudFlag, HudGift, HudHammer, HudHelmet, HudShield, HudTrophy } from "@/components/hud-icons";
 import { formatCash } from "@/lib/format";
 import type { ProgramViewProps } from "@/components/program-view";
 
-/** Tile colors: gradient face and the darker bottom edge. */
-const TONES = {
-  blue: { face: "bg-gradient-to-b from-[#6ea2ff] to-[#2f6bff]", edge: "#1f4bc4" },
-  purple: { face: "bg-gradient-to-b from-[#b9a3ff] to-[#7c5ce6]", edge: "#5a3fc0" },
-  green: { face: "bg-gradient-to-b from-[#5fe39b] to-[#1fb864]", edge: "#158a48" },
-  orange: { face: "bg-gradient-to-b from-[#ffaa5c] to-[#f26a00]", edge: "#b84f00" },
-  gold: { face: "bg-gradient-to-b from-[#ffe08a] to-[#ffb300]", edge: "#b47a00" },
-} as const;
-type Tone = keyof typeof TONES;
-
-/** A glossy square game button floating over the map, Last War style. */
+/** A round HUD button floating over the map, Last War style: dark slate face, light rim, pale glyph. */
 function HudButton({
   label,
   icon,
-  tone,
   href,
   onClick,
   badge,
@@ -31,27 +21,26 @@ function HudButton({
 }: {
   label: string;
   icon: ReactNode;
-  tone: Tone;
   href?: string;
   onClick?: () => void;
   badge?: string | boolean;
   pulse?: boolean;
 }) {
-  const t = TONES[tone];
   const body = (
     <>
       <span
-        className={`game-tile relative grid size-[52px] place-items-center rounded-2xl text-white ${t.face} ${pulse ? "bob" : ""}`}
-        style={{ ["--edge" as string]: t.edge }}
+        className={`relative grid size-[54px] place-items-center rounded-full bg-[radial-gradient(circle_at_50%_35%,#4a5878_0%,#2a3452_70%,#222a44_100%)] shadow-[0_4px_10px_rgba(18,26,58,0.45)] ring-[3px] ring-[#dfe7f6]/90 ${pulse ? "bob" : ""}`}
       >
-        <span className="relative z-10 drop-shadow-[0_2px_0_rgba(18,26,58,0.35)]">{icon}</span>
+        <span className="drop-shadow-[0_2px_1px_rgba(0,0,0,0.35)]">{icon}</span>
         {badge ? (
-          <span className="absolute -right-2 -top-2 z-20 grid min-w-5 place-items-center rounded-full bg-[#ff4d4f] px-1 text-[10px] font-black leading-5 text-white ring-2 ring-white">
-            {badge === true ? "!" : badge}
+          <span
+            className={`absolute -right-0.5 -top-0.5 grid place-items-center rounded-full bg-gradient-to-b from-[#ff6b6b] to-[#e0343a] text-[10px] font-black leading-none text-white ring-2 ring-white ${badge === true ? "size-4" : "h-5 min-w-5 px-1"}`}
+          >
+            {badge === true ? "" : badge}
           </span>
         ) : null}
       </span>
-      <span className="game-text mt-1.5 whitespace-nowrap text-[12px] font-black leading-none">{label}</span>
+      <span className="game-text mt-1 whitespace-nowrap text-[11px] font-black leading-none">{label}</span>
     </>
   );
   const cls = "campus-bldg pointer-events-auto flex w-16 flex-col items-center";
@@ -161,10 +150,10 @@ export function CampusHome(p: ProgramViewProps) {
 
       {/* Left: your crew and your staff. */}
       <div className="pointer-events-none absolute left-2 top-[24%] z-[1000] flex flex-col gap-4">
-        <HudButton label={`Crew ${building}/1`} icon={<Hammer size={26} />} tone="blue" badge={ready > 0 ? String(ready) : false} />
-        <HudButton label="Staff" icon={<Shield size={26} />} tone="blue" href="/staff" badge={p.canScout} />
-        {p.daily ? <HudButton label="Daily" icon={<Coin size={26} />} tone="gold" onClick={() => setSheet("daily")} badge={dailyLeft > 0 ? String(dailyLeft) : false} pulse={dailyLeft > 0} /> : null}
-        {p.seasonRewards ? <HudButton label="Prizes" icon={<Trophy size={26} />} tone="gold" onClick={() => setSheet("rewards")} badge pulse /> : null}
+        <HudButton label={`Crew ${building}/1`} icon={<HudHammer />} badge={ready > 0 ? String(ready) : false} />
+        <HudButton label="Staff" icon={<HudClipboard />} href="/staff" badge={p.canScout} />
+        {p.daily ? <HudButton label="Daily" icon={<HudGift />} onClick={() => setSheet("daily")} badge={dailyLeft > 0 ? String(dailyLeft) : false} pulse={dailyLeft > 0} /> : null}
+        {p.seasonRewards ? <HudButton label="Prizes" icon={<HudTrophy />} onClick={() => setSheet("rewards")} badge pulse /> : null}
       </div>
 
       {/* Bottom: game day, then your people. */}
@@ -175,7 +164,7 @@ export function CampusHome(p: ProgramViewProps) {
           style={{ ["--edge" as string]: "#158a48" }}
         >
           <span className="relative z-10 shrink-0 drop-shadow-[0_2px_0_rgba(18,26,58,0.35)]">
-            <Trophy size={26} />
+            <HudHelmet size={32} />
           </span>
           <span className="relative z-10 min-w-0">
             <span className="game-text block truncate text-base font-black leading-tight">{p.dueGames > 0 ? "See result" : "Matchups"}</span>
@@ -186,23 +175,20 @@ export function CampusHome(p: ProgramViewProps) {
         </Link>
         {p.seat ? (
           <>
-            <HudButton label="Faction" icon={<Shield size={26} />} tone="purple" href="/faction" />
-            <HudButton label="League" icon={<Trophy size={26} />} tone="green" href="/league" badge={p.factionRank ? `#${p.factionRank}` : false} />
+            <HudButton label="Faction" icon={<HudShield />} href="/faction" />
+            <HudButton label="League" icon={<HudTrophy />} href="/league" badge={p.factionRank ? `#${p.factionRank}` : false} />
           </>
         ) : (
           <form action={p.actions.joinFaction} className="pointer-events-auto">
             <button type="submit" className="campus-bldg flex w-16 flex-col items-center" aria-label="Join your faction">
-              <span
-                className="game-tile bob grid size-[52px] place-items-center rounded-2xl bg-gradient-to-b from-[#b9a3ff] to-[#7c5ce6] text-white"
-                style={{ ["--edge" as string]: "#5a3fc0" }}
-              >
-                <Shield size={26} />
+              <span className="bob grid size-[54px] place-items-center rounded-full bg-gradient-to-b from-[#b9a3ff] to-[#7c5ce6] shadow-[0_4px_10px_rgba(18,26,58,0.45)] ring-[3px] ring-white">
+                <HudShield />
               </span>
               <span className="game-text mt-1.5 text-[12px] font-black leading-none">Join</span>
             </button>
           </form>
         )}
-        <HudButton label="Nation" icon={<Bolt size={26} />} tone="orange" href="/nation" />
+        <HudButton label="Nation" icon={<HudFlag />} href="/nation" />
       </div>
 
       {sheet === "menu" ? (
