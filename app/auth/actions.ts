@@ -3,7 +3,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { requestOrigin } from "@/lib/origin";
-import { isPlausibleDateOfBirth } from "@/lib/age";
+import { isMinor, isPlausibleDateOfBirth } from "@/lib/age";
+import { flags } from "@/lib/flags";
 
 function str(formData: FormData, key: string): string {
   const v = formData.get(key);
@@ -25,6 +26,8 @@ export async function signUp(formData: FormData) {
   if (!email || !password) fail("/signup", "Email and password are required.");
   if (password.length < 8) fail("/signup", "Password must be at least 8 characters.");
   if (!isPlausibleDateOfBirth(dateOfBirth)) fail("/signup", "Enter a valid date of birth.");
+  // The database refuses the program too (FEATURE_ADULTS_ONLY); this just says so before an account exists.
+  if (flags.adultsOnly && isMinor(dateOfBirth)) fail("/signup", "Program is for players 18 and older.");
 
   const supabase = await createClient();
   const origin = await requestOrigin();

@@ -22,6 +22,8 @@ export const flags = {
   factionGoals: on("FLAG_FACTION_GOALS"),
   /** Season-end rewards: claim the prize for your faction's final place and games played. */
   seasonRewards: on("FLAG_SEASON_REWARDS"),
+  /** Adults only: signups under 18 are turned away. On for the beta (database: FEATURE_ADULTS_ONLY). */
+  adultsOnly: on("FLAG_ADULTS_ONLY"),
 } as const;
 
 export type FlagName = keyof typeof flags;

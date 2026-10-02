@@ -1,7 +1,7 @@
 /**
  * Age-gate helpers. Mirrors public.is_minor(date) in the database so the
- * client and server agree. Nothing is gated yet: minors are an escalation
- * (CLAUDE.md §4). This only records and reports.
+ * client and server agree. The beta is adults only (CONTEXT.md 2026-10-02),
+ * enforced behind flags.adultsOnly and FEATURE_ADULTS_ONLY.
  */
 export const ADULT_AGE = 18;
 
