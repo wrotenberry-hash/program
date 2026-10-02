@@ -84,8 +84,17 @@ input, select, button { font: inherit; }
 }
 .float { animation: float 3s ease-in-out infinite; }
 
+/* Campus: a building with something to claim bobs; any building dips when tapped. */
+@keyframes bob {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -5%; }
+}
+.bob { animation: bob 1.4s ease-in-out infinite; }
+.campus-bldg { transition: transform 90ms ease; -webkit-tap-highlight-color: transparent; }
+.campus-bldg:active { transform: scale(0.96); }
+
 @media (prefers-reduced-motion: reduce) {
-  .pulse, .float { animation: none; }
+  .pulse, .float, .bob { animation: none; }
 }
 
 .panel { box-shadow: var(--shadow); }

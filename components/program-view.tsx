@@ -6,6 +6,7 @@ import { formatCash, formatDuration } from "@/lib/format";
 import Image from "next/image";
 import { DailyCard, type DailyStatus } from "@/components/daily-card";
 import { buildingArt } from "@/lib/art";
+import { Campus } from "@/components/campus";
 import { SeasonRewardsCard, type SeasonRewardsStatus } from "@/components/season-rewards-card";
 
 export type FacilityRow = {
@@ -120,79 +121,91 @@ export function ProgramView(p: ProgramViewProps) {
         <p className="mt-2 text-xs font-semibold text-ink-muted">Donations pile up for {p.capHours} hours, then stop. Come back and collect.</p>
       </Card>
 
-      <Card
-        title="Facilities"
-        accent="primary"
-        icon={<Hammer size={14} />}
-        action={readyCount > 0 ? <span className="rounded-full bg-go px-2 py-0.5 text-[11px] font-extrabold text-go-ink">{readyCount} ready</span> : null}
-      >
-        <ul className="flex flex-col gap-2">
-          {rows.map((r) => {
-            const cur = levelOf(r.facility_id, r.level);
-            const next = levelOf(r.facility_id, r.level + 1);
-            const upgrading = r.upgrade_to !== null && r.upgrade_completes_at !== null;
-            const ready = upgrading && new Date(r.upgrade_completes_at!).getTime() <= now;
-            const gain = next ? (next.power ?? 0) - (cur?.power ?? 0) : 0;
-            const canAfford = next ? p.cash >= next.cost : false;
-            const art = p.art ? buildingArt(r.facility_id, r.level) : null;
-            return (
-              <li key={r.facility_id} className="rounded-2xl border border-line bg-surface-2 p-3">
-                <div className="flex items-start justify-between gap-3">
-                  {art ? (
-                    <Image
-                      src={art}
-                      alt=""
-                      width={84}
-                      height={84}
-                      unoptimized
-                      className={`-my-1 -ml-1 size-[84px] shrink-0 object-contain drop-shadow-md ${r.level === 0 ? "opacity-40 grayscale" : ""}`}
-                    />
-                  ) : null}
-                  <div className="min-w-0 flex-1">
-                    <p className={`text-base font-black ${p.art ? "leading-tight" : "truncate"}`}>{r.facility.name}</p>
-                    <div className="mt-1 flex items-center gap-2 text-xs font-bold text-ink-muted">
-                      <Pips level={r.level} tone={r.facility_id === "booster-club" ? "gold" : "primary"} />
-                      Lv {r.level}
+      {p.art ? (
+        <Card
+          title="Campus"
+          accent="primary"
+          icon={<Hammer size={14} />}
+          action={readyCount > 0 ? <span className="rounded-full bg-go px-2 py-0.5 text-[11px] font-extrabold text-go-ink">{readyCount} ready</span> : null}
+        >
+          <Campus rows={rows} levels={p.levels} cash={p.cash} busy={p.busy} startUpgrade={p.actions.startUpgrade} claimUpgrade={p.actions.claimUpgrade} />
+          <p className="mt-3 text-xs font-semibold text-ink-muted">Tap a building to upgrade it. One crew, one job at a time.</p>
+        </Card>
+      ) : (
+        <Card
+          title="Facilities"
+          accent="primary"
+          icon={<Hammer size={14} />}
+          action={readyCount > 0 ? <span className="rounded-full bg-go px-2 py-0.5 text-[11px] font-extrabold text-go-ink">{readyCount} ready</span> : null}
+        >
+          <ul className="flex flex-col gap-2">
+            {rows.map((r) => {
+              const cur = levelOf(r.facility_id, r.level);
+              const next = levelOf(r.facility_id, r.level + 1);
+              const upgrading = r.upgrade_to !== null && r.upgrade_completes_at !== null;
+              const ready = upgrading && new Date(r.upgrade_completes_at!).getTime() <= now;
+              const gain = next ? (next.power ?? 0) - (cur?.power ?? 0) : 0;
+              const canAfford = next ? p.cash >= next.cost : false;
+              const art = p.art ? buildingArt(r.facility_id, r.level) : null;
+              return (
+                <li key={r.facility_id} className="rounded-2xl border border-line bg-surface-2 p-3">
+                  <div className="flex items-start justify-between gap-3">
+                    {art ? (
+                      <Image
+                        src={art}
+                        alt=""
+                        width={84}
+                        height={84}
+                        unoptimized
+                        className={`-my-1 -ml-1 size-[84px] shrink-0 object-contain drop-shadow-md ${r.level === 0 ? "opacity-40 grayscale" : ""}`}
+                      />
+                    ) : null}
+                    <div className="min-w-0 flex-1">
+                      <p className={`text-base font-black ${p.art ? "leading-tight" : "truncate"}`}>{r.facility.name}</p>
+                      <div className="mt-1 flex items-center gap-2 text-xs font-bold text-ink-muted">
+                        <Pips level={r.level} tone={r.facility_id === "booster-club" ? "gold" : "primary"} />
+                        Lv {r.level}
+                      </div>
                     </div>
+                    {upgrading ? (
+                      <div className="text-right text-xs font-bold">
+                        <div className="text-ink-muted">→ Lv {r.upgrade_to}</div>
+                        <Countdown until={r.upgrade_completes_at!} onDoneLabel="Ready!" />
+                      </div>
+                    ) : next ? (
+                      <div className="text-right text-xs font-bold text-ink-muted">
+                        <div className="text-power">+{gain} power</div>
+                        {next.income_per_hour ? <div className="text-gold">{formatCash(next.income_per_hour)}/hr</div> : null}
+                      </div>
+                    ) : null}
                   </div>
-                  {upgrading ? (
-                    <div className="text-right text-xs font-bold">
-                      <div className="text-ink-muted">→ Lv {r.upgrade_to}</div>
-                      <Countdown until={r.upgrade_completes_at!} onDoneLabel="Ready!" />
-                    </div>
-                  ) : next ? (
-                    <div className="text-right text-xs font-bold text-ink-muted">
-                      <div className="text-power">+{gain} power</div>
-                      {next.income_per_hour ? <div className="text-gold">{formatCash(next.income_per_hour)}/hr</div> : null}
-                    </div>
-                  ) : null}
-                </div>
-                <div className="mt-3">
-                  {upgrading ? (
-                    <form action={p.actions.claimUpgrade}>
-                      <input type="hidden" name="facility_id" value={r.facility_id} />
-                      <Button type="submit" variant={ready ? "go" : "secondary"} pulse={ready && !collectIsBest} disabled={!ready} className="h-11 text-sm">
-                        {ready ? `Claim level ${r.upgrade_to}` : "Under construction"}
-                      </Button>
-                    </form>
-                  ) : next ? (
-                    <form action={p.actions.startUpgrade}>
-                      <input type="hidden" name="facility_id" value={r.facility_id} />
-                      <Button type="submit" variant={canAfford && !p.busy ? "primary" : "secondary"} disabled={p.busy || !canAfford} className="h-11 text-sm">
-                        <Hammer size={16} />
-                        {r.level === 0 ? "Build" : `Upgrade`} · <Coin size={14} /> {formatCash(next.cost)} · {formatDuration(next.duration_seconds)}
-                      </Button>
-                    </form>
-                  ) : (
-                    <p className="text-xs font-bold text-ink-muted">Maxed out.</p>
-                  )}
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-        {p.busy ? <p className="mt-3 text-xs font-semibold text-ink-muted">One crew, one job at a time. They&apos;re on it.</p> : null}
-      </Card>
+                  <div className="mt-3">
+                    {upgrading ? (
+                      <form action={p.actions.claimUpgrade}>
+                        <input type="hidden" name="facility_id" value={r.facility_id} />
+                        <Button type="submit" variant={ready ? "go" : "secondary"} pulse={ready && !collectIsBest} disabled={!ready} className="h-11 text-sm">
+                          {ready ? `Claim level ${r.upgrade_to}` : "Under construction"}
+                        </Button>
+                      </form>
+                    ) : next ? (
+                      <form action={p.actions.startUpgrade}>
+                        <input type="hidden" name="facility_id" value={r.facility_id} />
+                        <Button type="submit" variant={canAfford && !p.busy ? "primary" : "secondary"} disabled={p.busy || !canAfford} className="h-11 text-sm">
+                          <Hammer size={16} />
+                          {r.level === 0 ? "Build" : `Upgrade`} · <Coin size={14} /> {formatCash(next.cost)} · {formatDuration(next.duration_seconds)}
+                        </Button>
+                      </form>
+                    ) : (
+                      <p className="text-xs font-bold text-ink-muted">Maxed out.</p>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+          {p.busy ? <p className="mt-3 text-xs font-semibold text-ink-muted">One crew, one job at a time. They&apos;re on it.</p> : null}
+        </Card>
+      )}
 
       <Card title="Faction" accent="faction" icon={<Shield size={14} />}>
         {p.seat ? (
