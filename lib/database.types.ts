@@ -957,6 +957,54 @@ export type Database = {
           },
         ]
       }
+      player_days: {
+        Row: {
+          account_id: string
+          day: string
+          first_at: string
+          last_at: string
+          sessions: number
+        }
+        Insert: {
+          account_id: string
+          day: string
+          first_at?: string
+          last_at?: string
+          sessions?: number
+        }
+        Update: {
+          account_id?: string
+          day?: string
+          first_at?: string
+          last_at?: string
+          sessions?: number
+        }
+        Relationships: []
+      }
+      player_events: {
+        Row: {
+          account_id: string
+          at: string
+          detail: Json
+          event: string
+          id: number
+        }
+        Insert: {
+          account_id: string
+          at?: string
+          detail?: Json
+          event: string
+          id?: number
+        }
+        Update: {
+          account_id?: string
+          at?: string
+          detail?: Json
+          event?: string
+          id?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -1742,6 +1790,11 @@ export type Database = {
       place_my_program: { Args: never; Returns: string }
       place_program: { Args: { p_program_id: string }; Returns: string }
       program_power: { Args: { p_program_id: string }; Returns: number }
+      record_event: {
+        Args: { p_detail?: Json; p_event: string }
+        Returns: undefined
+      }
+      record_visit: { Args: never; Returns: undefined }
       refresh_standings: { Args: { p_season: string }; Returns: undefined }
       replay_game: {
         Args: { p_game_id: string }
@@ -1753,6 +1806,7 @@ export type Database = {
       }
       resolve_due_games: { Args: never; Returns: number }
       resolve_game: { Args: { p_game_id: string }; Returns: undefined }
+      retention_report: { Args: { p_token: string }; Returns: Json }
       run_maintenance: {
         Args: never
         Returns: {

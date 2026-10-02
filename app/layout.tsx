@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import "./globals.css";
 import { FeedbackButton } from "@/components/feedback-button";
+import { VisitPing } from "@/components/visit-ping";
 
 export const metadata: Metadata = {
   title: { default: "Program", template: "%s · Program" },
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Suspense fallback={null}>
           <FeedbackButton />
         </Suspense>
+        <VisitPing />
       </body>
     </html>
   );

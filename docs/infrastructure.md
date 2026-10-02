@@ -14,7 +14,7 @@ environment variables and the hosting dashboards only.
 
 ## State as of 2026-10-01, test week
 
-- Migrations 0001 through 0021 are applied.
+- Migrations 0001 through 0022 are applied.
   Seed data is loaded, including the 2027 calendar (status upcoming).
   RLS is on for every table. `feedback` and `admin_tokens` have RLS on and no
   policies on purpose: only their SECURITY DEFINER functions touch them.
@@ -25,13 +25,16 @@ environment variables and the hosting dashboards only.
   `FEATURE_DAILY_REWARDS`, `FEATURE_FACTION_GOALS` and
   `FEATURE_SEASON_REWARDS`, all 0. Turning a feature on takes both: the
   env var in Vercel and the config key set to 1.
+- Founder page: `/founder?token=…` shows return visits by sign-up week and
+  links the feedback export. Same private key as the export.
 - Feedback export: `/api/feedback/export?token=…` (CSV; add `&format=json`).
   The token is held by the founder; only its SHA-256 is in the database.
 - Staging copy: `scripts/staging-db/up.sh` builds a local Postgres 16
   database from every migration and the seed, and
   `scripts/staging-db/test-test-week.sql` runs the test-week checks against
   it (37 checks, including a full season rollover);
-  `test-season-rewards.sql` covers season-end rewards (28 checks). A hosted Supabase
+  `test-season-rewards.sql` covers season-end rewards (28 checks);
+  `test-activity.sql` covers return-visit tracking (10 checks). A hosted Supabase
   staging branch is not set up; it is a billable resource awaiting the
   founder's approval.
 - Vercel holds `NEXT_PUBLIC_SUPABASE_URL` and
