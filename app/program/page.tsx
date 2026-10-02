@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/auth/actions";
-import { claimCheckin, claimDailyTask, claimUpgrade, collectIncome, joinFaction, startUpgrade } from "@/app/program/actions";
+import { claimCheckin, claimDailyTask, claimSeasonRewards, claimUpgrade, collectIncome, joinFaction, startUpgrade } from "@/app/program/actions";
 import type { DailyStatus } from "@/components/daily-card";
+import type { SeasonRewardsStatus } from "@/components/season-rewards-card";
 import { flags } from "@/lib/flags";
 import { ProgramView } from "@/components/program-view";
 import { schoolSubtitle, shortName, teamName } from "@/lib/schools";
@@ -53,6 +54,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
   ]);
   // Daily rewards render only when both the app flag and the database feature are on.
   const daily = flags.dailyRewards ? ((await supabase.rpc("daily_status")).data as DailyStatus | null) : null;
+  const seasonRewards = flags.seasonRewards ? ((await supabase.rpc("season_rewards_status")).data as SeasonRewardsStatus | null) : null;
   let factionRank: number | null = null;
   if (seat) {
     const { data: st } = await supabase.from("faction_standings").select("faction_id, points, wins").eq("league_id", seat.league.id).order("points", { ascending: false }).order("wins", { ascending: false });
@@ -108,7 +110,8 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
       shareCode={program.share_code ?? "——————"}
       dueGames={dueGames}
       daily={daily?.enabled ? daily : null}
-      actions={{ joinFaction, collectIncome, startUpgrade, claimUpgrade, signOut, claimCheckin, claimDailyTask }}
+      seasonRewards={seasonRewards?.enabled && seasonRewards.unclaimed.length > 0 ? seasonRewards : null}
+      actions={{ joinFaction, collectIncome, startUpgrade, claimUpgrade, signOut, claimCheckin, claimDailyTask, claimSeasonRewards }}
     />
   );
 }

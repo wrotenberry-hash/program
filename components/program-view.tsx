@@ -4,6 +4,7 @@ import { Bolt, Coin, Hammer, Shield, Trophy } from "@/components/icons";
 import { Countdown } from "@/components/countdown";
 import { formatCash, formatDuration } from "@/lib/format";
 import { DailyCard, type DailyStatus } from "@/components/daily-card";
+import { SeasonRewardsCard, type SeasonRewardsStatus } from "@/components/season-rewards-card";
 
 export type FacilityRow = {
   facility_id: string;
@@ -41,6 +42,8 @@ export type ProgramViewProps = {
   dueGames: number;
   /** Daily check-in and tasks. Null unless the dailyRewards flag and the database feature are both on. */
   daily?: DailyStatus | null;
+  /** Unclaimed season-end rewards. Null unless the seasonRewards flag and the database feature are both on and something is waiting. */
+  seasonRewards?: SeasonRewardsStatus | null;
   actions: {
     joinFaction: (formData: FormData) => void | Promise<void>;
     collectIncome: (formData: FormData) => void | Promise<void>;
@@ -49,6 +52,7 @@ export type ProgramViewProps = {
     signOut: (formData: FormData) => void | Promise<void>;
     claimCheckin?: (formData: FormData) => void | Promise<void>;
     claimDailyTask?: (formData: FormData) => void | Promise<void>;
+    claimSeasonRewards?: (formData: FormData) => void | Promise<void>;
   };
   now?: number;
 };
@@ -95,6 +99,8 @@ export function ProgramView(p: ProgramViewProps) {
       </section>
 
       {p.notice ? <Notice>{p.notice}</Notice> : null}
+
+      {p.seasonRewards && p.actions.claimSeasonRewards ? <SeasonRewardsCard status={p.seasonRewards} claim={p.actions.claimSeasonRewards} /> : null}
 
       {p.daily && p.actions.claimCheckin && p.actions.claimDailyTask ? (
         <DailyCard daily={p.daily} claimCheckin={p.actions.claimCheckin} claimTask={p.actions.claimDailyTask} />

@@ -1,6 +1,7 @@
 import type { ProgramViewProps } from "@/components/program-view";
 import type { FactionViewProps } from "@/components/faction-view";
 import type { DailyStatus } from "@/components/daily-card";
+import type { SeasonRewardsStatus } from "@/components/season-rewards-card";
 import type { FactionGoalStatus } from "@/components/faction-goal-card";
 
 import { noop } from "@/app/preview/actions";
@@ -55,7 +56,12 @@ export const sampleProgram: Omit<ProgramViewProps, "actions"> = {
   dueGames: 1,
 };
 
-export const sampleActions: ProgramViewProps["actions"] = { joinFaction: noop, collectIncome: noop, startUpgrade: noop, claimUpgrade: noop, signOut: noop, claimCheckin: noop, claimDailyTask: noop };
+export const sampleActions: ProgramViewProps["actions"] = { joinFaction: noop, collectIncome: noop, startUpgrade: noop, claimUpgrade: noop, signOut: noop, claimCheckin: noop, claimDailyTask: noop, claimSeasonRewards: noop };
+
+export const sampleSeasonRewards: SeasonRewardsStatus = {
+  enabled: true,
+  unclaimed: [{ season_id: "2026", year: 2026, place: 1, league_size: 4, games_played: 11, place_cash: 3000, played_cash: 500, min_games: 3 }],
+};
 
 export const sampleDaily: DailyStatus = {
   enabled: true,

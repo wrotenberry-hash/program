@@ -141,6 +141,9 @@ trophies, and matched the orphaned Michigan faction across Leagues.
       settle. Tested end to end on the staging copy.
 - [x] Behind flags, off in production: daily check-in and three-task strip;
       weekly faction goal with shared reward and the officer role.
+- [x] Behind a flag, off in production: season-end rewards by faction
+      finish and games played (`docs/phase-5/season-rewards.md`). Rewards
+      are recorded when 2026 ends on Dec 5 whether or not the flag is on.
 
 ## After the slice
 

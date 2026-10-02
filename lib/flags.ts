@@ -20,6 +20,8 @@ export const flags = {
   dailyRewards: on("FLAG_DAILY_REWARDS"),
   /** Weekly faction goal, shared reward, and the officer role. */
   factionGoals: on("FLAG_FACTION_GOALS"),
+  /** Season-end rewards: claim the prize for your faction's final place and games played. */
+  seasonRewards: on("FLAG_SEASON_REWARDS"),
 } as const;
 
 export type FlagName = keyof typeof flags;

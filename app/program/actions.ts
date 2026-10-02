@@ -61,3 +61,12 @@ export async function claimDailyTask(formData: FormData) {
   revalidatePath("/program");
   back(row ? `Task done: +$${Number(row.reward).toLocaleString("en-US")}.` : undefined);
 }
+
+export async function claimSeasonRewards() {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("claim_season_rewards");
+  if (error) back(error.message);
+  const row = data?.[0];
+  revalidatePath("/program");
+  back(row ? `Season rewards: +$${Number(row.reward).toLocaleString("en-US")}.` : undefined);
+}

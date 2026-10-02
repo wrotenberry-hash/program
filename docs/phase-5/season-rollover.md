@@ -84,8 +84,7 @@ decision, not a data-model one; this design does not foreclose any answer.
   League seats sit in the old conference's League. Supporting realignment
   needs a season-scoped school-to-conference table and a remap step at
   rollover. Flagged for when a 2027 change is announced.
-- **Season rewards.** No end-of-season prizes are granted. The trophy case
-  and frozen standings are the record.
+- **Season rewards.** Built in `0020`, behind a flag: see `season-rewards.md`.
 
 ## 7. How it was tested
 

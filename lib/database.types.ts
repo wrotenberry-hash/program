@@ -357,6 +357,61 @@ export type Database = {
           },
         ]
       }
+      faction_season_finishes: {
+        Row: {
+          faction_id: string
+          league_id: string
+          losses: number
+          place: number
+          points: number
+          recorded_at: string
+          season_id: string
+          wins: number
+        }
+        Insert: {
+          faction_id: string
+          league_id: string
+          losses: number
+          place: number
+          points: number
+          recorded_at?: string
+          season_id: string
+          wins: number
+        }
+        Update: {
+          faction_id?: string
+          league_id?: string
+          losses?: number
+          place?: number
+          points?: number
+          recorded_at?: string
+          season_id?: string
+          wins?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "faction_season_finishes_faction_id_fkey"
+            columns: ["faction_id"]
+            isOneToOne: false
+            referencedRelation: "factions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "faction_season_finishes_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "faction_season_finishes_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       faction_standings: {
         Row: {
           faction_id: string
@@ -1042,6 +1097,64 @@ export type Database = {
           },
         ]
       }
+      program_season_rewards: {
+        Row: {
+          claimed_at: string | null
+          faction_id: string | null
+          games_played: number
+          granted_at: string
+          place: number | null
+          place_cash: number
+          played_cash: number
+          program_id: string
+          season_id: string
+        }
+        Insert: {
+          claimed_at?: string | null
+          faction_id?: string | null
+          games_played: number
+          granted_at?: string
+          place?: number | null
+          place_cash: number
+          played_cash: number
+          program_id: string
+          season_id: string
+        }
+        Update: {
+          claimed_at?: string | null
+          faction_id?: string | null
+          games_played?: number
+          granted_at?: string
+          place?: number | null
+          place_cash?: number
+          played_cash?: number
+          program_id?: string
+          season_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "program_season_rewards_faction_id_fkey"
+            columns: ["faction_id"]
+            isOneToOne: false
+            referencedRelation: "factions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "program_season_rewards_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "program_season_rewards_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       program_staff: {
         Row: {
           level: number
@@ -1415,6 +1528,7 @@ export type Database = {
           leagues_settled: number
         }[]
       }
+      award_season: { Args: { p_season_id: string }; Returns: number }
       challenge_by_code: { Args: { p_code: string }; Returns: string }
       claim_daily_checkin: {
         Args: never
@@ -1437,6 +1551,14 @@ export type Database = {
         Returns: {
           cash: number
           reward: number
+        }[]
+      }
+      claim_season_rewards: {
+        Args: never
+        Returns: {
+          cash: number
+          reward: number
+          seasons_claimed: number
         }[]
       }
       claim_upgrade: {
@@ -1675,6 +1797,8 @@ export type Database = {
           year: number
         }[]
       }
+      season_rewards_enabled: { Args: never; Returns: boolean }
+      season_rewards_status: { Args: never; Returns: Json }
       set_emphasis: { Args: { p_emphasis_id: string }; Returns: undefined }
       set_faction_goal: { Args: { p_goal_type_id: string }; Returns: undefined }
       set_faction_role: {
